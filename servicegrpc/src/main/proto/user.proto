@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.unla.servicegrpc.grpc";
+
+service user {
+  rpc register(RegisterRequest) returns (RegisterResponse);
+  rpc get(GetById) returns (RegisterResponse);
+}
+
+message RegisterRequest{
+  string name = 1;
+  string lastname = 2;
+  string email = 3;
+  string username = 4;
+  string password = 5;
+}
+
+message RegisterResponse{
+  int64 id = 1;
+  string name = 2;
+  string lastname = 3;
+  string email = 4;
+  string username = 5;
+}
+
+message GetById{
+  int64 id = 1;
+}
