@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -29,12 +30,11 @@ public class Wallet {
     @Setter(AccessLevel.NONE)
     private long id;
 
-    @NotBlank(message = CommonErrorMessages.REQUIRED_PARAM_MESSAGE)
     @Column(name = "balance", nullable = false)
     private double balance;
 
-    @NotBlank(message = CommonErrorMessages.REQUIRED_PARAM_MESSAGE)
-    @OneToOne(mappedBy = "wallet" , cascade = CascadeType.ALL)
+    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     private User user;
+
 
 }
