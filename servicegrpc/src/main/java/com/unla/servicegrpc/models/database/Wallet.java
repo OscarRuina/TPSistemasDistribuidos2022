@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -33,7 +34,8 @@ public class Wallet {
     @Column(name = "balance", nullable = false)
     private double balance;
 
-    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "userId")
     private User user;
 
 

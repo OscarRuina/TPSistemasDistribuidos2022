@@ -30,16 +30,6 @@ public class WalletServiceImpl implements IWalletService {
     }
 
     @Override
-    public Wallet create(RequestWalletDTO requestWalletDTO) {
-        Wallet wallet = new Wallet();
-        wallet.setBalance(requestWalletDTO.getBalance());
-        User user = userService.findById(requestWalletDTO.getUserId());
-        wallet.setUser(user);
-        walletRepository.save(wallet);
-        return wallet;
-    }
-
-    @Override
     public Wallet addBalance(long userId, double balance) {
         Wallet wallet = findByUserId(userId);
         wallet.setBalance(wallet.getBalance() + balance);
@@ -57,4 +47,5 @@ public class WalletServiceImpl implements IWalletService {
         walletRepository.save(wallet);
         return "Operation Success";
     }
+
 }

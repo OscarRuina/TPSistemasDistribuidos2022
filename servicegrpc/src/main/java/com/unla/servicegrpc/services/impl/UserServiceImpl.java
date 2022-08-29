@@ -1,8 +1,10 @@
 package com.unla.servicegrpc.services.impl;
 
 import com.unla.servicegrpc.models.database.User;
+import com.unla.servicegrpc.models.database.Wallet;
 import com.unla.servicegrpc.models.request.RequestUserDTO;
 import com.unla.servicegrpc.repositories.UserRepository;
+import com.unla.servicegrpc.repositories.WalletRepository;
 import com.unla.servicegrpc.services.IUserService;
 import com.unla.servicegrpc.utils.messages.CommonErrorMessages;
 import org.hibernate.ObjectNotFoundException;
@@ -14,6 +16,9 @@ public class UserServiceImpl implements IUserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private WalletRepository walletRepository;
 
     @Override
     public User findById(long userId) {
@@ -38,6 +43,10 @@ public class UserServiceImpl implements IUserService {
         user.setEmail(requestUserDTO.getEmail());
         user.setUsername(requestUserDTO.getUsername());
         user.setPassword(requestUserDTO.getPassword());
+        Wallet wallet = new Wallet();
+        wallet.setBalance(0);
+        wallet.setUser(user);
+        user.setWallet(wallet);
         return userRepository.save(user);
     }
 }
