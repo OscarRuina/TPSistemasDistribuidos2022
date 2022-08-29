@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.unla.servicegrpc.grpc";
+
+service wallet{
+  rpc register(RegisterRequestWallet) returns(RegisterResponseWallet);
+  rpc add(RegisterRequestWallet) returns(RegisterResponseWallet);
+  rpc subtract(RegisterRequestWallet) returns(ResponseAPIWallet);
+
+}
+
+message RegisterRequestWallet{
+  double balance = 1;
+  int64  userId = 2;
+}
+
+message RegisterResponseWallet{
+  int64 id = 1;
+  double balance = 2;
+  int64  userId = 3;
+}
+
+message ResponseAPIWallet{
+  string message = 1;
+}

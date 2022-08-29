@@ -57,8 +57,5 @@ public class User {
     @Column(name = "password",nullable = false)
     private String password;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id")
-    private Wallet wallet;
 
 }
