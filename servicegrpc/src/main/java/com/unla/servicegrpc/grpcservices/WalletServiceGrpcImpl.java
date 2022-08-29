@@ -5,7 +5,6 @@ import com.unla.servicegrpc.grpc.RegisterResponseWallet;
 import com.unla.servicegrpc.grpc.ResponseAPIWallet;
 import com.unla.servicegrpc.grpc.walletGrpc;
 import com.unla.servicegrpc.models.database.Wallet;
-import com.unla.servicegrpc.models.request.RequestWalletDTO;
 import com.unla.servicegrpc.services.IWalletService;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
@@ -16,27 +15,6 @@ public class WalletServiceGrpcImpl extends walletGrpc.walletImplBase{
 
     @Autowired
     private IWalletService walletService;
-
-    @Override
-    public void register(RegisterRequestWallet request,
-            StreamObserver<RegisterResponseWallet> responseObserver) {
-
-        RequestWalletDTO requestWalletDTO = new RequestWalletDTO();
-        requestWalletDTO.setBalance(request.getBalance());
-        requestWalletDTO.setUserId(request.getUserId());
-
-        Wallet wallet = walletService.create(requestWalletDTO);
-
-        RegisterResponseWallet registerResponseWallet = RegisterResponseWallet.newBuilder()
-                .setId(wallet.getId())
-                .setBalance(wallet.getBalance())
-                .setUserId(wallet.getUser().getId())
-                .build();
-
-        responseObserver.onNext(registerResponseWallet);
-        responseObserver.onCompleted();
-
-    }
 
     @Override
     public void add(RegisterRequestWallet request,
