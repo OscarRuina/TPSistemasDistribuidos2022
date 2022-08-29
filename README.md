@@ -42,10 +42,11 @@ La aplicación correrá en localhost bajo el puerto 5000: `http://127.0.0.1:5000
 GET /helloWorldCliente
 
 ## Servidor 
-* **IDE:** Intelij
-* **Lenguaje:** Java
+* **IDE:** Intelij https://www.jetbrains.com/es-es/idea/download/#section=windows version community.
+* **Lenguaje:** Java 11
 * **Framework:** Spring 
 * **Manejador de dependencias:** Gradle
+* **Base de Datos:** MySQL, crear una base de datos llamada **db**.
 * Para Iniciar el servidor ubicar la clase ServicegrpcApplication, click derecho y la opcion run.
 * El servidor de grcp inicia en el puerto **9090**.
 * Usar el programa BloomRPC y probarlo.
