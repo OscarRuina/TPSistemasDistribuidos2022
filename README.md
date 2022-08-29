@@ -46,7 +46,7 @@ GET /helloWorldCliente
 * **Lenguaje:** Java 11
 * **Framework:** Spring 
 * **Manejador de dependencias:** Gradle
-* **Base de Datos:** MySQL, crear una base de datos llamada **db**.
+* **Base de Datos:** MySQL, crear una base de datos llamada **db**. El usuario y contraseña default es root - root.
 * Para Iniciar el servidor ubicar la clase ServicegrpcApplication, click derecho y la opcion run.
 * El servidor de grcp inicia en el puerto **9090**.
 * Usar el programa BloomRPC y probarlo.
