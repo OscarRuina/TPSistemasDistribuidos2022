@@ -52,7 +52,7 @@ Register new user
 #### Prerequisitos:
   * Tener instalado el **IDE:** [Intelij](https://www.jetbrains.com/es-es/idea/download/#section=windows) version community. Se puede usar cualquier otro que tenga compatibilidad con el framework **Spring**, pero se recomienda usar el Intelij
   * Tener instalado el jdk **Java 11**.
-  * Tener instalado el **MySQL**, con usuario y contraseña root, crear una base de datos llamada **db**.
+  * Tener instalado el [MySQL](https://dev.mysql.com/downloads/workbench/), con usuario y contraseña root, crear una base de datos llamada **db**.
   * Tener instalado el [BloomRPC](https://github.com/bloomrpc/bloomrpc/releases) , descargar el setup.exe si el sistema operativo  usado es Windows. 
 #### Correr la aplicacion:
   * Se utiliza como gestor de dependencias **Gradle**, no es necesario tenerlo instalado si se usa el Intelij, ya que carga las dependencias automaticamente. 
