@@ -6,7 +6,11 @@ option java_package = "com.unla.servicegrpc.grpc";
 service user {
   rpc register(RegisterRequest) returns (RegisterResponse);
   rpc get(GetById) returns (RegisterResponse);
+  rpc login(LoginRequest) returns(LoginResponse);
+  rpc logout(Empty) returns(LogoutResponse);
 }
+
+message Empty{}
 
 message RegisterRequest{
   string name = 1;
@@ -26,4 +30,18 @@ message RegisterResponse{
 
 message GetById{
   int64 id = 1;
+}
+
+message LoginRequest{
+  string username = 1;
+  string password = 2;
+}
+
+message LoginResponse{
+  int64 id = 1;
+  string username = 2;
+}
+
+message LogoutResponse{
+  string message = 1;
 }

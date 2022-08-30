@@ -1,6 +1,7 @@
 package com.unla.servicegrpc.utils.converters;
 
 import com.unla.servicegrpc.models.database.User;
+import com.unla.servicegrpc.models.response.ResponseLoginDTO;
 import com.unla.servicegrpc.models.response.ResponseUserDTO;
 
 public final class UserConverter {
@@ -15,6 +16,13 @@ public final class UserConverter {
         responseUserDTO.setEmail(user.getEmail());
         responseUserDTO.setUsername(user.getUsername());
         return responseUserDTO;
+    }
+
+    public static ResponseLoginDTO toResponseLoginDTO(User user){
+        ResponseLoginDTO responseLoginDTO = new ResponseLoginDTO();
+        responseLoginDTO.setId(user.getId());
+        responseLoginDTO.setUsername(user.getUsername());
+        return responseLoginDTO;
     }
 
 }
