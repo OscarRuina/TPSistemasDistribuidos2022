@@ -62,7 +62,7 @@ public class Product {
             CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private List<Photo> photos;
 
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
 

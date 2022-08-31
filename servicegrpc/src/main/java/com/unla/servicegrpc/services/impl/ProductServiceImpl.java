@@ -43,12 +43,14 @@ public class ProductServiceImpl implements IProductService {
         product.setPrice(requestProductDTO.getPrice());
         product.setQuantity(requestProductDTO.getQuantity());
         product.setDate(requestProductDTO.getDate());
-        //product.setPhotos(requestProductDTO.get);
+
         User user = userRepository.findById(requestProductDTO.getUserId()).orElseThrow();
-        user.getP
+
         product.setUser(user);
+
         return productRepository.save(product);
-    };
+
+    }
 
     @Override
     public Product modificar(RequestProductDTO requestProductDTO, long productId){
@@ -59,31 +61,31 @@ public class ProductServiceImpl implements IProductService {
         product.setQuantity(requestProductDTO.getQuantity());
         product.setDate(requestProductDTO.getDate());
         return productRepository.save(product);
-    };
+    }
 
     @Override
     public List<Product> findByUserId(long userId){
         return productRepository.findByUser_Id(userId);
-    };
+    }
 
     @Override
     public List<Product> findByName(String name){
         return productRepository.findAllProductsForName(name);
-    };
+    }
 
     @Override
     public List<Product> findByCategory(String category){
         return productRepository.findAllProductsForCategory(category);
-    };
+    }
 
     @Override
     public List<Product> findByPrice(int priceMin, int priceMax){
         return productRepository.findAllProductsForPrice(priceMin, priceMax);
-    };
+    }
 
     @Override
     public List<Product> findByDates(LocalDate dateInitial, LocalDate dateFinal){
         return productRepository.findAllProductsForDate(dateInitial, dateFinal);
-    };
+    }
 
 }
