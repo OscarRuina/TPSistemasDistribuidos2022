@@ -24,6 +24,16 @@ class userStub(object):
                 request_serializer=user__pb2.GetById.SerializeToString,
                 response_deserializer=user__pb2.RegisterResponse.FromString,
                 )
+        self.login = channel.unary_unary(
+                '/user/login',
+                request_serializer=user__pb2.LoginRequest.SerializeToString,
+                response_deserializer=user__pb2.LoginResponse.FromString,
+                )
+        self.logout = channel.unary_unary(
+                '/user/logout',
+                request_serializer=user__pb2.Empty.SerializeToString,
+                response_deserializer=user__pb2.LogoutResponse.FromString,
+                )
 
 
 class userServicer(object):
@@ -41,6 +51,18 @@ class userServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def login(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def logout(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_userServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -53,6 +75,16 @@ def add_userServicer_to_server(servicer, server):
                     servicer.get,
                     request_deserializer=user__pb2.GetById.FromString,
                     response_serializer=user__pb2.RegisterResponse.SerializeToString,
+            ),
+            'login': grpc.unary_unary_rpc_method_handler(
+                    servicer.login,
+                    request_deserializer=user__pb2.LoginRequest.FromString,
+                    response_serializer=user__pb2.LoginResponse.SerializeToString,
+            ),
+            'logout': grpc.unary_unary_rpc_method_handler(
+                    servicer.logout,
+                    request_deserializer=user__pb2.Empty.FromString,
+                    response_serializer=user__pb2.LogoutResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -95,5 +127,39 @@ class user(object):
         return grpc.experimental.unary_unary(request, target, '/user/get',
             user__pb2.GetById.SerializeToString,
             user__pb2.RegisterResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def login(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/user/login',
+            user__pb2.LoginRequest.SerializeToString,
+            user__pb2.LoginResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def logout(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/user/logout',
+            user__pb2.Empty.SerializeToString,
+            user__pb2.LogoutResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
