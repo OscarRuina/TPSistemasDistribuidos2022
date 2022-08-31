@@ -46,15 +46,15 @@ public class Product {
     @Size(max = 250, message = CommonErrorMessages.MAX_SIZE_MESSAGE)
     private String category;
 
-    @NotBlank(message = CommonErrorMessages.REQUIRED_PARAM_MESSAGE)
+    //@NotBlank(message = CommonErrorMessages.REQUIRED_PARAM_MESSAGE)
     @Column(name = "quantity", nullable = false)
     private int quantity;
 
-    @NotBlank(message = CommonErrorMessages.REQUIRED_PARAM_MESSAGE)
+    //@NotBlank(message = CommonErrorMessages.REQUIRED_PARAM_MESSAGE)
     @Column(name = "price", nullable = false)
     private double price;
 
-    @NotBlank(message = CommonErrorMessages.REQUIRED_PARAM_MESSAGE)
+    //@NotBlank(message = CommonErrorMessages.REQUIRED_PARAM_MESSAGE)
     @Column(name = "date", nullable = false)
     private LocalDate date;
 
