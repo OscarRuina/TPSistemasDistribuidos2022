@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.unla.servicegrpc.grpc";
+
+service product{
+  rpc create(RequestProduct) returns(ResponseProduct);
+}
+
+message RequestProduct{
+  string name = 1;
+  string category = 2;
+  int32  quantity = 3;
+  double  price = 4;
+  string date = 5;
+  int64 userId = 6;
+}
+
+message ResponseProduct{
+  int64 id = 1;
+  string name = 2;
+  string category = 3;
+  int32 quantity = 4;
+  double price = 5;
+  string date = 6;
+  int64 userId = 7;
+}
+
+message getId{
+  int64 productId = 1;
+}

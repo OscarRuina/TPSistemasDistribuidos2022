@@ -12,6 +12,7 @@ import com.unla.servicegrpc.grpc.userGrpc;
 import com.unla.servicegrpc.models.database.User;
 import com.unla.servicegrpc.models.request.RequestLoginUserDTO;
 import com.unla.servicegrpc.models.request.RequestUserDTO;
+import com.unla.servicegrpc.services.IUserService;
 import com.unla.servicegrpc.services.impl.UserServiceImpl;
 import com.unla.servicegrpc.utils.messages.CommonErrorMessages;
 import io.grpc.stub.StreamObserver;
@@ -22,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class UserServiceGrpcImpl extends userGrpc.userImplBase {
 
     @Autowired
-    private UserServiceImpl userService;
+    private IUserService userService;
 
     @Override
     public void register(RegisterRequest request,
