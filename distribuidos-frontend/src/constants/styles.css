@@ -1,0 +1,14 @@
+.error {
+  color: red;
+  animation: changeColor 2.5s ease-in-out infinite;
+}
+
+@keyframes changeColor {
+  0%,
+  100% {
+    color: red;
+  }
+  80% {
+    color: transparent;
+  }
+}
