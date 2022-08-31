@@ -3,6 +3,7 @@
 
 ## Autores ✒️
   
+*  **Ariel Nicolas Heredia** - *Desarrollo Vista* - [Segneal](https://github.com/Segneal)
 
 *  **Matias Nicolas Rivero** - *Desarrollo Servidor* - [Mathyz1](https://github.com/Mathyz1)
 
@@ -13,6 +14,16 @@
 *  **Quimey Perez** - *Desarrollo Cliente* - [QuimeyPerez](https://github.com/QuimeyPerez)
 
   
+##
+Vista: ReactJs
+
+Prerequisitos 
+Instalado Visual Studio Code. https://code.visualstudio.com/
+Instalado NodeJS. https://nodejs.org/es/
+Para ejecutar el servidor de vista se debe ubicar dentro de la carpeta distribuidos-frontend
+Por medio de terminal ejecutar el comando $npm install para instalar las dependencias de node.
+Ejecutar el comando $npm start 
+La vista se ejecutara en puerto 3000 , http://localhost:3000
 
 ## Cliente Python
 
