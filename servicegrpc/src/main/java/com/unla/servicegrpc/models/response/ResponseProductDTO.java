@@ -2,6 +2,7 @@ package com.unla.servicegrpc.models.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import com.unla.servicegrpc.models.database.Photo;
 import com.unla.servicegrpc.utils.messages.CommonErrorMessages;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import lombok.Setter;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.List;
 
 @JsonRootName("product")
 @Getter
@@ -26,6 +28,9 @@ public class ResponseProductDTO {
     private double price;
 
     private LocalDate date;
+
+    //estaba en lista de string
+    private List<Photo> photos;
 
     @JsonProperty("user")
     private ResponseUserDTO user;

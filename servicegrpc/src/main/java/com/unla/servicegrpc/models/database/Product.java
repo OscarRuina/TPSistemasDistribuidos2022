@@ -58,8 +58,9 @@ public class Product {
     @Column(name = "date", nullable = false)
     private LocalDate date;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = {CascadeType.PERSIST,
-            CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    //, cascade = {CascadeType.PERSIST,
+    //            CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH}
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
     private List<Photo> photos;
 
     @ManyToOne

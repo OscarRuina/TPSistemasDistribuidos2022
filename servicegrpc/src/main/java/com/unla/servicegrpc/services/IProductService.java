@@ -5,6 +5,7 @@ import com.unla.servicegrpc.models.database.User;
 import com.unla.servicegrpc.models.request.RequestLoginUserDTO;
 import com.unla.servicegrpc.models.request.RequestProductDTO;
 import com.unla.servicegrpc.models.request.RequestUserDTO;
+import com.unla.servicegrpc.models.response.ResponseProductDTO;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,7 +14,7 @@ public interface IProductService {
 
     Product create(RequestProductDTO requestProductDTO);
 
-    Product modificar(RequestProductDTO requestProductDTO, long productId);
+    Product update(ResponseProductDTO requestProductDTO, long productId);
 
     List<Product> findByUserId(long userId);
 
