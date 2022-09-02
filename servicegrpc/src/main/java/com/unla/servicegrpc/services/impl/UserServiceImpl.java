@@ -4,6 +4,7 @@ import com.unla.servicegrpc.models.database.User;
 import com.unla.servicegrpc.models.database.Wallet;
 import com.unla.servicegrpc.models.request.RequestLoginUserDTO;
 import com.unla.servicegrpc.models.request.RequestUserDTO;
+import com.unla.servicegrpc.models.response.ResponseLogoutDTO;
 import com.unla.servicegrpc.repositories.UserRepository;
 import com.unla.servicegrpc.services.IUserService;
 import com.unla.servicegrpc.utils.messages.CommonErrorMessages;
@@ -62,7 +63,9 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public String logout() {
-        return "Logout Successfully";
+    public ResponseLogoutDTO logout() {
+        ResponseLogoutDTO responseLogoutDTO = new ResponseLogoutDTO();
+        responseLogoutDTO.setMessage(CommonErrorMessages.LOGOUT_SUCCESSFULLY);
+        return responseLogoutDTO;
     }
 }
