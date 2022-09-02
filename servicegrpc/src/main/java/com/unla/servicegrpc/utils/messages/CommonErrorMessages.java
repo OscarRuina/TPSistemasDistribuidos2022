@@ -16,4 +16,8 @@ public final class CommonErrorMessages {
 
     public static final String OBJECT_ALREADY_EXIST = "Object already exists";
 
+    public static final String INCORRECT_PASSWORD  = "Password is incorrect";
+
+    public static final String LOGOUT_SUCCESSFULLY = "Logout successfully";
+
 }

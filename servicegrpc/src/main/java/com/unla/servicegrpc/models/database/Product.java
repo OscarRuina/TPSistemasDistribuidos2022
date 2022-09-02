@@ -1,16 +1,20 @@
 package com.unla.servicegrpc.models.database;
 
 import com.unla.servicegrpc.utils.messages.CommonErrorMessages;
+import java.time.LocalDate;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import lombok.AccessLevel;
@@ -24,8 +28,8 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "USERS")
-public class User {
+@Table(name = "PRODUCT")
+public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,27 +42,31 @@ public class User {
     private String name;
 
     @NotBlank(message = CommonErrorMessages.REQUIRED_PARAM_MESSAGE)
-    @Column(name = "lastname", nullable = false)
+    @Column(name = "category", nullable = false)
     @Size(max = 250, message = CommonErrorMessages.MAX_SIZE_MESSAGE)
-    private String lastname;
+    private String category;
 
     @NotBlank(message = CommonErrorMessages.REQUIRED_PARAM_MESSAGE)
-    @Email(message = CommonErrorMessages.EMAIL_MESSAGE)
-    @Column(name = "email",nullable = false, unique = true)
-    @Size(max = 250, message = CommonErrorMessages.MAX_SIZE_MESSAGE)
-    private String email;
+    @Column(name = "quantity", nullable = false)
+    private int quantity;
 
     @NotBlank(message = CommonErrorMessages.REQUIRED_PARAM_MESSAGE)
-    @Column(name = "username",nullable = false, unique = true)
-    @Size(max = 250, message = CommonErrorMessages.MAX_SIZE_MESSAGE)
-    private String username;
+    @Column(name = "price", nullable = false)
+    private double price;
 
     @NotBlank(message = CommonErrorMessages.REQUIRED_PARAM_MESSAGE)
-    @Column(name = "password",nullable = false)
-    private String password;
+    @Column(name = "date", nullable = false)
+    private LocalDate date;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private Wallet wallet;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = {CascadeType.PERSIST,
+            CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    private List<Photo> photos;
 
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId")
+    private User user;
+
+    @ManyToMany(mappedBy = "products")
+    private List<ShoppingCart> shoppingCarts;
 
 }

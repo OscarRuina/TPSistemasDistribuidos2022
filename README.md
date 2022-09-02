@@ -48,14 +48,20 @@ Return user by id
 POST /user
 Register new user
 
-## Servidor 
-* **IDE:** Intelij https://www.jetbrains.com/es-es/idea/download/#section=windows version community.
-* **Lenguaje:** Java 11
-* **Framework:** Spring 
-* **Manejador de dependencias:** Gradle
-* **Base de Datos:** MySQL, crear una base de datos llamada **db**. El usuario y contraseña default es root - root.
-* Para Iniciar el servidor ubicar la clase ServicegrpcApplication, click derecho y la opcion run.
-* El servidor de grcp inicia en el puerto **9090**.
-* Usar el programa BloomRPC y probarlo.
-* Agregar el archivo proto generado, esta en la carpeta proto, veran los metodos, en la url poner localhost:9090, para finalziar click en el boton verde.
-
+## Servidor Java con Spring
+#### Prerequisitos:
+  * Tener instalado el **IDE:** [Intelij](https://www.jetbrains.com/es-es/idea/download/#section=windows) version community. Se puede usar cualquier otro que tenga compatibilidad con el framework **Spring**, pero se recomienda usar el Intelij
+  * Tener instalado el jdk **Java 11**.
+  * Tener instalado el [MySQL](https://dev.mysql.com/downloads/workbench/), con usuario y contraseña root, crear una base de datos llamada **db**.
+  * Tener instalado el [BloomRPC](https://github.com/bloomrpc/bloomrpc/releases) , descargar el setup.exe si el sistema operativo  usado es Windows. 
+#### Correr la aplicacion:
+  * Se utiliza como gestor de dependencias **Gradle**, no es necesario tenerlo instalado si se usa el Intelij, ya que carga las dependencias automaticamente. 
+  * Para Iniciar el servidor ubicar la clase **ServicegrpcApplication**, click derecho y la opcion run.
+  * El servidor de grcp inicia en el puerto **9090**.
+  * Abrir el BloomRPC, agregar los archivos proto generados mediante el boton + , estan en la carpeta proto del proyecto correspondiente al servidor, en la url poner **localhost:9090**.
+  * En el explorador veran los archivos protos y los metodos, click en algun metodo y en la parte central se carga el json con los datos default, cambiar los datos por los que quieran y pulsar el boton verde del medio. Al lado derecho veran la respuesta.
+#### Metodos: 
+  * Get/User: recibe un id de usuario y retorna un usuario.
+  * Register/User: recibe los parametros indicados en el trabajo practico y retorna el usuario creado, ademas se crea la billetera virtual con saldo 0.
+  * Add/Wallet: recibe el monto a agregar a la billetera y el id de usuario al que pertenece y retorna la billetera.
+  * Subtract/Wallet: recibe el monto a descontar a la billetera y el id de usuario al que pertenece y retorna un mensaje "Operation Success".

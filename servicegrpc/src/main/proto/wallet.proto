@@ -4,7 +4,6 @@ option java_multiple_files = true;
 option java_package = "com.unla.servicegrpc.grpc";
 
 service wallet{
-  rpc register(RegisterRequestWallet) returns(RegisterResponseWallet);
   rpc add(RegisterRequestWallet) returns(RegisterResponseWallet);
   rpc subtract(RegisterRequestWallet) returns(ResponseAPIWallet);
 
