@@ -29,8 +29,11 @@ public class Photo {
     @Setter(AccessLevel.NONE)
     private long id;
 
-    @Column(name = "url", nullable = true)
+    @Column(name = "url", nullable = false)
     private String url;
+
+    @Column(name = "orden", nullable = false)
+    private int orden;
 
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "productId")

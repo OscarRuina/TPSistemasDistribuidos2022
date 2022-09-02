@@ -1,0 +1,97 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.unla.servicegrpc.grpc";
+
+service product{
+  rpc create(RequestProduct) returns(ResponseProduct);
+  rpc update(ResponseProduct) returns(UpdateResponseProduct);
+  rpc getProductsDistinctByUserId(RequestProductByUserId) returns (getProducts);
+  rpc getProductByUserId(RequestProductByUserId) returns(getProducts);
+  rpc getProductByName(RequestProductByName) returns(getProducts);
+  rpc getProductByCategory(RequestProductByCategory) returns(getProducts);
+  rpc getProductByPrices(RequestProductByPrices) returns(getProducts);
+  rpc getProductByDates(RequestProductByDates) returns(getProducts);
+}
+
+message EmptyRequest{
+
+}
+
+message RequestProduct{
+  string name = 1;
+  string category = 2;
+  int32  quantity = 3;
+  double  price = 4;
+  string date = 5;
+  int64 userId = 6;
+  repeated Photos photos = 7;
+}
+
+message ResponseProduct{
+  int64 id = 1;
+  string name = 2;
+  string category = 3;
+  int32 quantity = 4;
+  double price = 5;
+  string date = 6;
+  int64 userId = 8;
+  repeated Photos photos = 7;
+}
+
+message getId{
+  int64 productId = 1;
+}
+
+message UpdateResponseProduct{
+  int64 id = 1;
+  string name = 2;
+  string category = 3;
+  int32 quantity = 4;
+  double price = 5;
+  string date = 6;
+  int64 userId = 8;
+  repeated Photos photos = 7;
+}
+
+message getProducts{
+  repeated ProductObject products = 1;
+}
+
+message ProductObject{
+  int64 id = 1;
+  string name = 2;
+  string category = 3;
+  int32 quantity = 4;
+  double price = 5;
+  string date = 6;
+  repeated Photos photos = 7;
+  int64 userId = 8;
+}
+
+message Photos{
+  int32 order = 1;
+  string url = 2;
+}
+
+  message RequestProductByUserId{
+    int64 userId = 1;
+  }
+
+  message RequestProductByName{
+    string name = 1;
+  }
+
+  message RequestProductByCategory{
+    string category = 1;
+  }
+
+  message RequestProductByPrices{
+    double priceMin = 1;
+    double priceMax = 2;
+  }
+
+  message RequestProductByDates{
+    string dateInitial = 1;
+    string dateFinal = 2;
+  }
