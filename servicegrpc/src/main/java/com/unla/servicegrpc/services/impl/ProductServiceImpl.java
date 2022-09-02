@@ -108,23 +108,28 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
+    public List<Product> findByNotUserId(long userId) {
+        return productRepository.findByUser_IdIsNot(userId);
+    }
+
+    @Override
     public List<Product> findByName(String name){
-        return productRepository.findAllProductsForName(name);
+        return productRepository.findAllProductsByName(name);
     }
 
     @Override
     public List<Product> findByCategory(String category){
-        return productRepository.findAllProductsForCategory(category);
+        return productRepository.findAllProductsByCategory(category);
     }
 
     @Override
-    public List<Product> findByPrice(int priceMin, int priceMax){
-        return productRepository.findAllProductsForPrice(priceMin, priceMax);
+    public List<Product> findByPrice(double priceMin, double priceMax){
+        return productRepository.findAllProductsByPrice(priceMin, priceMax);
     }
 
     @Override
     public List<Product> findByDates(LocalDate dateInitial, LocalDate dateFinal){
-        return productRepository.findAllProductsForDate(dateInitial, dateFinal);
+        return productRepository.findAllProductsByDate(dateInitial, dateFinal);
     }
 
 }

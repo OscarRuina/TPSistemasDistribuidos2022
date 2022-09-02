@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @GrpcService
-public class ProductServiceGrpcImpl extends productGrpc.productImplBase{
+public class ProductServiceGrpcImpl extends productGrpc.productImplBase {
 
     @Autowired
     private IProductService productService;
@@ -41,7 +41,7 @@ public class ProductServiceGrpcImpl extends productGrpc.productImplBase{
         requestProductDTO.setDate(LocalDate.parse(request.getDate()));
         requestProductDTO.setUserId(request.getUserId());
         List<Photo> photosList = new ArrayList<>();
-        for (int k=0;k<request.getPhotosCount();k++){
+        for (int k = 0; k < request.getPhotosCount(); k++) {
             Photo photoToAdd = new Photo();
             photoToAdd.setUrl(request.getPhotosList().get(k).getUrl());
             photoToAdd.setOrden(request.getPhotosList().get(k).getOrder());
@@ -52,7 +52,7 @@ public class ProductServiceGrpcImpl extends productGrpc.productImplBase{
         Product product = productService.create(requestProductDTO);
 
         List<Photos> photos = new ArrayList<>();
-        for (int i = 0;i < product.getPhotos().size();i++){
+        for (int i = 0; i < product.getPhotos().size(); i++) {
             Photos photoGrpcToAdd = Photos.newBuilder()
                     .setOrder(product.getPhotos().get(i).getOrden())
                     .setUrl(product.getPhotos().get(i).getUrl())
@@ -77,7 +77,8 @@ public class ProductServiceGrpcImpl extends productGrpc.productImplBase{
     }
 
     @Override
-    public void update(ResponseProduct request, StreamObserver<UpdateResponseProduct> responseObserver) {
+    public void update(ResponseProduct request,
+            StreamObserver<UpdateResponseProduct> responseObserver) {
         ResponseProductDTO responseProductDTO = new ResponseProductDTO();
         responseProductDTO.setName(request.getName());
         responseProductDTO.setCategory(request.getCategory());
@@ -100,13 +101,11 @@ public class ProductServiceGrpcImpl extends productGrpc.productImplBase{
 
         responseProductDTO.setPhotos(photosActual);
 
-
-
         System.out.println(responseProductDTO.getPhotos());
         Product product = productService.update(responseProductDTO, request.getId());
 
         List<Photos> photos = new ArrayList<>();
-        for (int i = 0;i < product.getPhotos().size();i++){
+        for (int i = 0; i < product.getPhotos().size(); i++) {
             Photos photoGrpcToAdd = Photos.newBuilder()
                     .setOrder(product.getPhotos().get(i).getOrden())
                     .setUrl(product.getPhotos().get(i).getUrl())
@@ -130,22 +129,21 @@ public class ProductServiceGrpcImpl extends productGrpc.productImplBase{
     }
 
     @Override
-    public void getProductByUserId(RequestProductByUserId request, StreamObserver<getProducts> responseObserver) {
+    public void getProductByUserId(RequestProductByUserId request,
+            StreamObserver<getProducts> responseObserver) {
         List<Product> products = productService.findByUserId(request.getUserId());
         List<ProductObject> productGrpcList = new ArrayList<>();
 
-
-        for (int i=0;i<products.size();i++){
+        for (int i = 0; i < products.size(); i++) {
 
             List<Photos> photosData = new ArrayList<>();
-            for (int j=0;j<products.get(i).getPhotos().size();j++){
+            for (int j = 0; j < products.get(i).getPhotos().size(); j++) {
                 Photos photoGrpcToAdd = Photos.newBuilder()
                         .setOrder(products.get(i).getPhotos().get(j).getOrden())
                         .setUrl(products.get(i).getPhotos().get(j).getUrl())
                         .build();
                 photosData.add(photoGrpcToAdd);
             }
-
 
             ProductObject productToAdd = ProductObject.newBuilder()
                     .setId(products.get(i).getId())
@@ -161,6 +159,44 @@ public class ProductServiceGrpcImpl extends productGrpc.productImplBase{
             productGrpcList.add(productToAdd);
         }
 
+        getProducts getProducts = com.unla.servicegrpc.grpc.getProducts.newBuilder()
+                .addAllProducts(productGrpcList)
+                .build();
+
+        responseObserver.onNext(getProducts);
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void getProductsDistinctByUserId(RequestProductByUserId request,
+            StreamObserver<getProducts> responseObserver) {
+        List<Product> products = productService.findByNotUserId(request.getUserId());
+        List<ProductObject> productGrpcList = new ArrayList<>();
+
+        for (int i = 0; i < products.size(); i++) {
+
+            List<Photos> photosData = new ArrayList<>();
+            for (int j = 0; j < products.get(i).getPhotos().size(); j++) {
+                Photos photoGrpcToAdd = Photos.newBuilder()
+                        .setOrder(products.get(i).getPhotos().get(j).getOrden())
+                        .setUrl(products.get(i).getPhotos().get(j).getUrl())
+                        .build();
+                photosData.add(photoGrpcToAdd);
+            }
+
+            ProductObject productToAdd = ProductObject.newBuilder()
+                    .setId(products.get(i).getId())
+                    .setName(products.get(i).getName())
+                    .setCategory(products.get(i).getCategory())
+                    .setPrice(products.get(i).getPrice())
+                    .setQuantity(products.get(i).getQuantity())
+                    .setDate(products.get(i).getDate().toString())
+                    .addAllPhotos(photosData)
+                    .setUserId(products.get(i).getUser().getId())
+                    .build();
+
+            productGrpcList.add(productToAdd);
+        }
 
         getProducts getProducts = com.unla.servicegrpc.grpc.getProducts.newBuilder()
                 .addAllProducts(productGrpcList)
@@ -171,22 +207,160 @@ public class ProductServiceGrpcImpl extends productGrpc.productImplBase{
     }
 
     @Override
-    public void getProductByName(RequestProductByName request, StreamObserver<getProducts> responseObserver) {
+    public void getProductByName(RequestProductByName request,
+            StreamObserver<getProducts> responseObserver) {
+        List<Product> products = productService.findByName(request.getName());
+        List<ProductObject> productGrpcList = new ArrayList<>();
 
+        for (int i = 0; i < products.size(); i++) {
+
+            List<Photos> photosData = new ArrayList<>();
+            for (int j = 0; j < products.get(i).getPhotos().size(); j++) {
+                Photos photoGrpcToAdd = Photos.newBuilder()
+                        .setOrder(products.get(i).getPhotos().get(j).getOrden())
+                        .setUrl(products.get(i).getPhotos().get(j).getUrl())
+                        .build();
+                photosData.add(photoGrpcToAdd);
+            }
+
+            ProductObject productToAdd = ProductObject.newBuilder()
+                    .setId(products.get(i).getId())
+                    .setName(products.get(i).getName())
+                    .setCategory(products.get(i).getCategory())
+                    .setPrice(products.get(i).getPrice())
+                    .setQuantity(products.get(i).getQuantity())
+                    .setDate(products.get(i).getDate().toString())
+                    .addAllPhotos(photosData)
+                    .setUserId(products.get(i).getUser().getId())
+                    .build();
+
+            productGrpcList.add(productToAdd);
+        }
+
+        getProducts getProducts = com.unla.servicegrpc.grpc.getProducts.newBuilder()
+                .addAllProducts(productGrpcList)
+                .build();
+
+        responseObserver.onNext(getProducts);
+        responseObserver.onCompleted();
     }
 
     @Override
-    public void getProductByCategory(RequestProductByCategory request, StreamObserver<getProducts> responseObserver) {
+    public void getProductByCategory(RequestProductByCategory request,
+            StreamObserver<getProducts> responseObserver) {
+        List<Product> products = productService.findByCategory(request.getCategory());
+        List<ProductObject> productGrpcList = new ArrayList<>();
 
+        for (int i = 0; i < products.size(); i++) {
+
+            List<Photos> photosData = new ArrayList<>();
+            for (int j = 0; j < products.get(i).getPhotos().size(); j++) {
+                Photos photoGrpcToAdd = Photos.newBuilder()
+                        .setOrder(products.get(i).getPhotos().get(j).getOrden())
+                        .setUrl(products.get(i).getPhotos().get(j).getUrl())
+                        .build();
+                photosData.add(photoGrpcToAdd);
+            }
+
+            ProductObject productToAdd = ProductObject.newBuilder()
+                    .setId(products.get(i).getId())
+                    .setName(products.get(i).getName())
+                    .setCategory(products.get(i).getCategory())
+                    .setPrice(products.get(i).getPrice())
+                    .setQuantity(products.get(i).getQuantity())
+                    .setDate(products.get(i).getDate().toString())
+                    .addAllPhotos(photosData)
+                    .setUserId(products.get(i).getUser().getId())
+                    .build();
+
+            productGrpcList.add(productToAdd);
+        }
+
+        getProducts getProducts = com.unla.servicegrpc.grpc.getProducts.newBuilder()
+                .addAllProducts(productGrpcList)
+                .build();
+
+        responseObserver.onNext(getProducts);
+        responseObserver.onCompleted();
     }
 
     @Override
-    public void getProductByPrices(RequestProductByPrices request, StreamObserver<getProducts> responseObserver) {
+    public void getProductByPrices(RequestProductByPrices request,
+            StreamObserver<getProducts> responseObserver) {
+        List<Product> products = productService.findByPrice(request.getPriceMin(),
+                request.getPriceMax());
+        List<ProductObject> productGrpcList = new ArrayList<>();
 
+        for (int i = 0; i < products.size(); i++) {
+
+            List<Photos> photosData = new ArrayList<>();
+            for (int j = 0; j < products.get(i).getPhotos().size(); j++) {
+                Photos photoGrpcToAdd = Photos.newBuilder()
+                        .setOrder(products.get(i).getPhotos().get(j).getOrden())
+                        .setUrl(products.get(i).getPhotos().get(j).getUrl())
+                        .build();
+                photosData.add(photoGrpcToAdd);
+            }
+
+            ProductObject productToAdd = ProductObject.newBuilder()
+                    .setId(products.get(i).getId())
+                    .setName(products.get(i).getName())
+                    .setCategory(products.get(i).getCategory())
+                    .setPrice(products.get(i).getPrice())
+                    .setQuantity(products.get(i).getQuantity())
+                    .setDate(products.get(i).getDate().toString())
+                    .addAllPhotos(photosData)
+                    .setUserId(products.get(i).getUser().getId())
+                    .build();
+
+            productGrpcList.add(productToAdd);
+        }
+
+        getProducts getProducts = com.unla.servicegrpc.grpc.getProducts.newBuilder()
+                .addAllProducts(productGrpcList)
+                .build();
+
+        responseObserver.onNext(getProducts);
+        responseObserver.onCompleted();
     }
 
     @Override
-    public void getProductByDates(RequestProductByDates request, StreamObserver<getProducts> responseObserver) {
+    public void getProductByDates(RequestProductByDates request,
+            StreamObserver<getProducts> responseObserver) {
+        List<Product> products = productService.findByDates(
+                LocalDate.parse(request.getDateInitial()), LocalDate.parse(request.getDateFinal()));
+        List<ProductObject> productGrpcList = new ArrayList<>();
 
+        for (int i = 0; i < products.size(); i++) {
+
+            List<Photos> photosData = new ArrayList<>();
+            for (int j = 0; j < products.get(i).getPhotos().size(); j++) {
+                Photos photoGrpcToAdd = Photos.newBuilder()
+                        .setOrder(products.get(i).getPhotos().get(j).getOrden())
+                        .setUrl(products.get(i).getPhotos().get(j).getUrl())
+                        .build();
+                photosData.add(photoGrpcToAdd);
+            }
+
+            ProductObject productToAdd = ProductObject.newBuilder()
+                    .setId(products.get(i).getId())
+                    .setName(products.get(i).getName())
+                    .setCategory(products.get(i).getCategory())
+                    .setPrice(products.get(i).getPrice())
+                    .setQuantity(products.get(i).getQuantity())
+                    .setDate(products.get(i).getDate().toString())
+                    .addAllPhotos(photosData)
+                    .setUserId(products.get(i).getUser().getId())
+                    .build();
+
+            productGrpcList.add(productToAdd);
+        }
+
+        getProducts getProducts = com.unla.servicegrpc.grpc.getProducts.newBuilder()
+                .addAllProducts(productGrpcList)
+                .build();
+
+        responseObserver.onNext(getProducts);
+        responseObserver.onCompleted();
     }
 }

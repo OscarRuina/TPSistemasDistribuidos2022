@@ -6,7 +6,7 @@ option java_package = "com.unla.servicegrpc.grpc";
 service product{
   rpc create(RequestProduct) returns(ResponseProduct);
   rpc update(ResponseProduct) returns(UpdateResponseProduct);
-  rpc getAll(EmptyRequest) returns (getProducts);
+  rpc getProductsDistinctByUserId(RequestProductByUserId) returns (getProducts);
   rpc getProductByUserId(RequestProductByUserId) returns(getProducts);
   rpc getProductByName(RequestProductByName) returns(getProducts);
   rpc getProductByCategory(RequestProductByCategory) returns(getProducts);
@@ -35,8 +35,8 @@ message ResponseProduct{
   int32 quantity = 4;
   double price = 5;
   string date = 6;
-  repeated Photos photos = 7;
   int64 userId = 8;
+  repeated Photos photos = 7;
 }
 
 message getId{
@@ -50,9 +50,8 @@ message UpdateResponseProduct{
   int32 quantity = 4;
   double price = 5;
   string date = 6;
-  repeated Photos photos = 7;
   int64 userId = 8;
-  string message = 9;
+  repeated Photos photos = 7;
 }
 
 message getProducts{

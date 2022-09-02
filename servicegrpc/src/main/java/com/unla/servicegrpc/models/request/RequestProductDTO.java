@@ -40,6 +40,4 @@ public class RequestProductDTO {
 
     private long userId;
 
-    /*faltan 2 datos pero no se si van aca fotos y carrito*/
-
 }

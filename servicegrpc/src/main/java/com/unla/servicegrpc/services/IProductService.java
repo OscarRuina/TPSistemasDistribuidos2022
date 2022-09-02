@@ -18,11 +18,13 @@ public interface IProductService {
 
     List<Product> findByUserId(long userId);
 
+    List<Product> findByNotUserId(long userId);
+
     List<Product> findByName(String name);
 
     List<Product> findByCategory(String category);
 
-    List<Product> findByPrice(int priceMin, int priceMax);
+    List<Product> findByPrice(double priceMin, double priceMax);
 
     List<Product> findByDates(LocalDate dateInitial, LocalDate dateFinal);
 
