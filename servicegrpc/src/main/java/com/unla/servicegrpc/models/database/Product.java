@@ -11,7 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -65,7 +64,9 @@ public class Product {
     @JoinColumn(name = "userId")
     private User user;
 
-    @ManyToMany(mappedBy = "products")
-    private List<ShoppingCart> shoppingCarts;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = {CascadeType.PERSIST,
+            CascadeType.MERGE,
+            CascadeType.DETACH, CascadeType.REFRESH})
+    private List<ShoppingCartProducts> shoppingCartProducts;
 
 }
