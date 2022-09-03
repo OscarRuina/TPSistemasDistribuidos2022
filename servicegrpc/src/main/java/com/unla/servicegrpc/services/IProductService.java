@@ -12,6 +12,7 @@ import java.util.List;
 
 public interface IProductService {
 
+    public Product findById(long productId);
     Product create(RequestProductDTO requestProductDTO);
 
     Product update(ResponseProductDTO requestProductDTO, long productId);

@@ -31,6 +31,7 @@ public class ProductServiceImpl implements IProductService {
     @Autowired
     private PhotoRepository photoRepository;
 
+    @Override
     public Product findById(long productId) {
         return productRepository.findById(productId).orElseThrow(
                 () -> new ObjectNotFoundException(
@@ -40,7 +41,6 @@ public class ProductServiceImpl implements IProductService {
         );
     }
 
-    @Override
     public Product create(RequestProductDTO requestProductDTO){
         Product product = new Product();
         product.setName(requestProductDTO.getName());

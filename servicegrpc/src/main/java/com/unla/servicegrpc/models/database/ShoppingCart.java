@@ -31,7 +31,7 @@ public class ShoppingCart {
     @Setter(AccessLevel.NONE)
     private long id;
 
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
 
