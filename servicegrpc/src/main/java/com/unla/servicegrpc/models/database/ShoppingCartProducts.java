@@ -29,11 +29,11 @@ public class ShoppingCartProducts {
     @Setter(AccessLevel.NONE)
     private long id;
 
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "shoppingCart_Id")
     private ShoppingCart shoppingCart;
 
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "product_Id")
     private Product product;
 

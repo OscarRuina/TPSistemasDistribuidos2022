@@ -1,0 +1,40 @@
+syntax = "proto3";
+import "product.proto";
+
+option java_multiple_files = true;
+option java_package = "com.unla.servicegrpc.grpc";
+
+service shoppingcart{
+  rpc comprar(RequestCart) returns(ResponseCart);
+}
+
+message RequestCart{
+  int64 userCompraId = 1;
+  repeated ItemCart itemCart =2;
+}
+
+message ResponseCart{
+  int64 shoppingCartId = 1;
+  UserCompra userCompra = 2;
+  repeated ProductData itemProduct=3;
+  double precioFinal = 4;
+}
+
+message ItemCart{
+  int64 itemId = 1;
+  int32 itemQuantity = 2;
+}
+
+message UserCompra{
+  int64 userCompraId = 1;
+  string username = 2;
+}
+
+message ProductData{
+  int64 id = 1;
+  string name = 2;
+  string category = 3;
+  int32 itemQuantity = 4;
+  double price = 5;
+
+}
