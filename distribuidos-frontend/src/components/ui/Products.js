@@ -9,7 +9,9 @@ import {
   Input,
   Text,
 } from '@chakra-ui/react';
+
 import React from 'react';
+import { getProduct } from '../../services/productService';
 
 export default function Products() {
   const [product, setProduct] = React.useState([
@@ -26,11 +28,10 @@ export default function Products() {
   const handleChange = e => {
     const { name, value } = e.target;
     setProduct({ ...product, [name]: value });
-    console.log(product);
   };
 
-  const submitForm = () => {
-    console.log(product);
+  const submitForm = async () => {
+    getProduct(product);
   };
 
   return (
@@ -43,7 +44,6 @@ export default function Products() {
       pt="2rem"
       minH="500px"
       w="95%"
-      variant="filled"
     >
       <Flex flexDir={'column'} width="30%" minW="400px" gap="20px">
         <Text as="h1" fontSize="xl" textDecor={'underline'}>

@@ -24,6 +24,12 @@ app.get('/login', async (req, res) => {
   }
 });
 
+app.get('/getProduct', async (req, res) => {
+  let payload = JSON.parse(req.query.payload);
+  console.log(payload);
+  return res.json(payload);
+});
+
 app.post('/create/', async (req, res) => {
   let product = req.params.product;
   return res.json(product);
