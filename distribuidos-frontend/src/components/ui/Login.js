@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 import { v4 as uuid } from 'uuid';
 import { Button, Flex, FormControl, FormLabel, Input } from '@chakra-ui/react';
-import { UserContext } from '../services/UserContext';
-import { logInUser } from '../services/logInUser';
-import { saveInLocalStorage } from '../services/saveUserLocalStorage';
+import { UserContext } from '../../constants/UserContext';
+import { logInUser } from '../../services/userService';
+import { saveInLocalStorage } from '../../services/localStorageService';
 
 export default function Login() {
   const [loginForm, setLoginForm] = React.useState({ user: '', password: '' });
