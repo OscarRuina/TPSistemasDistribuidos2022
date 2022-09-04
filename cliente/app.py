@@ -11,11 +11,6 @@ import wallet_pb2_grpc
 app = Flask(__name__)
 
 
-@app.route("/")
-def home():
-    return "Hello, Flask!"
-
-
 @app.route("/user", methods=["POST"])
 def registerUser():
     name = request.json['name']
@@ -58,13 +53,37 @@ def getUser():
         print(userResponse)
 
     return userResponse
+    
+
+@app.route("/login", methods=["POST"])
+def login():
+    username = request.form['username']
+    password = request.form['password']
+
+    with grpc.insecure_channel('localhost:9090') as channel:
+        stub = user_pb2_grpc.userStub(channel)
+        response = stub.login(user_pb2.LoginRequest(
+            username=username, password=password))
+        print(response)
+
+    return response.__str__()
+
+
+@app.route("/logout", methods=["POST"])
+def logout():
+    with grpc.insecure_channel('localhost:9090') as channel:
+        stub = user_pb2_grpc.userStub(channel)
+        response = stub.login(user_pb2.LogoutResponse())
+        print(response)
+
+    return response.__str__()
 
 
 @app.route("/addWallet", methods=["POST"])
 def addwallet():
     balance = int(request.json['balance'])
     userid = int(request.json['userId'])
-    #registerRequestWallet = wallet_pb2_grpc.wallet Para ver las opciones que tiene.
+    # registerRequestWallet = wallet_pb2_grpc.wallet Para ver las opciones que tiene.
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = wallet_pb2_grpc.walletStub(channel)
@@ -87,7 +106,8 @@ def subtractwallet():
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = wallet_pb2_grpc.walletStub(channel)
-        response = stub.subtract(wallet_pb2.RegisterRequestWallet(balance=balance, userId=userid))
+        response = stub.subtract(wallet_pb2.RegisterRequestWallet(
+            balance=balance, userId=userid))
         print(response)
 
         json = {
@@ -96,6 +116,7 @@ def subtractwallet():
 
     return json
 
+
 if __name__ == '__main__':
-	logging.basicConfig()
-	app.run()
+    logging.basicConfig()
+    app.run()
