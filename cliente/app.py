@@ -11,11 +11,6 @@ import wallet_pb2_grpc
 app = Flask(__name__)
 
 
-@app.route("/")
-def home():
-    return "Hello, Flask!"
-
-
 @app.route("/user", methods=["POST"])
 def registerUser():
     name = request.form['name']
@@ -60,7 +55,7 @@ def login():
 
 
 @app.route("/logout", methods=["POST"])
-def login():
+def logout():
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = user_pb2_grpc.userStub(channel)
         response = stub.login(user_pb2.LogoutResponse())
