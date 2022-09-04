@@ -11,7 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -46,27 +45,28 @@ public class Product {
     @Size(max = 250, message = CommonErrorMessages.MAX_SIZE_MESSAGE)
     private String category;
 
-    @NotBlank(message = CommonErrorMessages.REQUIRED_PARAM_MESSAGE)
+    //@NotBlank(message = CommonErrorMessages.REQUIRED_PARAM_MESSAGE)
     @Column(name = "quantity", nullable = false)
     private int quantity;
 
-    @NotBlank(message = CommonErrorMessages.REQUIRED_PARAM_MESSAGE)
+    //@NotBlank(message = CommonErrorMessages.REQUIRED_PARAM_MESSAGE)
     @Column(name = "price", nullable = false)
     private double price;
 
-    @NotBlank(message = CommonErrorMessages.REQUIRED_PARAM_MESSAGE)
+    //@NotBlank(message = CommonErrorMessages.REQUIRED_PARAM_MESSAGE)
     @Column(name = "date", nullable = false)
     private LocalDate date;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = {CascadeType.PERSIST,
-            CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "product", cascade = CascadeType.ALL)
     private List<Photo> photos;
 
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
 
-    @ManyToMany(mappedBy = "products")
-    private List<ShoppingCart> shoppingCarts;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = {CascadeType.PERSIST,
+            CascadeType.MERGE,
+            CascadeType.DETACH, CascadeType.REFRESH})
+    private List<ShoppingCartProducts> shoppingCartProducts;
 
 }

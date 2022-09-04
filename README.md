@@ -1,8 +1,8 @@
-
 # TPSistemasDistribuidos2022
 
 ## Autores ✒️
   
+*  **Ariel Nicolas Heredia** - *Desarrollo Vista* - [Segneal](https://github.com/Segneal)
 
 *  **Matias Nicolas Rivero** - *Desarrollo Servidor* - [Mathyz1](https://github.com/Mathyz1)
 
@@ -11,6 +11,17 @@
 *  **Gonzalo Cerbelli** - *Desarrollo Cliente* - [Gonzacerbelli](https://github.com/Gonzacerbelli)
 
 *  **Quimey Perez** - *Desarrollo Cliente* - [QuimeyPerez](https://github.com/QuimeyPerez)
+
+  
+## Vista: ReactJs
+
+#### Prerequisitos 
+* Instalado Visual Studio Code. https://code.visualstudio.com/
+* Instalado NodeJS. https://nodejs.org/es/
+* Para ejecutar el servidor de vista se debe ubicar dentro de la carpeta distribuidos-frontend
+* Por medio de terminal ejecutar el comando `$npm install` para instalar las dependencias de node.
+* Ejecutar el comando `$npm start` 
+* La vista se ejecutara en puerto 3000 , http://localhost:3000
 
   
 
@@ -65,3 +76,15 @@ Register new user
   * Register/User: recibe los parametros indicados en el trabajo practico y retorna el usuario creado, ademas se crea la billetera virtual con saldo 0.
   * Add/Wallet: recibe el monto a agregar a la billetera y el id de usuario al que pertenece y retorna la billetera.
   * Subtract/Wallet: recibe el monto a descontar a la billetera y el id de usuario al que pertenece y retorna un mensaje "Operation Success".
+  * Login/User: recibe username and password y retorna lo mismo.
+  * Logout/User: no recibe nada y retorna un mensaje.
+  * Create/Product: 
+  ![create product](https://user-images.githubusercontent.com/31217980/188204343-fbc13ba5-8ce4-497c-ba2d-08f9b066cc4e.PNG)
+  , retorna lo mismo mas el id de producto.
+  * Update/Product: recibe el mismo request que el create mas el id de producto, retorna lo mismo.
+  * GetProductByUserId/Product: recibe el id de usuario y retorna una lista de productos que le pertenecen.
+  * GetProductDistinctByUserId/Product: recibe un id de usuario y retorna una lista de los productos que no le pertenecen. 
+  * Estos dos metodos son importantes, el primero responde a la consigna de listar los productos que le pertenecen a un usuario y el segundo a las compras listando los otros productos. 
+  * Listados/Producto: distintos listados reciben disitntos parametros y retornan las listas filtradas por esos parametros.
+  
+  
