@@ -9,6 +9,6 @@ public interface IWalletService {
 
     Wallet addBalance(long userId,double balance);
 
-    String subtractBalance(long userId, double balance) throws Exception;
+    String subtractBalance(long userId, double balance);
 
 }

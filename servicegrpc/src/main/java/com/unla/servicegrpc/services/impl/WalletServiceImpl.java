@@ -37,12 +37,9 @@ public class WalletServiceImpl implements IWalletService {
     }
 
     @Override
-    public String subtractBalance(long userId, double balance) throws Exception {
+    public String subtractBalance(long userId, double balance)  {
         Wallet wallet = findByUserId(userId);
         double newBalance = wallet.getBalance() - balance;
-        if(newBalance < 0 ){
-            throw new Exception("Operation Failed");
-        }
         wallet.setBalance(balance);
         walletRepository.save(wallet);
         return "Operation Success";
