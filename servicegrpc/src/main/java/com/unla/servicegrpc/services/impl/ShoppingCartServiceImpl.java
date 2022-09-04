@@ -2,6 +2,7 @@ package com.unla.servicegrpc.services.impl;
 
 import com.unla.servicegrpc.models.database.Product;
 import com.unla.servicegrpc.models.database.ShoppingCart;
+import com.unla.servicegrpc.models.database.ShoppingCartProducts;
 import com.unla.servicegrpc.models.database.User;
 import com.unla.servicegrpc.models.request.RequestShoppingCartDTO;
 import com.unla.servicegrpc.repositories.ShoppingCartRepository;
@@ -31,10 +32,12 @@ public class ShoppingCartServiceImpl implements IShoppingCartService {
     public ShoppingCart comprar(RequestShoppingCartDTO requestShoppingCartDTO) {
 
         ShoppingCart shoppingCart = new ShoppingCart();
-        shoppingCart.setShoppingCartProducts(requestShoppingCartDTO.getShoppingCartProducts());
         shoppingCart.setUser(requestShoppingCartDTO.getUser());
         shoppingCart.setFinalPrice(requestShoppingCartDTO.getFinalPrice());
-
+        for (ShoppingCartProducts shoppingCartProducts : requestShoppingCartDTO.getShoppingCartProducts()){
+            shoppingCartProducts.setShoppingCart(shoppingCart);
+        }
+        shoppingCart.setShoppingCartProducts(requestShoppingCartDTO.getShoppingCartProducts());
         return shoppingCartRepository.save(shoppingCart);
 
     }
