@@ -44,6 +44,7 @@ def getUser():
 
     return response.__str__()
 
+
 @app.route("/login", methods=["POST"])
 def login():
     username = request.form['username']
@@ -51,10 +52,12 @@ def login():
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = user_pb2_grpc.userStub(channel)
-        response = stub.login(user_pb2.LoginRequest(username=username, password=password))
+        response = stub.login(user_pb2.LoginRequest(
+            username=username, password=password))
         print(response)
 
     return response.__str__()
+
 
 @app.route("/logout", methods=["POST"])
 def login():
@@ -70,17 +73,18 @@ def login():
 def addwallet():
     balance = int(request.json['balance'])
     userid = int(request.json['userId'])
-    #registerRequestWallet = wallet_pb2_grpc.wallet Para ver las opciones que tiene.
+    # registerRequestWallet = wallet_pb2_grpc.wallet Para ver las opciones que tiene.
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = wallet_pb2_grpc.walletStub(channel)
-        response = stub.add(wallet_pb2.RegisterRequestWallet(balance=balance, userId=userid))
+        response = stub.add(wallet_pb2.RegisterRequestWallet(
+            balance=balance, userId=userid))
 
         #response = json.dumps(response.__str__())
         #response = response.__str__()
         #response = response.replace("\n", ",")
         #iid = response[0:5]
-        #print(iid)
+        # print(iid)
         print(response)
 
     return response.__str__()
@@ -93,11 +97,13 @@ def subtractwallet():
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = wallet_pb2_grpc.walletStub(channel)
-        response = stub.subtract(wallet_pb2.RegisterRequestWallet(balance=balance, userId=userid))
+        response = stub.subtract(wallet_pb2.RegisterRequestWallet(
+            balance=balance, userId=userid))
         print(response)
 
     return response.__str__()
 
+
 if __name__ == '__main__':
-	logging.basicConfig()
-	app.run()
+    logging.basicConfig()
+    app.run()
