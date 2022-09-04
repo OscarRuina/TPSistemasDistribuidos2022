@@ -2,11 +2,14 @@ package com.unla.servicegrpc.services.impl;
 
 import com.unla.servicegrpc.models.database.Photo;
 import com.unla.servicegrpc.models.database.Product;
+import com.unla.servicegrpc.models.database.ShoppingCart;
+import com.unla.servicegrpc.models.database.ShoppingCartProducts;
 import com.unla.servicegrpc.models.database.User;
 import com.unla.servicegrpc.models.request.RequestProductDTO;
 import com.unla.servicegrpc.models.response.ResponseProductDTO;
 import com.unla.servicegrpc.repositories.PhotoRepository;
 import com.unla.servicegrpc.repositories.ProductRepository;
+import com.unla.servicegrpc.repositories.ShoppingCartRepository;
 import com.unla.servicegrpc.repositories.UserRepository;
 import com.unla.servicegrpc.services.IProductService;
 import com.unla.servicegrpc.utils.messages.CommonErrorMessages;
@@ -30,6 +33,9 @@ public class ProductServiceImpl implements IProductService {
 
     @Autowired
     private PhotoRepository photoRepository;
+
+    @Autowired
+    private ShoppingCartRepository shoppingCartRepository;
 
     @Override
     public Product findById(long productId) {
@@ -110,6 +116,18 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public List<Product> findByNotUserId(long userId) {
         return productRepository.findByUser_IdIsNot(userId);
+    }
+
+    @Override
+    public List<Product> findByUserIdPurchase(long userId) {
+        List<ShoppingCart> shoppingCarts = shoppingCartRepository.findByUser_Id(userId);
+        List<Product> products = new ArrayList<>();
+        for(ShoppingCart shoppingCart : shoppingCarts){
+            for(ShoppingCartProducts shoppingCartProducts: shoppingCart.getShoppingCartProducts()){
+                products.add(shoppingCartProducts.getProduct());
+            }
+        }
+        return products;
     }
 
     @Override

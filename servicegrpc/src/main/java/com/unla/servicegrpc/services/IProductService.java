@@ -21,6 +21,8 @@ public interface IProductService {
 
     List<Product> findByNotUserId(long userId);
 
+    List<Product> findByUserIdPurchase(long userId);
+
     List<Product> findByName(String name);
 
     List<Product> findByCategory(String category);
