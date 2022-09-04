@@ -21,9 +21,8 @@ def registerUser():
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = user_pb2_grpc.userStub(channel)
-        user = stub.register(user_pb2.RegisterRequest(name=name, lastname=lastname, email=email, username=username, password=password))
-        print(user)
-
+        user = stub.register(user_pb2.RegisterRequest(
+            name=name, lastname=lastname, email=email, username=username, password=password))
         userResponse = {
             "id": user.__getattribute__("id"),
             "name": user.__getattribute__("name"),
@@ -31,6 +30,7 @@ def registerUser():
             "email": user.__getattribute__("email"),
             "username": user.__getattribute__("username")
         }
+        print(userResponse)
     return userResponse
 
 
@@ -41,7 +41,8 @@ def getUser():
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = user_pb2_grpc.userStub(channel)
-        user = stub.get(user_pb2.GetById(id=userId))    #Me devuelve una estructura
+        # Me devuelve una estructura
+        user = stub.get(user_pb2.GetById(id=userId))
 
         userResponse = {
             "id": user.__getattribute__("id"),
@@ -53,30 +54,37 @@ def getUser():
         print(userResponse)
 
     return userResponse
-    
+
 
 @app.route("/login", methods=["POST"])
 def login():
-    username = request.form['username']
-    password = request.form['password']
+    username = request.json['username']
+    password = request.json['password']
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = user_pb2_grpc.userStub(channel)
-        response = stub.login(user_pb2.LoginRequest(
+        login = stub.login(user_pb2.LoginRequest(
             username=username, password=password))
-        print(response)
+        loginResponse = {
+            "id": login.__getattribute__("id"),
+            "username": login.__getattribute__("username")
+        }
+        print(loginResponse)
 
-    return response.__str__()
+    return loginResponse
 
 
 @app.route("/logout", methods=["POST"])
 def logout():
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = user_pb2_grpc.userStub(channel)
-        response = stub.login(user_pb2.LogoutResponse())
-        print(response)
+        logout = stub.logout(user_pb2.LogoutResponse())
+        logoutResponse = {
+            "message": logout.__getattribute__("message")
+        }
+        print(logoutResponse)
 
-    return response.__str__()
+    return logoutResponse
 
 
 @app.route("/addWallet", methods=["POST"])
@@ -87,7 +95,8 @@ def addwallet():
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = wallet_pb2_grpc.walletStub(channel)
-        response = stub.add(wallet_pb2.RegisterRequestWallet(balance=balance, userId=userid))
+        response = stub.add(wallet_pb2.RegisterRequestWallet(
+            balance=balance, userId=userid))
         print(response)
 
         json = {
