@@ -49,16 +49,6 @@ Para inicializar el cliente en python debemos ubicarnos en la carpeta `/cliente`
 
 La aplicación correrá en localhost bajo el puerto 5000: `http://127.0.0.1:5000/`
 
-#### Métodos
-GET /
-Return hello world
-
-GET /user
-Return user by id
-
-POST /user
-Register new user
-
 ## Servidor Java con Spring
 #### Prerequisitos:
   * Tener instalado el **IDE:** [Intelij](https://www.jetbrains.com/es-es/idea/download/#section=windows) version community. Se puede usar cualquier otro que tenga compatibilidad con el framework **Spring**, pero se recomienda usar el Intelij
