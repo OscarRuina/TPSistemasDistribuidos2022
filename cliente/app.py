@@ -36,8 +36,8 @@ def registerUser():
 
 @app.route("/user", methods=["GET"])
 def getUser():
-    #userId = request.args.get('id')
-    userId = int(request.json['id'])
+    userId = int(request.args.get('id'))
+    #userId = int(request.json['id'])
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = user_pb2_grpc.userStub(channel)
