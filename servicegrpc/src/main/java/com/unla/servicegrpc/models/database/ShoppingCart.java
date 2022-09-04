@@ -38,9 +38,7 @@ public class ShoppingCart {
     @Column(name = "finalPrice")
     private double finalPrice;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "shoppingCart", cascade = {CascadeType.PERSIST,
-            CascadeType.MERGE,
-            CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "shoppingCart", cascade = CascadeType.ALL)
     private List<ShoppingCartProducts> shoppingCartProducts;
 
 }
