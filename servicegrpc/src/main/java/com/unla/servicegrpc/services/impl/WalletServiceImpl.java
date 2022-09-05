@@ -40,7 +40,7 @@ public class WalletServiceImpl implements IWalletService {
     public String subtractBalance(long userId, double balance)  {
         Wallet wallet = findByUserId(userId);
         double newBalance = wallet.getBalance() - balance;
-        wallet.setBalance(balance);
+        wallet.setBalance(newBalance);
         walletRepository.save(wallet);
         return "Operation Success";
     }

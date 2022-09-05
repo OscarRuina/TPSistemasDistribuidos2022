@@ -74,6 +74,13 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
+    public Product updateStock(int newStock, long productId) {
+        Product product = findById(productId);
+        product.setQuantity(newStock);
+        return productRepository.save(product);
+    }
+
+    @Override
     public Product update(ResponseProductDTO responseProductDTO, long productId){
 
         Product product = findById(productId);

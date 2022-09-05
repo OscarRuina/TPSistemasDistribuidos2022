@@ -17,6 +17,8 @@ public interface IProductService {
 
     Product update(ResponseProductDTO requestProductDTO, long productId);
 
+    Product updateStock(int newStock, long productId);
+
     List<Product> findByUserId(long userId);
 
     List<Product> findByNotUserId(long userId);

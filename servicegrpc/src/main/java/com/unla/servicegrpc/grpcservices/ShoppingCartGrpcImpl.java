@@ -35,8 +35,6 @@ public class ShoppingCartGrpcImpl extends shoppingcartGrpc.shoppingcartImplBase 
 
         RequestShoppingCartDTO requestShoppingCartDTO = new RequestShoppingCartDTO();
 
-
-
         requestShoppingCartDTO.setUser(userService.findById(request.getUserCompraId()));
 
         double total = 0;
@@ -61,6 +59,11 @@ public class ShoppingCartGrpcImpl extends shoppingcartGrpc.shoppingcartImplBase 
             walletService.subtractBalance(requestShoppingCartDTO.getUser().getId(), total);
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+        for (int k=0;k<shoppingCartProducts.size();k++){
+            System.out.println(shoppingCart.getShoppingCartProducts().get(k).getProduct().getQuantity());
+            System.out.println(shoppingCart.getShoppingCartProducts().get(k).getProduct().getId());
+            productService.updateStock(shoppingCart.getShoppingCartProducts().get(k).getProduct().getQuantity() ,shoppingCart.getShoppingCartProducts().get(k).getProduct().getId());
         }
         //despues de realizar la compra
 
