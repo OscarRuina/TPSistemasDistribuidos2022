@@ -1,4 +1,3 @@
-
 # TPSistemasDistribuidos2022
 
 ## Autores ✒️
@@ -24,6 +23,8 @@
 * Ejecutar el comando `$npm start` 
 * La vista se ejecutara en puerto 3000 , http://localhost:3000
 
+  
+
 ## Cliente Python
 
 #### Prerequisitos
@@ -47,16 +48,6 @@ python -m grpc_tools.protoc -I../protos --python_out=. --grpc_python_out=. ../pr
 Para inicializar el cliente en python debemos ubicarnos en la carpeta `/cliente` y correr el comando `python -m flask run` para iniciar la API corriendo Flask.
 
 La aplicación correrá en localhost bajo el puerto 5000: `http://127.0.0.1:5000/`
-
-#### Métodos
-GET /
-Return hello world
-
-GET /user
-Return user by id
-
-POST /user
-Register new user
 
 ## Servidor Java con Spring
 #### Prerequisitos:

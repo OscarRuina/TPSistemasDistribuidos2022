@@ -8,7 +8,6 @@ service product{
   rpc update(ResponseProduct) returns(UpdateResponseProduct);
   rpc getProductsDistinctByUserId(RequestProductByUserId) returns (getProducts);
   rpc getProductByUserId(RequestProductByUserId) returns(getProducts);
-  rpc getProductByUserIdPurchase(RequestProductByUserId) returns(getProducts);
   rpc getProductByName(RequestProductByName) returns(getProducts);
   rpc getProductByCategory(RequestProductByCategory) returns(getProducts);
   rpc getProductByPrices(RequestProductByPrices) returns(getProducts);

@@ -12,13 +12,18 @@ import java.util.List;
 
 public interface IProductService {
 
+    public Product findById(long productId);
     Product create(RequestProductDTO requestProductDTO);
 
     Product update(ResponseProductDTO requestProductDTO, long productId);
 
+    Product updateStock(int newStock, long productId);
+
     List<Product> findByUserId(long userId);
 
     List<Product> findByNotUserId(long userId);
+
+    List<Product> findByUserIdPurchase(long userId);
 
     List<Product> findByName(String name);
 

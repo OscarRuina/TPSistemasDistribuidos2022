@@ -1,6 +1,5 @@
 package com.unla.servicegrpc.models.database;
 
-import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,7 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -23,24 +21,26 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "SHOPPINGCART")
-public class ShoppingCart {
+@Table(name = "SHOPPINGCART_PRODUCTS")
+public class ShoppingCartProducts {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
     private long id;
 
-    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId")
-    private User user;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "shoppingCart_Id")
+    private ShoppingCart shoppingCart;
 
-    @Column(name = "finalPrice")
-    private double finalPrice;
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @JoinColumn(name = "product_Id")
+    private Product product;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "shoppingCart", cascade = {CascadeType.PERSIST,
-            CascadeType.MERGE,
-            CascadeType.DETACH, CascadeType.REFRESH})
-    private List<ShoppingCartProducts> shoppingCartProducts;
+    @Column(name = "quantity")
+    private int quantity;
+
+    @Column(name = "subtotal")
+    private double subtotal;
 
 }
