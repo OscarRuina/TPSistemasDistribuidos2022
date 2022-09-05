@@ -7,9 +7,8 @@ import Account from './components/pages/Account';
 import './constants/styles.css';
 import { loadUserFromLocalStorage } from './services/localStorageService';
 import Wallet from './components/pages/Wallet';
-import UserProducts from './components/pages/RegisterProduct';
 import RegisterProduct from './components/pages/RegisterProduct';
-import bgPj from './Assets/bgPj.jpg';
+import UserProducts from './components/pages/UserProducts';
 
 function App() {
   const loadUser = loadUserFromLocalStorage();

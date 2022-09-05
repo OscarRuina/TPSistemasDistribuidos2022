@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { UserContext } from '../../constants/UserContext';
+import { getAllProducts } from '../../services/productService';
 
 export default function UserProducts() {
-  return <div>UserProducts</div>;
+  const { user, setUser } = useContext(UserContext);
+  const [products, setProducts] = useState(getAllProducts(user.id));
 }

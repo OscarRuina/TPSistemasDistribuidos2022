@@ -31,7 +31,7 @@ export default function Account() {
           w="100px"
           h="60px"
           borderRadius="5px"
-          onClick={() => navigate(-1)}
+          onClick={() => navigate('/')}
         >
           Return
         </Button>

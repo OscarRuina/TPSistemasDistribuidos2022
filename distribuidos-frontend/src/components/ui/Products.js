@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 
 import React from 'react';
-import { getProduct } from '../../services/productService';
+import { getAllProducts } from '../../services/productService';
 
 export default function Products() {
   const [product, setProduct] = React.useState([
@@ -31,7 +31,7 @@ export default function Products() {
   };
 
   const submitForm = async () => {
-    getProduct(product);
+    getAllProducts(product);
   };
 
   return (
