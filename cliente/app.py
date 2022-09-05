@@ -173,13 +173,12 @@ def getProduct():
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = product_pb2_grpc.productStub(channel)
-        productList = stub.getProductByUserId(
-            product_pb2.RequestProductByUserId(userId=userId))
-        print(productList)
+        productList = stub.getProductByUserId(product_pb2.RequestProductByUserId(userId=userId))
 
         PRODUCTS = []
 
-        for product in productList:
+        for product in productList.__getattribute__("products"):
+            print(product)
 
             PHOTOS = []
 
@@ -191,12 +190,12 @@ def getProduct():
                 PHOTOS.append(photosJson)
 
             productJson = {
-                "name": product.__getattribute__["name"],
-                "category": product.__getattribute__["category"],
-                "quantity": product.__getattribute__["quantity"],
-                "price": product.__getattribute__["price"],
-                "date": product.__getattribute__["date"],
-                "userId": product.__getattribute__["userId"],
+                "name": product.__getattribute__("name"),
+                "category": product.__getattribute__("category"),
+                "quantity": product.__getattribute__("quantity"),
+                "price": product.__getattribute__("price"),
+                "date": product.__getattribute__("date"),
+                "userId": product.__getattribute__("userId"),
                 "photos": PHOTOS
             }
 
