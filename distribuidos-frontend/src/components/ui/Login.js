@@ -1,13 +1,24 @@
 import React, { useContext } from 'react';
 import { v4 as uuid } from 'uuid';
-import { Button, Flex, FormControl, FormLabel, Input } from '@chakra-ui/react';
+import {
+  Button,
+  Center,
+  Flex,
+  FormControl,
+  FormLabel,
+  Input,
+} from '@chakra-ui/react';
 import { UserContext } from '../../constants/UserContext';
 import { logInUser } from '../../services/userService';
 import { saveInLocalStorage } from '../../services/localStorageService';
 
 export default function Login() {
-  const [loginForm, setLoginForm] = React.useState({ user: '', password: '' });
+  const [loginForm, setLoginForm] = React.useState({
+    username: '',
+    password: '',
+  });
   const { user, setUser } = useContext(UserContext);
+  const [error, setError] = React.useState(false);
 
   const handleInputChange = e => {
     let { name, value } = e.target;
@@ -17,10 +28,14 @@ export default function Login() {
   };
 
   const handleSubmit = async () => {
-    await logInUser().then(data => {
-      setUser(data.user);
-      saveInLocalStorage(data.user);
-    });
+    await logInUser(loginForm.username, loginForm.password)
+      .then(res => {
+        setUser(res.data);
+        saveInLocalStorage(res.data);
+      })
+      .catch(err => {
+        setError(true);
+      });
   };
 
   return (
@@ -28,9 +43,9 @@ export default function Login() {
       <FormLabel>Usuario</FormLabel>
       <Input
         type="text"
-        id={loginForm.id}
-        name="user"
-        value={loginForm.user}
+        id={uuid()}
+        name="username"
+        value={loginForm.username}
         onChange={handleInputChange}
       />
       <FormLabel>Contraseña</FormLabel>
@@ -42,6 +57,9 @@ export default function Login() {
         onChange={handleInputChange}
         required
       />
+      <Center color="red">
+        {error ? <p>Usuario o contraseña incorrectos</p> : null}
+      </Center>
       <Flex pt="2rem" justifyContent="center">
         <Button onClick={handleSubmit}>Ingresar</Button>
       </Flex>

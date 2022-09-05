@@ -20,7 +20,7 @@ app.get('/login', async (req, res) => {
     userCompare.user === user.user &&
     userCompare.password === user.password
   ) {
-    return res.json(user);
+    return res.json({ id: 1, user: user.user });
   }
 });
 

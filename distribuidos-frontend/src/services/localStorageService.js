@@ -1,10 +1,11 @@
 export const loadUserFromLocalStorage = () => {
   if (window.localStorage.getItem('user') !== null) {
-    return window.localStorage.getItem('user');
+    let data = window.localStorage.getItem('user');
+
+    return JSON.parse(data);
   }
 };
 
 export const saveInLocalStorage = user => {
-  console.log(user);
-  window.localStorage.setItem('user', user);
+  window.localStorage.setItem('user', JSON.stringify(user));
 };

@@ -1,4 +1,5 @@
 from flask import Flask, request
+from flask_cors import CORS, cross_origin
 
 import logging
 import json
@@ -12,6 +13,8 @@ import product_pb2
 import product_pb2_grpc
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 
 @app.route("/user", methods=["POST"])

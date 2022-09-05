@@ -26,7 +26,7 @@ export default function Home() {
           <IconButton ml="2rem" aria-label="View" icon={<ViewIcon />} />
         </Link>
         <Text fontFamily={'sans'} fontSize={'1.5rem'}>
-          Bienvenido: {user.toUpperCase()}
+          Bienvenido: {user.username.toUpperCase()}
         </Text>
       </Flex>
       <Center pt="2rem">

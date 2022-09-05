@@ -45,20 +45,23 @@ export default function Products() {
       minH="500px"
       w="95%"
     >
-      <Flex flexDir={'column'} width="30%" minW="400px" gap="20px">
+      <Flex flexDir={'column'} width="30%" minW="400px" gap="2rem">
         <Text as="h1" fontSize="xl" textDecor={'underline'}>
-          filtros
+          Filtros
         </Text>
-        <FormLabel fontSize="1rem">Categoria</FormLabel>
-        <Input
-          value={product.category || ''}
-          variant="outline"
-          name="category"
-          onChange={handleChange}
-        ></Input>
-        <Box></Box>
         <Flex>
-          <FormLabel>Precio minimo</FormLabel>
+          <FormLabel fontSize="1rem">Categoria</FormLabel>
+          <Input
+            value={product.category || ''}
+            variant="outline"
+            name="category"
+            onChange={handleChange}
+          ></Input>
+        </Flex>
+        <Flex gap=".5rem">
+          <FormLabel fontSize="1rem" gap=".25rem" placeItems="center">
+            Precio minimo
+          </FormLabel>
           <Input
             value={product.priceMin || ''}
             name="priceMin"
@@ -66,7 +69,9 @@ export default function Products() {
             type="number"
             onChange={handleChange}
           ></Input>
-          <FormLabel>Precio Maximo</FormLabel>
+          <FormLabel fontSize="1rem" gap=".25rem">
+            Precio Maximo
+          </FormLabel>
           <Input
             name="priceMax"
             value={product.priceMax || ''}
@@ -75,8 +80,10 @@ export default function Products() {
             type="number"
           ></Input>
         </Flex>
-        <Flex>
-          <FormLabel>Fecha desde</FormLabel>
+        <Flex gap=".5rem">
+          <FormLabel fontSize="1rem" gap=".25rem">
+            Fecha desde
+          </FormLabel>
           <Input
             name="dateInitial"
             value={product.dateInitial || ''}
@@ -84,7 +91,9 @@ export default function Products() {
             variant="outline"
             type="date"
           ></Input>
-          <FormLabel>hasta</FormLabel>
+          <FormLabel fontSize="1rem" gap=".25rem">
+            hasta
+          </FormLabel>
           <Input
             value={product.dateFinal || ''}
             name="dateFinal"

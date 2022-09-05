@@ -1,17 +1,37 @@
 import axios from 'axios';
-const URL = 'http://localhost:5500/login';
+const BASE_URL = 'http://127.0.0.1:5000';
 
-export const logInUser = async () => {
-  const resp = await axios.get(URL);
-  return await resp.data;
+export const logInUser = async (username, password) => {
+  return await axios
+    .post(`${BASE_URL}/login`, {
+      username: username,
+      password: password,
+    })
+    .then(res => {
+      console.log(res);
+      return res;
+    });
 };
 
-export const registerUser = loginForm => {
-  let payload = {
-    user: loginForm.user,
-    password: loginForm.password,
-  };
-  console.log(payload);
+export const registerUser = async ({
+  name,
+  lastname,
+  email,
+  username,
+  password,
+}) => {
+  console.log(name);
+  return await axios
+    .post(`${BASE_URL}/user`, {
+      name: name,
+      lastname: lastname,
+      email: email,
+      username: username,
+      password: password,
+    })
+    .then(res => {
+      return res;
+    });
 };
 
 export const disconnect = () => {
