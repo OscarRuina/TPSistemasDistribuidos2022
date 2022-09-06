@@ -177,6 +177,45 @@ def createProduct():
     return productResponse
 
 
+@app.route('/updproduct', methods=['POST'])
+def updateProduct():
+    id = int(request.json["id"])
+    name = request.json["name"]
+    category = request.json["category"]
+    quantity = int(request.json["quantity"])
+    price = float(request.json["price"])
+    date = request.json["date"]
+    userId = int(request.json["userId"])
+    photos = request.json["photos"]
+
+    with grpc.insecure_channel('localhost:9090') as channel:
+        stub = product_pb2_grpc.productStub(channel)
+        product = stub.update(product_pb2.ResponseProduct(id=id, name=name, category=category,
+                              quantity=quantity, price=price, date=date, userId=userId, photos=photos))
+        print(product)
+
+        PHOTOS = []
+
+        for photo in product.__getattribute__("photos"):
+            photosJson = {
+                "url": photo.__getattribute__("url"),
+                "order": photo.__getattribute__("order")
+            }
+            PHOTOS.append(photosJson)
+
+        productResponse = {
+            "name": product.__getattribute__("name"),
+            "category": product.__getattribute__("category"),
+            "quantity": product.__getattribute__("quantity"),
+            "price": product.__getattribute__("price"),
+            "date": product.__getattribute__("date"),
+            "userId": product.__getattribute__("userId"),
+            "photos": PHOTOS
+        }
+
+    return productResponse
+
+
 @app.route('/product', methods=['GET'])
 def getProduct():
     userId = int(request.args.get('userId')) if request.args.get('userId') is not None else None
