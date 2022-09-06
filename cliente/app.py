@@ -10,9 +10,14 @@ import wallet_pb2
 import wallet_pb2_grpc
 import product_pb2
 import product_pb2_grpc
+import shoppingcart_pb2
+import shoppingcart_pb2_grpc
 
 app = Flask(__name__)
 
+#====================================
+#   User
+#====================================
 
 @app.route("/user", methods=["POST"])
 def registerUser():
@@ -89,6 +94,9 @@ def logout():
 
     return logoutResponse
 
+#====================================
+#   Wallet
+#====================================
 
 @app.route("/addWallet", methods=["POST"])
 def addwallet():
@@ -128,6 +136,9 @@ def subtractwallet():
 
     return json
 
+#====================================
+#   Product
+#====================================
 
 @app.route('/product', methods=['POST'])
 def createProduct():
@@ -207,6 +218,46 @@ def getProduct():
 
     return productResponse
 
+#====================================
+#   ShoppingCart
+#====================================
+
+@app.route('/shoppingcart', methods=['POST'])
+def toBuyShoppingCart():
+    userCompraId = request.json["userCompraId"]
+    itemCart = request.json["itemCart"]
+    
+    with grpc.insecure_channel('localhost:9090') as channel:
+        stub = shoppingcart_pb2_grpc.shoppingcartStub(channel)
+        response = stub.comprar(shoppingcart_pb2.RequestCart(userCompraId=userCompraId, itemCart=itemCart))
+        print(response)
+
+        ITEMPRODUCT = []
+
+        for item in response.__getattribute__("itemProduct"):
+            photosJson = {
+                "id": item.__getattribute__("id"),
+                "name": item.__getattribute__("name"),
+                "category": item.__getattribute__("category"),
+                "itemQuantity": item.__getattribute__("itemQuantity"),
+                "price": item.__getattribute__("price")
+            }
+            ITEMPRODUCT.append(photosJson)
+
+        userCompra = response.__getattribute__("userCompra")
+
+        Compra = {
+            "userCompraId": userCompra.__getattribute__("userCompraId"),
+            "username": userCompra.__getattribute__("username")
+        }
+        productResponse = {
+            "itemProduct": ITEMPRODUCT,
+            "shoppingCartId": response.__getattribute__("shoppingCartId"),
+            "precioFinal": response.__getattribute__("precioFinal"),
+            "userCompra": Compra
+        }
+
+    return productResponse
 
 if __name__ == '__main__':
     logging.basicConfig()
