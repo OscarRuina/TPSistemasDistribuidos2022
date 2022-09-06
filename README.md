@@ -39,10 +39,19 @@ python -m pip install grpcio
 python -m pip install grpcio-tools
 ```
 
-Para compilar Proto debemos correr el siguiente comando
+Para compilar Proto debemos correr los siguientes comandos en el root path y mover los archivos generados dentro de la carpeta cliente.
 ```
-python -m grpc_tools.protoc -I../protos --python_out=. --grpc_python_out=. ../protos/helloworld.proto
+python -m grpc_tools.protoc -I./protos --python_out=. --grpc_python_out=. ./protos/product.proto
+python -m grpc_tools.protoc -I./protos --python_out=. --grpc_python_out=. ./protos/user.proto
+python -m grpc_tools.protoc -I./protos --python_out=. --grpc_python_out=. ./protos/wallet.proto
 ```
+Los archivos generados deberían ser:
+* product_pb2_grpc.py
+* product_pb2.py
+* user_pb2_grpc.py
+* user_pb2.py
+* wallet_pb2_grpc.py
+* wallet_pb2.py
 
 #### Iniciar aplicación
 Para inicializar el cliente en python debemos ubicarnos en la carpeta `/cliente` y correr el comando `python -m flask run` para iniciar la API corriendo Flask.
@@ -68,9 +77,8 @@ La aplicación correrá en localhost bajo el puerto 5000: `http://127.0.0.1:5000
   * Subtract/Wallet: recibe el monto a descontar a la billetera y el id de usuario al que pertenece y retorna un mensaje "Operation Success".
   * Login/User: recibe username and password y retorna lo mismo.
   * Logout/User: no recibe nada y retorna un mensaje.
-  * Create/Product: 
+  * Create/Product: retorna lo mismo mas el id de producto.
   ![create product](https://user-images.githubusercontent.com/31217980/188204343-fbc13ba5-8ce4-497c-ba2d-08f9b066cc4e.PNG)
-  , retorna lo mismo mas el id de producto.
   * Update/Product: recibe el mismo request que el create mas el id de producto, retorna lo mismo.
   * GetProductByUserId/Product: recibe el id de usuario y retorna una lista de productos que le pertenecen.
   * GetProductDistinctByUserId/Product: recibe un id de usuario y retorna una lista de los productos que no le pertenecen. 
