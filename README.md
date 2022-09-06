@@ -42,12 +42,15 @@ python -m pip install grpcio-tools
 Para compilar Proto debemos correr los siguientes comandos en el root path y mover los archivos generados dentro de la carpeta cliente.
 ```
 python -m grpc_tools.protoc -I./protos --python_out=. --grpc_python_out=. ./protos/product.proto
+python -m grpc_tools.protoc -I./protos --python_out=. --grpc_python_out=. ./protos/shoppingcart.proto
 python -m grpc_tools.protoc -I./protos --python_out=. --grpc_python_out=. ./protos/user.proto
 python -m grpc_tools.protoc -I./protos --python_out=. --grpc_python_out=. ./protos/wallet.proto
 ```
 Los archivos generados deberían ser:
 * product_pb2_grpc.py
 * product_pb2.py
+* shoppingcart_pb2_grpc.py
+* shoppingcart_pb2.py
 * user_pb2_grpc.py
 * user_pb2.py
 * wallet_pb2_grpc.py
