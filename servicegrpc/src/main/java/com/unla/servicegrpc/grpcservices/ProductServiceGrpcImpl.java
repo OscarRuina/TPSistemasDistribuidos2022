@@ -207,6 +207,45 @@ public class ProductServiceGrpcImpl extends productGrpc.productImplBase {
     }
 
     @Override
+    public void getProductByUserIdPurchase(RequestProductByUserId request,
+            StreamObserver<getProducts> responseObserver) {
+        List<Product> products = productService.findByUserIdPurchase(request.getUserId());
+        List<ProductObject> productGrpcList = new ArrayList<>();
+
+        for (int i = 0; i < products.size(); i++) {
+
+            List<Photos> photosData = new ArrayList<>();
+            for (int j = 0; j < products.get(i).getPhotos().size(); j++) {
+                Photos photoGrpcToAdd = Photos.newBuilder()
+                        .setOrder(products.get(i).getPhotos().get(j).getOrden())
+                        .setUrl(products.get(i).getPhotos().get(j).getUrl())
+                        .build();
+                photosData.add(photoGrpcToAdd);
+            }
+
+            ProductObject productToAdd = ProductObject.newBuilder()
+                    .setId(products.get(i).getId())
+                    .setName(products.get(i).getName())
+                    .setCategory(products.get(i).getCategory())
+                    .setPrice(products.get(i).getPrice())
+                    .setQuantity(products.get(i).getQuantity())
+                    .setDate(products.get(i).getDate().toString())
+                    .addAllPhotos(photosData)
+                    .setUserId(products.get(i).getUser().getId())
+                    .build();
+
+            productGrpcList.add(productToAdd);
+        }
+
+        getProducts getProducts = com.unla.servicegrpc.grpc.getProducts.newBuilder()
+                .addAllProducts(productGrpcList)
+                .build();
+
+        responseObserver.onNext(getProducts);
+        responseObserver.onCompleted();
+    }
+
+    @Override
     public void getProductByName(RequestProductByName request,
             StreamObserver<getProducts> responseObserver) {
         List<Product> products = productService.findByName(request.getName());

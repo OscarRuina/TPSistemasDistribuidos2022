@@ -1,4 +1,5 @@
 from flask import Flask, request
+from flask_cors import CORS, cross_origin
 
 import logging
 
@@ -13,6 +14,8 @@ import shoppingcart_pb2
 import shoppingcart_pb2_grpc
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 #====================================
 #   User
@@ -219,6 +222,7 @@ def updateProduct():
 @app.route('/product', methods=['GET'])
 def getProduct():
     userId = int(request.args.get('userId')) if request.args.get('userId') is not None else None
+    print(userId)
     userIdDistinct = int(request.args.get('userIdDistinct')) if request.args.get('userIdDistinct') is not None else None
     userIdPurchase = int(request.args.get('userIdPurchase')) if request.args.get('userIdPurchase') is not None else None
     name = request.args.get('name') if request.args.get('name') is not None else None

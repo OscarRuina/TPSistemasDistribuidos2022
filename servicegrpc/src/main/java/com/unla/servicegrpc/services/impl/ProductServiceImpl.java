@@ -2,11 +2,14 @@ package com.unla.servicegrpc.services.impl;
 
 import com.unla.servicegrpc.models.database.Photo;
 import com.unla.servicegrpc.models.database.Product;
+import com.unla.servicegrpc.models.database.ShoppingCart;
+import com.unla.servicegrpc.models.database.ShoppingCartProducts;
 import com.unla.servicegrpc.models.database.User;
 import com.unla.servicegrpc.models.request.RequestProductDTO;
 import com.unla.servicegrpc.models.response.ResponseProductDTO;
 import com.unla.servicegrpc.repositories.PhotoRepository;
 import com.unla.servicegrpc.repositories.ProductRepository;
+import com.unla.servicegrpc.repositories.ShoppingCartRepository;
 import com.unla.servicegrpc.repositories.UserRepository;
 import com.unla.servicegrpc.services.IProductService;
 import com.unla.servicegrpc.utils.messages.CommonErrorMessages;
@@ -31,6 +34,10 @@ public class ProductServiceImpl implements IProductService {
     @Autowired
     private PhotoRepository photoRepository;
 
+    @Autowired
+    private ShoppingCartRepository shoppingCartRepository;
+
+    @Override
     public Product findById(long productId) {
         return productRepository.findById(productId).orElseThrow(
                 () -> new ObjectNotFoundException(
@@ -40,7 +47,6 @@ public class ProductServiceImpl implements IProductService {
         );
     }
 
-    @Override
     public Product create(RequestProductDTO requestProductDTO){
         Product product = new Product();
         product.setName(requestProductDTO.getName());
@@ -65,6 +71,13 @@ public class ProductServiceImpl implements IProductService {
 
         return productRepository.save(product);
 
+    }
+
+    @Override
+    public Product updateStock(int newStock, long productId) {
+        Product product = findById(productId);
+        product.setQuantity(newStock);
+        return productRepository.save(product);
     }
 
     @Override
@@ -110,6 +123,18 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public List<Product> findByNotUserId(long userId) {
         return productRepository.findByUser_IdIsNot(userId);
+    }
+
+    @Override
+    public List<Product> findByUserIdPurchase(long userId) {
+        List<ShoppingCart> shoppingCarts = shoppingCartRepository.findByUser_Id(userId);
+        List<Product> products = new ArrayList<>();
+        for(ShoppingCart shoppingCart : shoppingCarts){
+            for(ShoppingCartProducts shoppingCartProducts: shoppingCart.getShoppingCartProducts()){
+                products.add(shoppingCartProducts.getProduct());
+            }
+        }
+        return products;
     }
 
     @Override

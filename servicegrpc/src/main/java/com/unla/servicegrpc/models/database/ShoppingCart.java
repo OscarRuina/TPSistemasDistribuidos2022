@@ -31,14 +31,14 @@ public class ShoppingCart {
     @Setter(AccessLevel.NONE)
     private long id;
 
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
 
     @Column(name = "finalPrice")
     private double finalPrice;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "shoppingCart", cascade = {CascadeType.PERSIST,
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "shoppingCart", cascade = {CascadeType.PERSIST,
             CascadeType.MERGE,
             CascadeType.DETACH, CascadeType.REFRESH})
     private List<ShoppingCartProducts> shoppingCartProducts;

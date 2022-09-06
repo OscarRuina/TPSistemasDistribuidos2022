@@ -44,12 +44,9 @@ public class WalletServiceGrpcImpl extends walletGrpc.walletImplBase{
         double balance = request.getBalance();
         long userId = request.getUserId();
         String message = "Operation Success";
-        try{
-            walletService.subtractBalance(userId,balance);
-        }
-        catch (Exception e){
-            System.out.println(e.getMessage());
-        }
+
+        walletService.subtractBalance(userId,balance);
+
 
         ResponseAPIWallet responseAPIWallet = ResponseAPIWallet.newBuilder()
                 .setMessage(message)
