@@ -1,8 +1,6 @@
-from unicodedata import category, name
 from flask import Flask, request
 
 import logging
-import json
 
 import grpc
 import user_pb2
