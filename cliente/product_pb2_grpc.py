@@ -34,6 +34,11 @@ class productStub(object):
                 request_serializer=product__pb2.RequestProductByUserId.SerializeToString,
                 response_deserializer=product__pb2.getProducts.FromString,
                 )
+        self.getProductByUserIdPurchase = channel.unary_unary(
+                '/product/getProductByUserIdPurchase',
+                request_serializer=product__pb2.RequestProductByUserId.SerializeToString,
+                response_deserializer=product__pb2.getProducts.FromString,
+                )
         self.getProductByName = channel.unary_unary(
                 '/product/getProductByName',
                 request_serializer=product__pb2.RequestProductByName.SerializeToString,
@@ -83,6 +88,12 @@ class productServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def getProductByUserIdPurchase(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def getProductByName(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -127,6 +138,11 @@ def add_productServicer_to_server(servicer, server):
             ),
             'getProductByUserId': grpc.unary_unary_rpc_method_handler(
                     servicer.getProductByUserId,
+                    request_deserializer=product__pb2.RequestProductByUserId.FromString,
+                    response_serializer=product__pb2.getProducts.SerializeToString,
+            ),
+            'getProductByUserIdPurchase': grpc.unary_unary_rpc_method_handler(
+                    servicer.getProductByUserIdPurchase,
                     request_deserializer=product__pb2.RequestProductByUserId.FromString,
                     response_serializer=product__pb2.getProducts.SerializeToString,
             ),
@@ -223,6 +239,23 @@ class product(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/product/getProductByUserId',
+            product__pb2.RequestProductByUserId.SerializeToString,
+            product__pb2.getProducts.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getProductByUserIdPurchase(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/product/getProductByUserIdPurchase',
             product__pb2.RequestProductByUserId.SerializeToString,
             product__pb2.getProducts.FromString,
             options, channel_credentials,
