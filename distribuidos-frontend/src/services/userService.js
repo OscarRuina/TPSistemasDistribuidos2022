@@ -8,7 +8,6 @@ export const logInUser = async (username, password) => {
       password: password,
     })
     .then(res => {
-      console.log(res);
       return res;
     });
 };
@@ -20,7 +19,6 @@ export const registerUser = async ({
   username,
   password,
 }) => {
-  console.log(name);
   return await axios
     .post(`${BASE_URL}/user`, {
       name: name,

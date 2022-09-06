@@ -9,6 +9,7 @@ import { loadUserFromLocalStorage } from './services/localStorageService';
 import Wallet from './components/pages/Wallet';
 import RegisterProduct from './components/pages/RegisterProduct';
 import UserProducts from './components/pages/UserProducts';
+import UserPurchase from './components/pages/UserPurchase';
 
 function App() {
   const loadUser = loadUserFromLocalStorage();
@@ -24,6 +25,7 @@ function App() {
             <Route path="/wallet" element={<Wallet />} />
             <Route path="/products" element={<RegisterProduct />} />
             <Route path="/userProducts" element={<UserProducts />} />
+            <Route path="/userPurchase" element={<UserPurchase />} />
           </Routes>
         </UserContext.Provider>
       </Box>

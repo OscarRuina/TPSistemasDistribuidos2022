@@ -183,6 +183,7 @@ def createProduct():
 @app.route('/product', methods=['GET'])
 def getProduct():
     userId = int(request.args.get('userId')) if request.args.get('userId') is not None else None
+    print(userId)
     userIdDistinct = int(request.args.get('userIdDistinct')) if request.args.get('userIdDistinct') is not None else None
     userIdPurchase = int(request.args.get('userIdPurchase')) if request.args.get('userIdPurchase') is not None else None
     name = request.args.get('name') if request.args.get('name') is not None else None

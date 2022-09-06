@@ -7,20 +7,14 @@ import {
   UnorderedList,
 } from '@chakra-ui/react';
 import React, { useContext } from 'react';
-import { getBalance } from '../../services/walletService';
 import DCButton from '../ui/DCButton';
-import { useMutation, useQuery } from 'react-query';
 import { UserContext } from '../../constants/UserContext';
 import { Link, useNavigate } from 'react-router-dom';
 
 export default function Account() {
   const { user, setUser } = useContext(UserContext);
-  const { data, isLoading, isError } = useQuery('balance', async () =>
-    getBalance(user)
-  );
   const navigate = useNavigate();
 
-  const addBalance = () => {};
   return (
     <Box w="100%" h="100%">
       <DCButton />
@@ -28,10 +22,12 @@ export default function Account() {
         <Button
           position="absolute"
           right="2rem"
+          top="2rem"
           w="100px"
           h="60px"
           borderRadius="5px"
           onClick={() => navigate('/')}
+          zIndex="99"
         >
           Return
         </Button>
@@ -57,26 +53,45 @@ export default function Account() {
       >
         <UnorderedList
           listStyleType="none"
-          gap="5rem"
+          gap="3rem"
           display="flex"
           textAlign="center"
           placeItems="center"
           justifyContent="center"
-          fontSize="2rem"
+          fontSize="1.5rem"
           pt="1.5rem"
         >
           <Link to="/wallet">
             <ListItem
-              __hover={{ bgColor: 'blue.800', transform: 'scale(1.2)' }}
+              transition="all 0.2s ease-in-out"
+              _hover={{ transform: 'scale(1.3)' }}
             >
               Wallet
             </ListItem>
           </Link>
           <Link to="/products">
-            <ListItem __hover={{ bgColor: 'blue.800' }}>Productos</ListItem>
+            <ListItem
+              transition="all 0.2s ease-in-out"
+              _hover={{ transform: 'scale(1.3)' }}
+            >
+              Productos
+            </ListItem>
           </Link>
           <Link to="/userProducts">
-            <ListItem __hover={{ bgColor: 'blue.800' }}>My Products</ListItem>
+            <ListItem
+              transition="all 0.2s ease-in-out"
+              _hover={{ transform: 'scale(1.3)' }}
+            >
+              My Products
+            </ListItem>
+          </Link>
+          <Link to="/userPurchase">
+            <ListItem
+              transition="all 0.2s ease-in-out"
+              _hover={{ transform: 'scale(1.3)' }}
+            >
+              Purchase Records
+            </ListItem>
           </Link>
         </UnorderedList>
       </Box>

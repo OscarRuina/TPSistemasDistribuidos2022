@@ -40,7 +40,6 @@ export default function RegisterProduct() {
   const submitForm = async () => {
     await createProduct(registerProductForm)
       .then(res => {
-        console.log(res);
         setIsSuccess(true);
         setIsError(false);
         setRegisterProductForm(defaultOpts);
