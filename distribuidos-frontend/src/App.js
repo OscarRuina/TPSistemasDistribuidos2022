@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import { UserContext } from './components/services/UserContext';
+import { UserContext } from './constants/UserContext';
 import { Box } from '@chakra-ui/react';
 import Index from './components/pages/Index';
 import Account from './components/pages/Account';
 import './constants/styles.css';
-import { loadUserFromLocalStorage } from './components/services/loadUserFromLocalStorage';
+import { loadUserFromLocalStorage } from './services/localStorageService';
+import Wallet from './components/pages/Wallet';
+import RegisterProduct from './components/pages/RegisterProduct';
+import UserProducts from './components/pages/UserProducts';
+import UserPurchase from './components/pages/UserPurchase';
 
 function App() {
   const loadUser = loadUserFromLocalStorage();
@@ -13,11 +17,15 @@ function App() {
 
   return (
     <Router>
-      <Box className="App" position="relative">
+      <Box className="App" fontFamily="sans-serif" position="relative">
         <UserContext.Provider value={{ user, setUser }}>
           <Routes>
-            <Route path="/" exact element={<Index />} />
-            <Route path="/account" exact element={<Account />} />
+            <Route exact path="/" element={<Index />} />
+            <Route path="/account" element={<Account />} />
+            <Route path="/wallet" element={<Wallet />} />
+            <Route path="/products" element={<RegisterProduct />} />
+            <Route path="/userProducts" element={<UserProducts />} />
+            <Route path="/userPurchase" element={<UserPurchase />} />
           </Routes>
         </UserContext.Provider>
       </Box>

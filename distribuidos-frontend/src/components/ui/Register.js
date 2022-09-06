@@ -9,16 +9,20 @@ import {
   Text,
 } from '@chakra-ui/react';
 import '../../constants/styles.css';
-import { registerUser } from '../services/registerUser';
+import { registerUser } from '../../services/userService';
 
-export default function Register() {
+export default function Register({ onClose }) {
   const [registerForm, setRegisterForm] = React.useState({
-    user: '',
+    name: '',
+    lastname: '',
+    email: '',
+    username: '',
     password: '',
     repeatPassword: '',
   });
 
   const [error, setError] = React.useState(false);
+  const [registerError, setRegisterError] = React.useState(false);
 
   const handleInputChange = e => {
     let { name, value } = e.target;
@@ -27,28 +31,62 @@ export default function Register() {
     });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (registerForm.password !== registerForm.repeatPassword) {
       setError(prev => true);
       return false;
     }
-    setError(false);
-    registerUser(registerForm);
+    await registerUser(registerForm)
+      .then(res => {
+        onClose();
+        return res.data;
+      })
+      .catch(err => {
+        setError(false);
+        setRegisterError(true);
+      });
   };
 
   return (
     <>
       <FormControl mt="2rem">
-        <FormLabel>Email</FormLabel>
+        <FormLabel>Name</FormLabel>
         <Input
           id={uuid()}
           type="text"
-          name="user"
-          value={registerForm.user}
+          name="name"
+          value={registerForm.name}
           onChange={handleInputChange}
           required
         />
-        <FormLabel>Contraseña</FormLabel>
+        <FormLabel>Last Name</FormLabel>
+        <Input
+          id={uuid()}
+          type="text"
+          name="lastname"
+          value={registerForm.lastname}
+          onChange={handleInputChange}
+          required
+        />
+        <FormLabel>Email</FormLabel>
+        <Input
+          id={uuid()}
+          type="email"
+          name="email"
+          value={registerForm.email}
+          onChange={handleInputChange}
+          required
+        />
+        <FormLabel>Username</FormLabel>
+        <Input
+          id={uuid()}
+          type="text"
+          name="username"
+          value={registerForm.username}
+          onChange={handleInputChange}
+          required
+        />
+        <FormLabel>Password</FormLabel>
         <Input
           id={uuid()}
           type="password"
@@ -57,7 +95,7 @@ export default function Register() {
           onChange={handleInputChange}
           required
         />
-        <FormLabel>Repetir Contraseña</FormLabel>
+        <FormLabel>Repeat Password</FormLabel>
         <Input
           id={uuid()}
           type="password"
@@ -68,6 +106,9 @@ export default function Register() {
         />
         {error && (
           <Text className="error ">passwords doesnt match, try again</Text>
+        )}
+        {registerError && (
+          <Text className="error ">username already exists, try again</Text>
         )}
         <Flex pt="2rem" justifyContent="center">
           <Button onClick={handleSubmit}>Registrar</Button>
