@@ -125,7 +125,9 @@ export default function Products() {
         <FormLabel textDecor={'underline'}>Product</FormLabel>
         <Flex flexDir="row" justifyContent="space-between" gap="20px">
           <Input
+            p="1rem"
             name="name"
+            borderRadius="15px"
             value={productForm.name || ''}
             onChange={handleChange}
             variant="flushed"

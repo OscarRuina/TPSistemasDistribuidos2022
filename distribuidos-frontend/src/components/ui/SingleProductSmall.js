@@ -7,7 +7,7 @@ export default function SingleProductSmall({ product }) {
     <Flex
       minW="200px"
       p=".5rem"
-      width="60%"
+      width="90%"
       h="100px"
       fontSize=".75rem"
       borderRadius="25px"
@@ -18,13 +18,13 @@ export default function SingleProductSmall({ product }) {
       position="relative"
     >
       <HStack
-        gap="2rem"
+        gap="1rem"
         placeItems="center"
         justifyContent="center"
         textAlign="center"
         display="flex"
       >
-        <Grid w="100%" templateColumns="repeat(2 ,1fr)" gap="1rem">
+        <Grid w="100%" templateColumns="repeat(2 ,1fr)" gap=".25rem">
           <Text>Product: {product.name.toUpperCase()}</Text>
           <Text>Category: {product.category.toUpperCase()}</Text>
           <Text>Price: {product.price}</Text>
@@ -33,11 +33,13 @@ export default function SingleProductSmall({ product }) {
         </Grid>
         <Box
           right="0"
-          w="128px"
-          position="absolute"
           overflow="hidden"
           borderRadius="25px"
           objectFit="cover"
+          placeSelf="center"
+          bgColor="red.500"
+          w="100%"
+          h="100%"
         >
           <Image src={bread} alt=""></Image>
         </Box>
