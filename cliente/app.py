@@ -2,7 +2,6 @@ from flask import Flask, request
 from flask_cors import CORS, cross_origin
 
 import logging
-import json
 
 import grpc
 import user_pb2
@@ -11,11 +10,16 @@ import wallet_pb2
 import wallet_pb2_grpc
 import product_pb2
 import product_pb2_grpc
+import shoppingcart_pb2
+import shoppingcart_pb2_grpc
 
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
+#====================================
+#   User
+#====================================
 
 @app.route("/user", methods=["POST"])
 def registerUser():
@@ -92,6 +96,9 @@ def logout():
 
     return logoutResponse
 
+#====================================
+#   Wallet
+#====================================
 
 @app.route("/addWallet", methods=["POST"])
 def addwallet():
@@ -131,6 +138,9 @@ def subtractwallet():
 
     return json
 
+#====================================
+#   Product
+#====================================
 
 @app.route('/product', methods=['POST'])
 def createProduct():
@@ -172,11 +182,34 @@ def createProduct():
 
 @app.route('/product', methods=['GET'])
 def getProduct():
-    userId = int(request.args.get('userId'))
+    userId = int(request.args.get('userId')) if request.args.get('userId') is not None else None
+    userIdDistinct = int(request.args.get('userIdDistinct')) if request.args.get('userIdDistinct') is not None else None
+    userIdPurchase = int(request.args.get('userIdPurchase')) if request.args.get('userIdPurchase') is not None else None
+    name = request.args.get('name') if request.args.get('name') is not None else None
+    category = request.args.get('category') if request.args.get('category') is not None else None
+    priceMax = float(request.args.get('priceMax')) if request.args.get('priceMax') is not None else None
+    priceMin = float(request.args.get('priceMin')) if request.args.get('priceMin') is not None else None
+    dateInitial = request.args.get('dateInitial') if request.args.get('dateInitial') is not None else None
+    dateFinal = request.args.get('dateFinal') if request.args.get('dateFinal') is not None else None
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = product_pb2_grpc.productStub(channel)
-        productList = stub.getProductByUserId(product_pb2.RequestProductByUserId(userId=userId))
+        
+        if userId is not None:
+            productList = stub.getProductByUserId(product_pb2.RequestProductByUserId(userId=userId))
+        elif userIdDistinct is not None:
+            productList = stub.getProductsDistinctByUserId(product_pb2.RequestProductByUserId(userId=userIdDistinct))
+        elif userIdPurchase is not None:
+            productList = stub.getProductByUserIdPurchase(product_pb2.RequestProductByUserId(userId=userIdPurchase))
+        elif name is not None:
+            productList = stub.getProductByName(product_pb2.RequestProductByName(name=name))
+        elif category is not None:
+            productList = stub.getProductByCategory(product_pb2.RequestProductByCategory(category=category))
+        elif priceMax is not None and priceMin is not None:
+            productList = stub.getProductByPrices(product_pb2.RequestProductByPrices(priceMin=priceMin, priceMax=priceMax))
+        elif dateInitial is not None and dateFinal is not None:
+            productList = stub.getProductByDates(product_pb2.RequestProductByDates(dateInitial=dateInitial, dateFinal=dateFinal))
+
 
         PRODUCTS = []
 
@@ -210,6 +243,46 @@ def getProduct():
 
     return productResponse
 
+#====================================
+#   ShoppingCart
+#====================================
+
+@app.route('/shoppingcart', methods=['POST'])
+def toBuyShoppingCart():
+    userCompraId = request.json["userCompraId"]
+    itemCart = request.json["itemCart"]
+    
+    with grpc.insecure_channel('localhost:9090') as channel:
+        stub = shoppingcart_pb2_grpc.shoppingcartStub(channel)
+        response = stub.comprar(shoppingcart_pb2.RequestCart(userCompraId=userCompraId, itemCart=itemCart))
+        print(response)
+
+        ITEMPRODUCT = []
+
+        for item in response.__getattribute__("itemProduct"):
+            photosJson = {
+                "id": item.__getattribute__("id"),
+                "name": item.__getattribute__("name"),
+                "category": item.__getattribute__("category"),
+                "itemQuantity": item.__getattribute__("itemQuantity"),
+                "price": item.__getattribute__("price")
+            }
+            ITEMPRODUCT.append(photosJson)
+
+        userCompra = response.__getattribute__("userCompra")
+
+        Compra = {
+            "userCompraId": userCompra.__getattribute__("userCompraId"),
+            "username": userCompra.__getattribute__("username")
+        }
+        productResponse = {
+            "itemProduct": ITEMPRODUCT,
+            "shoppingCartId": response.__getattribute__("shoppingCartId"),
+            "precioFinal": response.__getattribute__("precioFinal"),
+            "userCompra": Compra
+        }
+
+    return productResponse
 
 if __name__ == '__main__':
     logging.basicConfig()
