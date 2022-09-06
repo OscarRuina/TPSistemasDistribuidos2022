@@ -9,8 +9,6 @@ export default function Index() {
 
   return (
     <>
-      <ColorModeSwitcher />
-
       {user && <Home user={user} />}
       {!user && <NavBar user={user} />}
     </>

@@ -13,7 +13,7 @@ import { ViewIcon } from '@chakra-ui/icons';
 
 import { UserContext } from '../../constants/UserContext';
 import DCButton from '../ui/DCButton';
-import Products from '../ui/Products';
+import Products from './Products';
 
 export default function Home() {
   const { user, setUser } = useContext(UserContext);

@@ -24,13 +24,13 @@ export const getAllProducts = async userId => {
     });
 };
 
-export const getAllProductsDiferent = async userIdDistinct => {
+export const getAllProductsDiferent = async productForm => {
   return await axios
     .get(`${BASE_URL}/product`, {
-      params: { userIdDistinct: userIdDistinct },
+      params: { ...productForm },
     })
     .then(res => {
-      return res;
+      return res.data;
     })
     .catch(err => {
       return err;

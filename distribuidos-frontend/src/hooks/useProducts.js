@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const BASE_URL = 'http://127.0.0.1:5000';
 
-export default function useGetProducts(userId) {
+export default function useProducts(userId) {
   const [products, setProduct] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(false);

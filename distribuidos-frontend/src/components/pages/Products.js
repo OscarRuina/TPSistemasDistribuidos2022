@@ -8,13 +8,19 @@ import {
   IconButton,
   Input,
   Text,
+  VStack,
 } from '@chakra-ui/react';
-
-import React from 'react';
-import { getAllProducts } from '../../services/productService';
+import { UserContext } from '../../constants/UserContext';
+import React, { useContext } from 'react';
+import { getAllProductsDiferent } from '../../services/productService';
+import SingleProduct from '../ui/SingleProduct';
+import SingleProductSmall from '../ui/SingleProductSmall';
 
 export default function Products() {
-  const [product, setProduct] = React.useState([
+  const { user, setUser } = useContext(UserContext);
+  const [products, setProducts] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
+  const [productForm, setProductForm] = React.useState([
     {
       name: '',
       category: '',
@@ -22,16 +28,28 @@ export default function Products() {
       priceMax: '',
       dateInitial: '',
       dateFinal: '',
+      userIdDistinct: user.id,
     },
   ]);
 
   const handleChange = e => {
     const { name, value } = e.target;
-    setProduct({ ...product, [name]: value });
+    setProductForm({ ...productForm, [name]: value });
   };
 
   const submitForm = async () => {
-    getAllProducts(product);
+    setLoading(true);
+    await getAllProductsDiferent(productForm).then(res => {
+      setProducts(res.products);
+      setLoading(false);
+    });
+    console.log(products);
+  };
+
+  const showProducts = e => {
+    return products.map((product, idx) => {
+      return <SingleProductSmall key={idx} product={product} />;
+    });
   };
 
   return (
@@ -52,7 +70,7 @@ export default function Products() {
         <Flex>
           <FormLabel fontSize="1rem">Categoria</FormLabel>
           <Input
-            value={product.category || ''}
+            value={productForm.category || ''}
             variant="outline"
             name="category"
             onChange={handleChange}
@@ -63,7 +81,7 @@ export default function Products() {
             Precio minimo
           </FormLabel>
           <Input
-            value={product.priceMin || ''}
+            value={productForm.priceMin || ''}
             name="priceMin"
             variant="outline"
             type="number"
@@ -74,7 +92,7 @@ export default function Products() {
           </FormLabel>
           <Input
             name="priceMax"
-            value={product.priceMax || ''}
+            value={productForm.priceMax || ''}
             onChange={handleChange}
             variant="outline"
             type="number"
@@ -86,7 +104,7 @@ export default function Products() {
           </FormLabel>
           <Input
             name="dateInitial"
-            value={product.dateInitial || ''}
+            value={productForm.dateInitial || ''}
             onChange={handleChange}
             variant="outline"
             type="date"
@@ -95,7 +113,7 @@ export default function Products() {
             hasta
           </FormLabel>
           <Input
-            value={product.dateFinal || ''}
+            value={productForm.dateFinal || ''}
             name="dateFinal"
             variant="outline"
             type="date"
@@ -104,18 +122,25 @@ export default function Products() {
         </Flex>
       </Flex>
       <Box width="70%" paddingInline={'2rem'}>
-        <FormLabel textDecor={'underline'}>Producto</FormLabel>
+        <FormLabel textDecor={'underline'}>Product</FormLabel>
         <Flex flexDir="row" justifyContent="space-between" gap="20px">
           <Input
             name="name"
-            value={product.name || ''}
+            value={productForm.name || ''}
             onChange={handleChange}
             variant="flushed"
             type="email"
           />
           <IconButton icon={<SearchIcon />} onClick={submitForm}></IconButton>
         </Flex>
-        <FormHelperText>Ingresa lo que estás buscando</FormHelperText>
+        <FormHelperText>what are you looking for ? </FormHelperText>
+        {products && (
+          <Box>
+            <VStack w="100%" p="1rem" minH="500px" gap="1rem" overflow="scroll">
+              {showProducts()}
+            </VStack>
+          </Box>
+        )}
       </Box>
     </FormControl>
   );
