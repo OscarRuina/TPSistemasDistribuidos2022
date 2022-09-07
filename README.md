@@ -39,6 +39,11 @@ python -m pip install grpcio
 python -m pip install grpcio-tools
 ```
 
+Tambien es necesario instalar el cors, para no tener problemas con el cross-origin
+```
+pip install flask-cors
+```
+
 Para compilar Proto debemos correr los siguientes comandos en el root path y mover los archivos generados dentro de la carpeta cliente.
 ```
 python -m grpc_tools.protoc -I./protos --python_out=. --grpc_python_out=. ./protos/product.proto
