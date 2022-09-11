@@ -41,6 +41,7 @@ public class UserServiceImpl implements IUserService {
         user.setEmail(requestUserDTO.getEmail());
         user.setUsername(requestUserDTO.getUsername());
         user.setPassword(requestUserDTO.getPassword());
+        user.setRole(requestUserDTO.getRole().toUpperCase());
         Wallet wallet = new Wallet();
         wallet.setBalance(0);
         wallet.setUser(user);

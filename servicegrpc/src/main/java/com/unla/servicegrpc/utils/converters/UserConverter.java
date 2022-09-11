@@ -15,6 +15,7 @@ public final class UserConverter {
         responseUserDTO.setLastname(user.getLastname());
         responseUserDTO.setEmail(user.getEmail());
         responseUserDTO.setUsername(user.getUsername());
+        responseUserDTO.setRole(user.getRole());
         return responseUserDTO;
     }
 
@@ -22,6 +23,7 @@ public final class UserConverter {
         ResponseLoginDTO responseLoginDTO = new ResponseLoginDTO();
         responseLoginDTO.setId(user.getId());
         responseLoginDTO.setUsername(user.getUsername());
+        responseLoginDTO.setRole(user.getRole());
         return responseLoginDTO;
     }
 

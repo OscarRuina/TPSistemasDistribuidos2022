@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\nuser.proto\"\x07\n\x05\x45mpty\"d\n\x0fRegisterRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x10\n\x08lastname\x18\x02 \x01(\t\x12\r\n\x05\x65mail\x18\x03 \x01(\t\x12\x10\n\x08username\x18\x04 \x01(\t\x12\x10\n\x08password\x18\x05 \x01(\t\"_\n\x10RegisterResponse\x12\n\n\x02id\x18\x01 \x01(\x03\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x10\n\x08lastname\x18\x03 \x01(\t\x12\r\n\x05\x65mail\x18\x04 \x01(\t\x12\x10\n\x08username\x18\x05 \x01(\t\"\x15\n\x07GetById\x12\n\n\x02id\x18\x01 \x01(\x03\"2\n\x0cLoginRequest\x12\x10\n\x08username\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"-\n\rLoginResponse\x12\n\n\x02id\x18\x01 \x01(\x03\x12\x10\n\x08username\x18\x02 \x01(\t\"!\n\x0eLogoutResponse\x12\x0f\n\x07message\x18\x01 \x01(\t2\xa6\x01\n\x04user\x12/\n\x08register\x12\x10.RegisterRequest\x1a\x11.RegisterResponse\x12\"\n\x03get\x12\x08.GetById\x1a\x11.RegisterResponse\x12&\n\x05login\x12\r.LoginRequest\x1a\x0e.LoginResponse\x12!\n\x06logout\x12\x06.Empty\x1a\x0f.LogoutResponseB\x1d\n\x19\x63om.unla.servicegrpc.grpcP\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\nuser.proto\"\x07\n\x05\x45mpty\"r\n\x0fRegisterRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x10\n\x08lastname\x18\x02 \x01(\t\x12\r\n\x05\x65mail\x18\x03 \x01(\t\x12\x10\n\x08username\x18\x04 \x01(\t\x12\x10\n\x08password\x18\x05 \x01(\t\x12\x0c\n\x04role\x18\x06 \x01(\t\"m\n\x10RegisterResponse\x12\n\n\x02id\x18\x01 \x01(\x03\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x10\n\x08lastname\x18\x03 \x01(\t\x12\r\n\x05\x65mail\x18\x04 \x01(\t\x12\x10\n\x08username\x18\x05 \x01(\t\x12\x0c\n\x04role\x18\x06 \x01(\t\"\x15\n\x07GetById\x12\n\n\x02id\x18\x01 \x01(\x03\"2\n\x0cLoginRequest\x12\x10\n\x08username\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\";\n\rLoginResponse\x12\n\n\x02id\x18\x01 \x01(\x03\x12\x10\n\x08username\x18\x02 \x01(\t\x12\x0c\n\x04role\x18\x03 \x01(\t\"!\n\x0eLogoutResponse\x12\x0f\n\x07message\x18\x01 \x01(\t2\xa6\x01\n\x04user\x12/\n\x08register\x12\x10.RegisterRequest\x1a\x11.RegisterResponse\x12\"\n\x03get\x12\x08.GetById\x1a\x11.RegisterResponse\x12&\n\x05login\x12\r.LoginRequest\x1a\x0e.LoginResponse\x12!\n\x06logout\x12\x06.Empty\x1a\x0f.LogoutResponseB\x1d\n\x19\x63om.unla.servicegrpc.grpcP\x01\x62\x06proto3')
 
 
 
@@ -82,17 +82,17 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _EMPTY._serialized_start=14
   _EMPTY._serialized_end=21
   _REGISTERREQUEST._serialized_start=23
-  _REGISTERREQUEST._serialized_end=123
-  _REGISTERRESPONSE._serialized_start=125
-  _REGISTERRESPONSE._serialized_end=220
-  _GETBYID._serialized_start=222
-  _GETBYID._serialized_end=243
-  _LOGINREQUEST._serialized_start=245
-  _LOGINREQUEST._serialized_end=295
-  _LOGINRESPONSE._serialized_start=297
-  _LOGINRESPONSE._serialized_end=342
-  _LOGOUTRESPONSE._serialized_start=344
-  _LOGOUTRESPONSE._serialized_end=377
-  _USER._serialized_start=380
-  _USER._serialized_end=546
+  _REGISTERREQUEST._serialized_end=137
+  _REGISTERRESPONSE._serialized_start=139
+  _REGISTERRESPONSE._serialized_end=248
+  _GETBYID._serialized_start=250
+  _GETBYID._serialized_end=271
+  _LOGINREQUEST._serialized_start=273
+  _LOGINREQUEST._serialized_end=323
+  _LOGINRESPONSE._serialized_start=325
+  _LOGINRESPONSE._serialized_end=384
+  _LOGOUTRESPONSE._serialized_start=386
+  _LOGOUTRESPONSE._serialized_end=419
+  _USER._serialized_start=422
+  _USER._serialized_end=588
 # @@protoc_insertion_point(module_scope)

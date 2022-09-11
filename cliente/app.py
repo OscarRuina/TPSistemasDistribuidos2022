@@ -28,17 +28,19 @@ def registerUser():
     email = request.json['email']
     username = request.json['username']
     password = request.json['password']
+    role = request.json['role']
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = user_pb2_grpc.userStub(channel)
         user = stub.register(user_pb2.RegisterRequest(
-            name=name, lastname=lastname, email=email, username=username, password=password))
+            name=name, lastname=lastname, email=email, username=username, password=password, role=role))
         userResponse = {
             "id": user.__getattribute__("id"),
             "name": user.__getattribute__("name"),
             "lastname": user.__getattribute__("lastname"),
             "email": user.__getattribute__("email"),
-            "username": user.__getattribute__("username")
+            "username": user.__getattribute__("username"),
+            "role": user.__getattribute__("role")
         }
         print(userResponse)
     return userResponse
@@ -77,7 +79,8 @@ def login():
             username=username, password=password))
         loginResponse = {
             "id": login.__getattribute__("id"),
-            "username": login.__getattribute__("username")
+            "username": login.__getattribute__("username"),
+            "role": login.__getattribute__("role")
         }
         print(loginResponse)
 
@@ -222,7 +225,7 @@ def updateProduct():
 @app.route('/product', methods=['GET'])
 def getProduct():
     userId = int(request.args.get('userId')) if request.args.get('userId') is not None else None
-    print(userId)
+    print(request.args)
     userIdDistinct = int(request.args.get('userIdDistinct')) if request.args.get('userIdDistinct') is not None else None
     userIdPurchase = int(request.args.get('userIdPurchase')) if request.args.get('userIdPurchase') is not None else None
     name = request.args.get('name') if request.args.get('name') is not None else None
