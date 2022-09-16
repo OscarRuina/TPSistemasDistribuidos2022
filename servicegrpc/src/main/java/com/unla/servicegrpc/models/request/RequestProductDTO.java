@@ -36,6 +36,9 @@ public class RequestProductDTO {
     @NotBlank(message = CommonErrorMessages.REQUIRED_PARAM_MESSAGE)
     private LocalDate date;
 
+    @NotBlank(message = CommonErrorMessages.REQUIRED_PARAM_MESSAGE)
+    private boolean at_auction;
+
     private List<Photo> photos;
 
     private long userId;

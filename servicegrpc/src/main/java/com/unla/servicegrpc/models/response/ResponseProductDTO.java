@@ -29,6 +29,8 @@ public class ResponseProductDTO {
 
     private LocalDate date;
 
+    private boolean at_auction;
+
     //estaba en lista de string
     private List<Photo> photos;
 

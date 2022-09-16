@@ -57,6 +57,9 @@ public class Product {
     @Column(name = "date", nullable = false)
     private LocalDate date;
 
+    @Column(name = "at_auction", nullable = false)
+    private boolean at_auction;
+
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "product", cascade = CascadeType.ALL)
     private List<Photo> photos;
 
