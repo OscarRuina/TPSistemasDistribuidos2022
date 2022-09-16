@@ -231,50 +231,18 @@ def updateProduct():
 
 @app.route('/product', methods=['GET'])
 def getProduct():
-    userId = int(request.args.get('userId')) if request.args.get(
-        'userId') is not None else None
+    
     print(request.args)
-    userIdDistinct = int(request.args.get('userIdDistinct')) if request.args.get(
-        'userIdDistinct') is not None else None
-    userIdPurchase = int(request.args.get('userIdPurchase')) if request.args.get(
-        'userIdPurchase') is not None else None
-    name = request.args.get('name') if request.args.get(
-        'name') is not None else None
-    category = request.args.get('category') if request.args.get(
-        'category') is not None else None
-    priceMax = float(request.args.get('priceMax')) if request.args.get(
-        'priceMax') is not None else None
-    priceMin = float(request.args.get('priceMin')) if request.args.get(
-        'priceMin') is not None else None
-    dateInitial = request.args.get('dateInitial') if request.args.get(
-        'dateInitial') is not None else None
-    dateFinal = request.args.get('dateFinal') if request.args.get(
-        'dateFinal') is not None else None
+    userIdDistinct = int(request.args.get('userIdDistinct')) if request.args.get('userIdDistinct') is not None else None
+    
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = product_pb2_grpc.productStub(channel)
+        
+        productList = stub.getProductsDistinctByUserId(product_pb2.RequestProductByUserId(userId=userIdDistinct))
+       
 
-        if userId is not None:
-            productList = stub.getProductByUserId(
-                product_pb2.RequestProductByUserId(userId=userId))
-        elif userIdDistinct is not None:
-            productList = stub.getProductsDistinctByUserId(
-                product_pb2.RequestProductByUserId(userId=userIdDistinct))
-        elif userIdPurchase is not None:
-            productList = stub.getProductByUserIdPurchase(
-                product_pb2.RequestProductByUserId(userId=userIdPurchase))
-        elif name is not None:
-            productList = stub.getProductByName(
-                product_pb2.RequestProductByName(name=name))
-        elif category is not None:
-            productList = stub.getProductByCategory(
-                product_pb2.RequestProductByCategory(category=category))
-        elif priceMax is not None and priceMin is not None:
-            productList = stub.getProductByPrices(
-                product_pb2.RequestProductByPrices(priceMin=priceMin, priceMax=priceMax))
-        elif dateInitial is not None and dateFinal is not None:
-            productList = stub.getProductByDates(product_pb2.RequestProductByDates(
-                dateInitial=dateInitial, dateFinal=dateFinal))
+
 
         PRODUCTS = []
 

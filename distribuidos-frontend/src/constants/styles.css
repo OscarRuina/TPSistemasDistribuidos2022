@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap');
+
 .error {
   color: red;
   animation: changeColor 2.5s ease-in-out infinite;
@@ -23,6 +25,7 @@ html {
     #24243e
   ); /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(to right, #0f0c29, #302b63, #24243e);
+  
 }
 
 body {
@@ -38,6 +41,8 @@ body {
 }
 
 .App {
+  font-family: 'Poppins', sans-serif;
+  position: relative;
   min-height: 100vh;
   background: #0f0c29; /* fallback for old browsers */
   background: -webkit-linear-gradient(
@@ -53,4 +58,9 @@ body {
     #24243e
   ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   color: white;
+}
+
+.container-default{
+  width: 100vw;
+  height: 100vh;
 }

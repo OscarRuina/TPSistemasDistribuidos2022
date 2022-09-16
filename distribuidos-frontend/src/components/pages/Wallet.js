@@ -15,21 +15,28 @@ import {
   Modal,
   ModalContent,
 } from '@chakra-ui/react';
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import wallet from '../../Assets/wallet.jpg';
 import { UserContext } from '../../constants/UserContext';
 import useGetBalance from '../../hooks/useGetBalance';
 import { addBalance } from '../../services/walletService';
+import NavBar from '../ui/NavBar/NavBar';
 
 export default function Wallet() {
   const { user } = useContext(UserContext);
   const { balance, loading, error } = useGetBalance(user.id);
+  const [saldoActual, setsaldoActual] = useState(balance);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [balanceForm, setBalanceForm] = React.useState({ balance: '' });
+  const [balanceForm, setBalanceForm] = React.useState({ balance: 0 });
   const [isChargeDone, setIsChargeDone] = React.useState(false);
   const [isError, setIsError] = React.useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setsaldoActual(balance);
+  }, [balance])
+  
 
   const handleInputChange = e => {
     let { name, value } = e.target;
@@ -43,7 +50,8 @@ export default function Wallet() {
       .then(res => {
         setIsChargeDone(true);
         setIsError(false);
-        setBalanceForm({ balance: '' });
+        setBalanceForm({ balance: `` });
+        setsaldoActual(res);
         onOpen();
       })
       .catch(err => {
@@ -53,9 +61,8 @@ export default function Wallet() {
       });
   };
 
-  return (
-    <Box w="100%">
-      <Box position="relative" r="0" h="100px" w="100%">
+  /*
+  <Box position="relative" r="0" h="100px" w="100%">
         <Button
           position="absolute"
           right="2rem"
@@ -68,6 +75,12 @@ export default function Wallet() {
           Return
         </Button>
       </Box>
+  */
+
+  return (
+    <Box w="100%">
+      <NavBar actual="wallet"/>
+      
       <Flex pt="5rem" flexDir={'column'}>
         <Flex
           bg="#edf3f8"
@@ -127,7 +140,7 @@ export default function Wallet() {
                 fontSize="2xl"
                 textAlign={'left'}
               >
-                Wallet Balance : {balance}$
+                {loading ? "cargando..." : `Wallet Balance : ${saldoActual}$` }
               </chakra.h1>
               <HStack pt="1rem" pb="1rem" gap="2rem">
                 <Input

@@ -1,7 +1,8 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { UserContext } from '../../constants/UserContext';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
+import {uploadImages} from "../../firebase/config";
 import {
   FormControl,
   FormLabel,
@@ -12,8 +13,11 @@ import {
   Grid,
 } from '@chakra-ui/react';
 import { createProduct } from '../../services/productService';
+import NavBar from '../ui/NavBar/NavBar';
+import { async } from '@firebase/util';
 
 export default function RegisterProduct() {
+  //los archivos de input file dan una lista de objetos e.target.files[0] el primer archivo tiene lenght
   const navigate = useNavigate();
   const { user, setUser } = useContext(UserContext);
   const defaultOpts = {
@@ -25,16 +29,43 @@ export default function RegisterProduct() {
     userId: user.id,
     photos: [],
   };
-  const [isError, setIsError] = React.useState(false);
-  const [isSuccess, setIsSuccess] = React.useState(false);
+  const [imagenes, setImagenes] = useState(null);
+  
+  const [isError, setIsError] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const [registerProductForm, setRegisterProductForm] =
-    React.useState(defaultOpts);
+    useState(defaultOpts);
 
   const handleInputChange = e => {
     let { name, value } = e.target;
     setRegisterProductForm(prev => {
       return { ...prev, [name]: value };
     });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(imagenes);
+    let listaImagenes = [];
+    for (let i = 0; i < imagenes.length; i++) {
+      if(i<5){
+        try {
+          let urlImagen = await uploadImages(imagenes[i]);
+          listaImagenes.push(urlImagen);
+        } catch (error) {
+          console.log(error);
+          alert("Fallo la subida de archivos");
+        }
+      }
+    }
+    console.log(listaImagenes);
+    for (let j = 0; j < listaImagenes.length; j++) {
+      registerProductForm.photos.push({order: j+1, url:listaImagenes[j]});
+    }
+    console.log(registerProductForm);
+
+    submitForm();
+
   };
 
   const submitForm = async () => {
@@ -50,10 +81,8 @@ export default function RegisterProduct() {
         setIsSuccess(false);
       });
   };
-
-  return (
-    <Box position="relative" mb="5rem">
-      <Button
+  /*
+  <Button
         position="absolute"
         top="-5rem"
         right="2rem"
@@ -64,6 +93,10 @@ export default function RegisterProduct() {
       >
         Return
       </Button>
+  */
+  return (
+    <div>
+      <NavBar/>
       <Box
         mt="7rem"
         w="90%"
@@ -84,12 +117,12 @@ export default function RegisterProduct() {
               textUnderlineOffset="2px"
               textDecorationThickness="1px"
             >
-              Add new Product
+              Agregar un nuevo Producto
             </Center>
           </FormLabel>
           <Grid templateColumns="repeat(2,1fr)" gap=".5rem" p="1rem">
             <Box>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Nombre</FormLabel>
               <Input
                 htmlFor="name"
                 id={uuid()}
@@ -101,7 +134,7 @@ export default function RegisterProduct() {
               ></Input>
             </Box>
             <Box>
-              <FormLabel>Category</FormLabel>
+              <FormLabel>Categoria</FormLabel>
               <Input
                 htmlFor="category"
                 id={uuid()}
@@ -113,7 +146,7 @@ export default function RegisterProduct() {
               ></Input>
             </Box>
             <Box>
-              <FormLabel>Quantity</FormLabel>
+              <FormLabel>Cantidad</FormLabel>
               <Input
                 htmlFor="quantity"
                 id={uuid()}
@@ -125,7 +158,7 @@ export default function RegisterProduct() {
               ></Input>
             </Box>
             <Box>
-              <FormLabel>Price</FormLabel>
+              <FormLabel>Precio</FormLabel>
               <Input
                 htmlFor="price"
                 id={uuid()}
@@ -137,7 +170,7 @@ export default function RegisterProduct() {
               ></Input>
             </Box>
             <Box>
-              <FormLabel>Date</FormLabel>
+              <FormLabel>Fecha de elaboracion</FormLabel>
               <Input
                 htmlFor="date"
                 id={uuid()}
@@ -148,6 +181,7 @@ export default function RegisterProduct() {
                 required
               ></Input>
             </Box>
+            <input type="file" onChange={e => setImagenes(e.target.files)} multiple accept="image/*" required/>
           </Grid>
           <Center>
             {isSuccess ? (
@@ -159,7 +193,7 @@ export default function RegisterProduct() {
                 w="100%"
                 textAlign="center"
               >
-                Product added successfully
+                Producto agregado satisfactoriamente
               </Box>
             ) : null}
             {isError ? (
@@ -171,17 +205,17 @@ export default function RegisterProduct() {
                 w="100%"
                 textAlign="center"
               >
-                Error adding product
+                Error al agregar producto
               </Box>
             ) : null}
           </Center>
           <Center mt="2rem">
-            <Button type="submit" onClick={submitForm}>
-              Add Product
+            <Button type="submit" onClick={handleSubmit}>
+              Agregar
             </Button>
           </Center>
         </FormControl>
       </Box>
-    </Box>
+    </div>
   );
 }
