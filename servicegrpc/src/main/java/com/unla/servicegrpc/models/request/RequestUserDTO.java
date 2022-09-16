@@ -35,4 +35,8 @@ public class RequestUserDTO {
     @NotBlank(message = CommonErrorMessages.REQUIRED_PARAM_MESSAGE)
     private String password;
 
+    @NotBlank(message = CommonErrorMessages.REQUIRED_PARAM_MESSAGE)
+    @Size(max = 250, message = CommonErrorMessages.MAX_SIZE_MESSAGE)
+    private String role;
+
 }

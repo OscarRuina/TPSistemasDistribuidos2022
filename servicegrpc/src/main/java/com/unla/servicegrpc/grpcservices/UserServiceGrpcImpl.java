@@ -14,8 +14,6 @@ import com.unla.servicegrpc.models.request.RequestLoginUserDTO;
 import com.unla.servicegrpc.models.request.RequestUserDTO;
 import com.unla.servicegrpc.models.response.ResponseLogoutDTO;
 import com.unla.servicegrpc.services.IUserService;
-import com.unla.servicegrpc.services.impl.UserServiceImpl;
-import com.unla.servicegrpc.utils.messages.CommonErrorMessages;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +34,7 @@ public class UserServiceGrpcImpl extends userGrpc.userImplBase {
         requestUserDTO.setEmail(request.getEmail());
         requestUserDTO.setUsername(request.getUsername());
         requestUserDTO.setPassword(request.getPassword());
+        requestUserDTO.setRole(request.getRole());
 
         User user = userService.create(requestUserDTO);
 
@@ -45,6 +44,7 @@ public class UserServiceGrpcImpl extends userGrpc.userImplBase {
                 .setLastname(user.getLastname())
                 .setEmail(user.getEmail())
                 .setUsername(user.getUsername())
+                .setRole(user.getRole())
                 .build();
 
         responseObserver.onNext(registerResponse);
@@ -62,6 +62,7 @@ public class UserServiceGrpcImpl extends userGrpc.userImplBase {
                 .setLastname(user.getLastname())
                 .setEmail(user.getEmail())
                 .setUsername(user.getUsername())
+                .setRole(user.getRole())
                 .build();
 
         responseObserver.onNext(registerResponse);
@@ -79,6 +80,7 @@ public class UserServiceGrpcImpl extends userGrpc.userImplBase {
         LoginResponse loginResponse = LoginResponse.newBuilder()
                 .setId(user.getId())
                 .setUsername(user.getUsername())
+                .setRole(user.getRole())
                 .build();
 
         responseObserver.onNext(loginResponse);

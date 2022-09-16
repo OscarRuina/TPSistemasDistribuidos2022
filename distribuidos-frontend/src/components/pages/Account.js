@@ -86,12 +86,12 @@ export default function Account() {
             </ListItem>
           </Link>
           <Link to="/userPurchase">
-            {/* <ListItem
+            <ListItem
               transition="all 0.2s ease-in-out"
               _hover={{ transform: 'scale(1.3)' }}
             >
               Purchase Records
-            </ListItem> */}
+            </ListItem>
           </Link>
         </UnorderedList>
       </Box>

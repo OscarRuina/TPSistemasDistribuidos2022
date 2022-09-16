@@ -60,6 +60,10 @@ public class User {
     @Column(name = "password",nullable = false)
     private String password;
 
+    @NotBlank(message = CommonErrorMessages.REQUIRED_PARAM_MESSAGE)
+    @Column(name = "roles",nullable = false)
+    private String role;
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Wallet wallet;
 

@@ -1,5 +1,9 @@
-from flask import Flask, request
-from flask_cors import CORS, cross_origin
+from flask import Flask, request, Response
+from flask_cors import CORS
+from topics import topics
+from consumer import consumer_groups, get_messages
+from producer import produce_messages
+import json
 
 import logging
 
@@ -17,9 +21,10 @@ app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-#====================================
+# ====================================
 #   User
-#====================================
+# ====================================
+
 
 @app.route("/user", methods=["POST"])
 def registerUser():
@@ -28,17 +33,19 @@ def registerUser():
     email = request.json['email']
     username = request.json['username']
     password = request.json['password']
+    role = request.json['role']
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = user_pb2_grpc.userStub(channel)
         user = stub.register(user_pb2.RegisterRequest(
-            name=name, lastname=lastname, email=email, username=username, password=password))
+            name=name, lastname=lastname, email=email, username=username, password=password, role=role))
         userResponse = {
             "id": user.__getattribute__("id"),
             "name": user.__getattribute__("name"),
             "lastname": user.__getattribute__("lastname"),
             "email": user.__getattribute__("email"),
-            "username": user.__getattribute__("username")
+            "username": user.__getattribute__("username"),
+            "role": user.__getattribute__("role")
         }
         print(userResponse)
     return userResponse
@@ -77,7 +84,8 @@ def login():
             username=username, password=password))
         loginResponse = {
             "id": login.__getattribute__("id"),
-            "username": login.__getattribute__("username")
+            "username": login.__getattribute__("username"),
+            "role": login.__getattribute__("role")
         }
         print(loginResponse)
 
@@ -96,9 +104,10 @@ def logout():
 
     return logoutResponse
 
-#====================================
+# ====================================
 #   Wallet
-#====================================
+# ====================================
+
 
 @app.route("/addWallet", methods=["POST"])
 def addwallet():
@@ -138,9 +147,10 @@ def subtractwallet():
 
     return json
 
-#====================================
+# ====================================
 #   Product
-#====================================
+# ====================================
+
 
 @app.route('/product', methods=['POST'])
 def createProduct():
@@ -221,35 +231,50 @@ def updateProduct():
 
 @app.route('/product', methods=['GET'])
 def getProduct():
-    userId = int(request.args.get('userId')) if request.args.get('userId') is not None else None
-    print(userId)
-    userIdDistinct = int(request.args.get('userIdDistinct')) if request.args.get('userIdDistinct') is not None else None
-    userIdPurchase = int(request.args.get('userIdPurchase')) if request.args.get('userIdPurchase') is not None else None
-    name = request.args.get('name') if request.args.get('name') is not None else None
-    category = request.args.get('category') if request.args.get('category') is not None else None
-    priceMax = float(request.args.get('priceMax')) if request.args.get('priceMax') is not None else None
-    priceMin = float(request.args.get('priceMin')) if request.args.get('priceMin') is not None else None
-    dateInitial = request.args.get('dateInitial') if request.args.get('dateInitial') is not None else None
-    dateFinal = request.args.get('dateFinal') if request.args.get('dateFinal') is not None else None
+    userId = int(request.args.get('userId')) if request.args.get(
+        'userId') is not None else None
+    print(request.args)
+    userIdDistinct = int(request.args.get('userIdDistinct')) if request.args.get(
+        'userIdDistinct') is not None else None
+    userIdPurchase = int(request.args.get('userIdPurchase')) if request.args.get(
+        'userIdPurchase') is not None else None
+    name = request.args.get('name') if request.args.get(
+        'name') is not None else None
+    category = request.args.get('category') if request.args.get(
+        'category') is not None else None
+    priceMax = float(request.args.get('priceMax')) if request.args.get(
+        'priceMax') is not None else None
+    priceMin = float(request.args.get('priceMin')) if request.args.get(
+        'priceMin') is not None else None
+    dateInitial = request.args.get('dateInitial') if request.args.get(
+        'dateInitial') is not None else None
+    dateFinal = request.args.get('dateFinal') if request.args.get(
+        'dateFinal') is not None else None
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = product_pb2_grpc.productStub(channel)
-        
-        if userId is not None:
-            productList = stub.getProductByUserId(product_pb2.RequestProductByUserId(userId=userId))
-        elif userIdDistinct is not None:
-            productList = stub.getProductsDistinctByUserId(product_pb2.RequestProductByUserId(userId=userIdDistinct))
-        elif userIdPurchase is not None:
-            productList = stub.getProductByUserIdPurchase(product_pb2.RequestProductByUserId(userId=userIdPurchase))
-        elif name is not None:
-            productList = stub.getProductByName(product_pb2.RequestProductByName(name=name))
-        elif category is not None:
-            productList = stub.getProductByCategory(product_pb2.RequestProductByCategory(category=category))
-        elif priceMax is not None and priceMin is not None:
-            productList = stub.getProductByPrices(product_pb2.RequestProductByPrices(priceMin=priceMin, priceMax=priceMax))
-        elif dateInitial is not None and dateFinal is not None:
-            productList = stub.getProductByDates(product_pb2.RequestProductByDates(dateInitial=dateInitial, dateFinal=dateFinal))
 
+        if userId is not None:
+            productList = stub.getProductByUserId(
+                product_pb2.RequestProductByUserId(userId=userId))
+        elif userIdDistinct is not None:
+            productList = stub.getProductsDistinctByUserId(
+                product_pb2.RequestProductByUserId(userId=userIdDistinct))
+        elif userIdPurchase is not None:
+            productList = stub.getProductByUserIdPurchase(
+                product_pb2.RequestProductByUserId(userId=userIdPurchase))
+        elif name is not None:
+            productList = stub.getProductByName(
+                product_pb2.RequestProductByName(name=name))
+        elif category is not None:
+            productList = stub.getProductByCategory(
+                product_pb2.RequestProductByCategory(category=category))
+        elif priceMax is not None and priceMin is not None:
+            productList = stub.getProductByPrices(
+                product_pb2.RequestProductByPrices(priceMin=priceMin, priceMax=priceMax))
+        elif dateInitial is not None and dateFinal is not None:
+            productList = stub.getProductByDates(product_pb2.RequestProductByDates(
+                dateInitial=dateInitial, dateFinal=dateFinal))
 
         PRODUCTS = []
 
@@ -283,18 +308,20 @@ def getProduct():
 
     return productResponse
 
-#====================================
+# ====================================
 #   ShoppingCart
-#====================================
+# ====================================
+
 
 @app.route('/shoppingcart', methods=['POST'])
 def toBuyShoppingCart():
     userCompraId = request.json["userCompraId"]
     itemCart = request.json["itemCart"]
-    
+
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = shoppingcart_pb2_grpc.shoppingcartStub(channel)
-        response = stub.comprar(shoppingcart_pb2.RequestCart(userCompraId=userCompraId, itemCart=itemCart))
+        response = stub.comprar(shoppingcart_pb2.RequestCart(
+            userCompraId=userCompraId, itemCart=itemCart))
         print(response)
 
         ITEMPRODUCT = []
@@ -323,6 +350,48 @@ def toBuyShoppingCart():
         }
 
     return productResponse
+
+
+@app.route("/topics", methods=["GET"])
+def get_topics():
+    group_id = request.args.get('groupId') if request.args.get(
+        'groupId') is not None else 'default'
+    return topics(group_id)
+
+
+@app.route("/consumer-groups", methods=["GET"])
+def get_consumer_groups():
+    return consumer_groups()
+
+
+@app.route("/messages", methods=["GET"])
+def get_consumer_messages():
+    response = ''
+    group_id = request.args.get('groupId') if request.args.get(
+        'groupId') is not None else 'default'
+    if request.args.get('topic'):
+        topic = request.args.get('topic')
+        message = json.dumps(get_messages(topic, group_id))
+        response = Response(message, status=200, mimetype='application/json')
+    else:
+        message = json.dumps({"error": "missing topic"})
+        response = Response(message, status=400, mimetype='application/json')
+    return response
+
+
+@app.route("/messages", methods=["POST"])
+def submit_messages():
+    response = ''
+    if request.args.get('topic'):
+        topic = request.args.get('topic')
+        orders = request.json["orders"]
+        message = json.dumps(produce_messages(topic, orders))
+        response = Response(message, status=200, mimetype='application/json')
+    else:
+        message = json.dumps({"error": "missing topic"})
+        response = Response(message, status=400, mimetype='application/json')
+    return response
+
 
 if __name__ == '__main__':
     logging.basicConfig()

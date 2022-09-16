@@ -39,6 +39,11 @@ python -m pip install grpcio
 python -m pip install grpcio-tools
 ```
 
+Tambien es necesario instalar el cors, para no tener problemas con el cross-origin
+```
+pip install flask-cors
+```
+
 Para compilar Proto debemos correr los siguientes comandos en el root path y mover los archivos generados dentro de la carpeta cliente.
 ```
 python -m grpc_tools.protoc -I./protos --python_out=. --grpc_python_out=. ./protos/product.proto
@@ -85,7 +90,9 @@ La aplicación correrá en localhost bajo el puerto 5000: `http://127.0.0.1:5000
   * Update/Product: recibe el mismo request que el create mas el id de producto, retorna lo mismo.
   * GetProductByUserId/Product: recibe el id de usuario y retorna una lista de productos que le pertenecen.
   * GetProductDistinctByUserId/Product: recibe un id de usuario y retorna una lista de los productos que no le pertenecen. 
-  * Estos dos metodos son importantes, el primero responde a la consigna de listar los productos que le pertenecen a un usuario y el segundo a las compras listando los otros productos. 
+  * Estos dos metodos son importantes, el primero responde a la consigna de listar los productos que le pertenecen a un usuario y el segundo a las compras listando los otros productos.
+  * GetProductPurchasesByUserId/Product: recibe un id de usuario y devuelve una lista de productos comprados por el usuario.
   * Listados/Producto: distintos listados reciben disitntos parametros y retornan las listas filtradas por esos parametros.
+  * Comprar/Product: recibe los productos a comprar y devuelve los productos comprados. 
   
   
