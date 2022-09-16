@@ -1,5 +1,9 @@
-from flask import Flask, request
-from flask_cors import CORS, cross_origin
+from flask import Flask, request, Response
+from flask_cors import CORS
+from topics import topics
+from consumer import consumer_groups, get_messages
+from producer import produce_messages
+import json
 
 import logging
 
@@ -17,9 +21,10 @@ app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-#====================================
+# ====================================
 #   User
-#====================================
+# ====================================
+
 
 @app.route("/user", methods=["POST"])
 def registerUser():
@@ -99,9 +104,10 @@ def logout():
 
     return logoutResponse
 
-#====================================
+# ====================================
 #   Wallet
-#====================================
+# ====================================
+
 
 @app.route("/addWallet", methods=["POST"])
 def addwallet():
@@ -141,9 +147,10 @@ def subtractwallet():
 
     return json
 
-#====================================
+# ====================================
 #   Product
-#====================================
+# ====================================
+
 
 @app.route('/product', methods=['POST'])
 def createProduct():
@@ -236,6 +243,7 @@ def getProduct():
        
 
 
+
         PRODUCTS = []
 
         for product in productList.__getattribute__("products"):
@@ -268,18 +276,20 @@ def getProduct():
 
     return productResponse
 
-#====================================
+# ====================================
 #   ShoppingCart
-#====================================
+# ====================================
+
 
 @app.route('/shoppingcart', methods=['POST'])
 def toBuyShoppingCart():
     userCompraId = request.json["userCompraId"]
     itemCart = request.json["itemCart"]
-    
+
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = shoppingcart_pb2_grpc.shoppingcartStub(channel)
-        response = stub.comprar(shoppingcart_pb2.RequestCart(userCompraId=userCompraId, itemCart=itemCart))
+        response = stub.comprar(shoppingcart_pb2.RequestCart(
+            userCompraId=userCompraId, itemCart=itemCart))
         print(response)
 
         ITEMPRODUCT = []
@@ -308,6 +318,48 @@ def toBuyShoppingCart():
         }
 
     return productResponse
+
+
+@app.route("/topics", methods=["GET"])
+def get_topics():
+    group_id = request.args.get('groupId') if request.args.get(
+        'groupId') is not None else 'default'
+    return topics(group_id)
+
+
+@app.route("/consumer-groups", methods=["GET"])
+def get_consumer_groups():
+    return consumer_groups()
+
+
+@app.route("/messages", methods=["GET"])
+def get_consumer_messages():
+    response = ''
+    group_id = request.args.get('groupId') if request.args.get(
+        'groupId') is not None else 'default'
+    if request.args.get('topic'):
+        topic = request.args.get('topic')
+        message = json.dumps(get_messages(topic, group_id))
+        response = Response(message, status=200, mimetype='application/json')
+    else:
+        message = json.dumps({"error": "missing topic"})
+        response = Response(message, status=400, mimetype='application/json')
+    return response
+
+
+@app.route("/messages", methods=["POST"])
+def submit_messages():
+    response = ''
+    if request.args.get('topic'):
+        topic = request.args.get('topic')
+        orders = request.json["orders"]
+        message = json.dumps(produce_messages(topic, orders))
+        response = Response(message, status=200, mimetype='application/json')
+    else:
+        message = json.dumps({"error": "missing topic"})
+        response = Response(message, status=400, mimetype='application/json')
+    return response
+
 
 if __name__ == '__main__':
     logging.basicConfig()
