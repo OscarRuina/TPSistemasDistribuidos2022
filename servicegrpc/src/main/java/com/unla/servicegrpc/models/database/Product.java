@@ -72,4 +72,9 @@ public class Product {
             CascadeType.DETACH, CascadeType.REFRESH})
     private List<ShoppingCartProducts> shoppingCartProducts;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = {CascadeType.PERSIST,
+            CascadeType.MERGE,
+            CascadeType.DETACH, CascadeType.REFRESH})
+    private List<Auction> auctions;
+
 }
