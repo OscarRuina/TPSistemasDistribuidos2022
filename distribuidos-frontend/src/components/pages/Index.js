@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { ColorModeSwitcher } from '../ColorModeSwitcher';
 import { UserContext } from '../../constants/UserContext';
-import NavBar from '../ui/NavBar';
+import NavBar from '../ui/NavBar/NavBar';
 import Home from './Home';
 
 export default function Index() {
@@ -9,8 +9,10 @@ export default function Index() {
 
   return (
     <>
-      {user && <Home user={user} />}
-      {!user && <NavBar user={user} />}
+      <Home />
     </>
   );
 }
+
+//{user && <Home user={user}/>}
+//{!user && <NavBar user={user} />}

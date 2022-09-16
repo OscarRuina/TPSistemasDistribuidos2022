@@ -10,8 +10,10 @@ import {
 } from '@chakra-ui/react';
 import '../../constants/styles.css';
 import { registerUser } from '../../services/userService';
+import {useNavigate} from "react-router-dom"
 
 export default function Register({ onClose }) {
+  const navigate = useNavigate();
   const [registerForm, setRegisterForm] = React.useState({
     name: '',
     lastname: '',
@@ -19,6 +21,7 @@ export default function Register({ onClose }) {
     username: '',
     password: '',
     repeatPassword: '',
+    role: ""
   });
 
   const [error, setError] = React.useState(false);
@@ -32,6 +35,7 @@ export default function Register({ onClose }) {
   };
 
   const handleSubmit = async () => {
+    console.log(registerForm);
     if (registerForm.password !== registerForm.repeatPassword) {
       setError(prev => true);
       return false;
@@ -50,7 +54,7 @@ export default function Register({ onClose }) {
   return (
     <>
       <FormControl mt="2rem">
-        <FormLabel>Name</FormLabel>
+        <FormLabel>Nombre</FormLabel>
         <Input
           id={uuid()}
           type="text"
@@ -59,7 +63,7 @@ export default function Register({ onClose }) {
           onChange={handleInputChange}
           required
         />
-        <FormLabel>Last Name</FormLabel>
+        <FormLabel>Apellido</FormLabel>
         <Input
           id={uuid()}
           type="text"
@@ -86,7 +90,16 @@ export default function Register({ onClose }) {
           onChange={handleInputChange}
           required
         />
-        <FormLabel>Password</FormLabel>
+        <FormLabel>Role</FormLabel>
+        <Input
+          id={uuid()}
+          type="text"
+          name="role"
+          value={registerForm.role}
+          onChange={handleInputChange}
+          required
+        />
+        <FormLabel>Contraseña</FormLabel>
         <Input
           id={uuid()}
           type="password"
@@ -95,7 +108,7 @@ export default function Register({ onClose }) {
           onChange={handleInputChange}
           required
         />
-        <FormLabel>Repeat Password</FormLabel>
+        <FormLabel>Repetir contraseña</FormLabel>
         <Input
           id={uuid()}
           type="password"
@@ -105,10 +118,10 @@ export default function Register({ onClose }) {
           required
         />
         {error && (
-          <Text className="error ">passwords doesnt match, try again</Text>
+          <Text className="error ">las contraseñas no coinciden, intente de nuevo</Text>
         )}
         {registerError && (
-          <Text className="error ">username already exists, try again</Text>
+          <Text className="error ">username ya existente, intente con otro</Text>
         )}
         <Flex pt="2rem" justifyContent="center">
           <Button onClick={handleSubmit}>Registrar</Button>
