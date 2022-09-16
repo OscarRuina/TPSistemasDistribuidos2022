@@ -11,8 +11,10 @@ import {
 import { UserContext } from '../../constants/UserContext';
 import { logInUser } from '../../services/userService';
 import { saveInLocalStorage } from '../../services/localStorageService';
+import {useNavigate} from "react-router-dom"
 
-export default function Login() {
+export default function LoginUI() {
+  const navigate = useNavigate();
   const [loginForm, setLoginForm] = React.useState({
     username: '',
     password: '',
@@ -32,6 +34,7 @@ export default function Login() {
       .then(res => {
         setUser(res.data);
         saveInLocalStorage(res.data);
+        navigate('/');
       })
       .catch(err => {
         setError(true);

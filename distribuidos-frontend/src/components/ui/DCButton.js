@@ -1,8 +1,8 @@
-import { Button, Link } from '@chakra-ui/react';
-import { Link as ReachLink } from 'react-router-dom';
+
 import React, { useContext } from 'react';
 import { UserContext } from '../../constants/UserContext';
 import { disconnect } from '../../services/userService';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function DCButton() {
   const { user, setUser } = useContext(UserContext);
@@ -12,10 +12,10 @@ export default function DCButton() {
   };
 
   return (
-    <Link as={ReachLink} to="/">
-      <Button mt="2rem" ml="2rem" onClick={logOut}>
+    <Link to="/">
+      <button onClick={logOut}>
         Desconectar
-      </Button>
+      </button>
     </Link>
   );
 }

@@ -17,7 +17,7 @@ import {
   ModalCloseButton,
 } from '@chakra-ui/react';
 import Register from './Register';
-import Login from './Login';
+import LoginUI from './LoginUI';
 
 export default function NavbarModal() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -36,12 +36,12 @@ export default function NavbarModal() {
                 <Tab ml="auto" mr="auto">
                   Login
                 </Tab>
-                <Tab mr="auto">Register</Tab>
+                <Tab mr="auto">Registro</Tab>
               </TabList>
               <TabPanels>
                 <TabPanel>
                   {/* LOGIN PANEL  */}
-                  <Login onClose={onClose} />
+                  <LoginUI onClose={onClose} />
                 </TabPanel>
                 <TabPanel>
                   {/* REGISTER PANEL */}

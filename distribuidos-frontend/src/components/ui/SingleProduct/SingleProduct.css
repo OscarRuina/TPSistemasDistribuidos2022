@@ -1,0 +1,10 @@
+p > span{
+    color: gray;
+}
+
+/*css por ahora que no funciona nada mas*/
+.carousel.slide{
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}

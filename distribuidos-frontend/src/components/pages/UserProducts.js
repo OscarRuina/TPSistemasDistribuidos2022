@@ -8,10 +8,12 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import React, { useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../constants/UserContext';
 import useGetProducts from '../../hooks/useProducts';
-import SingleProduct from '../ui/SingleProduct';
+import NavBar from '../ui/NavBar/NavBar';
+import SingleProduct from '../ui/SingleProduct/SingleProduct';
+
 
 export default function UserProducts() {
   const { user, setUser } = useContext(UserContext);
@@ -25,9 +27,8 @@ export default function UserProducts() {
     });
   };
 
-  return (
-    <Box position="relative" minW="700px">
-      <Flex position="absolute" right="2rem" top="-5rem">
+  /*
+  <Flex position="absolute" right="2rem" top="-5rem">
         <Button
           right="1rem"
           h="60px"
@@ -38,6 +39,11 @@ export default function UserProducts() {
           Return
         </Button>
       </Flex>
+  */
+
+  return (
+    <div>
+      <NavBar/>
       <VStack
         mt="7rem"
         w="90%"
@@ -50,8 +56,12 @@ export default function UserProducts() {
         borderRadius="25px"
       >
         <Center pt="-1rem">
-          <Text fontSize="2rem">My Products</Text>
+          <Text fontSize="2rem">Mis Productos</Text>
         </Center>
+        
+        <Link to="/newProduct">
+              <button>Agregar</button>
+          </Link>
         {loading ? (
           <Text>Loading...</Text>
         ) : (
@@ -60,6 +70,6 @@ export default function UserProducts() {
           </VStack>
         )}
       </VStack>
-    </Box>
+    </div>
   );
 }

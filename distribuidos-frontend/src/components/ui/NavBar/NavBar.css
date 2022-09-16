@@ -1,0 +1,69 @@
+.NavContainer{
+    display: flex;
+    justify-content: space-around;
+    width: 100vw;
+    height: 10vh;
+    padding-top: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: black;
+    margin-bottom: 10px;
+}
+
+ul{
+    list-style: none;
+    display: flex;
+    justify-content: space-around;
+}
+
+li{
+    margin-right: 1rem;
+}
+
+.visible{
+    display: block;
+}
+.no-visible{
+    display: none;
+    visibility: hidden;
+}
+
+.userOptions{
+    display: flex;
+    position: relative;
+}
+.opciones{
+    position: absolute;
+    top: 35px;
+    right: -10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: black;
+    border-radius: 5px;
+    padding-top: 5px;
+    width: max-content;
+    height: max-content;
+    overflow: hidden;
+}
+
+.opciones > *{
+    padding: 5px 10px;
+}
+.opciones a{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+.opciones a:hover{
+    background-color: #212121;
+    
+}
+.opciones button{
+    align-self: center;
+}
+
+ul li a:hover{
+    color: aquamarine;
+}
