@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AuctionRepository extends JpaRepository<Auction,Long> {
 
+    List<Auction> findByBuyer_Id(long userId);
+
 }
