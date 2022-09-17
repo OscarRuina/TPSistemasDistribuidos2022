@@ -69,7 +69,7 @@ public class ProductServiceGrpcImpl extends productGrpc.productImplBase {
                 .setQuantity(product.getQuantity())
                 .setPrice(product.getPrice())
                 .setDate(product.getDate().toString())
-                .setAtAuction(product.isAt_auction())
+                .setAtAuction(product.isAuction())
                 .setUserId(product.getUser().getId())
                 .addAllPhotos(photos)
                 .build();
@@ -123,7 +123,7 @@ public class ProductServiceGrpcImpl extends productGrpc.productImplBase {
                 .setQuantity(product.getQuantity())
                 .setPrice(product.getPrice())
                 .setDate(product.getDate().toString())
-                .setAtAuction(product.isAt_auction())
+                .setAtAuction(product.isAuction())
                 .setUserId(product.getUser().getId())
                 .addAllPhotos(photos)
                 .build();
@@ -156,7 +156,7 @@ public class ProductServiceGrpcImpl extends productGrpc.productImplBase {
                     .setPrice(products.get(i).getPrice())
                     .setQuantity(products.get(i).getQuantity())
                     .setDate(products.get(i).getDate().toString())
-                    .setAtAuction(products.get(i).isAt_auction())
+                    .setAtAuction(products.get(i).isAuction())
                     .addAllPhotos(photosData)
                     .setUserId(products.get(i).getUser().getId())
                     .build();
@@ -196,7 +196,7 @@ public class ProductServiceGrpcImpl extends productGrpc.productImplBase {
                     .setPrice(products.get(i).getPrice())
                     .setQuantity(products.get(i).getQuantity())
                     .setDate(products.get(i).getDate().toString())
-                    .setAtAuction(products.get(i).isAt_auction())
+                    .setAtAuction(products.get(i).isAuction())
                     .addAllPhotos(photosData)
                     .setUserId(products.get(i).getUser().getId())
                     .build();
@@ -236,7 +236,7 @@ public class ProductServiceGrpcImpl extends productGrpc.productImplBase {
                     .setPrice(products.get(i).getPrice())
                     .setQuantity(products.get(i).getQuantity())
                     .setDate(products.get(i).getDate().toString())
-                    .setAtAuction(products.get(i).isAt_auction())
+                    .setAtAuction(products.get(i).isAuction())
                     .addAllPhotos(photosData)
                     .setUserId(products.get(i).getUser().getId())
                     .build();
@@ -276,7 +276,7 @@ public class ProductServiceGrpcImpl extends productGrpc.productImplBase {
                     .setPrice(products.get(i).getPrice())
                     .setQuantity(products.get(i).getQuantity())
                     .setDate(products.get(i).getDate().toString())
-                    .setAtAuction(products.get(i).isAt_auction())
+                    .setAtAuction(products.get(i).isAuction())
                     .addAllPhotos(photosData)
                     .setUserId(products.get(i).getUser().getId())
                     .build();
@@ -316,7 +316,7 @@ public class ProductServiceGrpcImpl extends productGrpc.productImplBase {
                     .setPrice(products.get(i).getPrice())
                     .setQuantity(products.get(i).getQuantity())
                     .setDate(products.get(i).getDate().toString())
-                    .setAtAuction(products.get(i).isAt_auction())
+                    .setAtAuction(products.get(i).isAuction())
                     .addAllPhotos(photosData)
                     .setUserId(products.get(i).getUser().getId())
                     .build();
@@ -357,7 +357,7 @@ public class ProductServiceGrpcImpl extends productGrpc.productImplBase {
                     .setPrice(products.get(i).getPrice())
                     .setQuantity(products.get(i).getQuantity())
                     .setDate(products.get(i).getDate().toString())
-                    .setAtAuction(products.get(i).isAt_auction())
+                    .setAtAuction(products.get(i).isAuction())
                     .addAllPhotos(photosData)
                     .setUserId(products.get(i).getUser().getId())
                     .build();
@@ -398,7 +398,7 @@ public class ProductServiceGrpcImpl extends productGrpc.productImplBase {
                     .setPrice(products.get(i).getPrice())
                     .setQuantity(products.get(i).getQuantity())
                     .setDate(products.get(i).getDate().toString())
-                    .setAtAuction(products.get(i).isAt_auction())
+                    .setAtAuction(products.get(i).isAuction())
                     .addAllPhotos(photosData)
                     .setUserId(products.get(i).getUser().getId())
                     .build();

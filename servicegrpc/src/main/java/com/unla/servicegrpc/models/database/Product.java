@@ -58,7 +58,7 @@ public class Product {
     private LocalDate date;
 
     @Column(name = "at_auction", nullable = false)
-    private boolean at_auction;
+    private boolean auction;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "product", cascade = CascadeType.ALL)
     private List<Photo> photos;
