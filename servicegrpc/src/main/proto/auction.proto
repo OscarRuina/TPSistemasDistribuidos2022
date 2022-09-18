@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.unla.servicegrpc.grpc";
+
+service auction{
+  rpc comprar(RegisterAuction) returns (ResponseAuction);
+}
+
+message RegisterAuction{
+  int64 userId = 1;
+  int64 productId = 2;
+  double total = 3;
+}
+
+message ResponseAuction{
+  int64 id = 1;
+  int64 userId = 2;
+  int64 productId = 3;
+  double total = 4;
+
+}
