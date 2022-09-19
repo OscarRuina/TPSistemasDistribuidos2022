@@ -19,7 +19,7 @@ export default function UserPurchase() {
   */
   return (
     <div>
-      <NavBar/>
+      <NavBar actual="userPurchase"/>
       
     </div>
   );

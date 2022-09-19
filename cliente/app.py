@@ -259,6 +259,7 @@ def getProduct():
                 PHOTOS.append(photosJson)
 
             productJson = {
+                "id": product.__getattribute__("id"),
                 "name": product.__getattribute__("name"),
                 "category": product.__getattribute__("category"),
                 "quantity": product.__getattribute__("quantity"),
