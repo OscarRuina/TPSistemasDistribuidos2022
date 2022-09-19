@@ -7,7 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 export default function DCButton() {
   const { user, setUser } = useContext(UserContext);
   const logOut = () => {
-    setUser('');
+    setUser(undefined);
     disconnect();
   };
 

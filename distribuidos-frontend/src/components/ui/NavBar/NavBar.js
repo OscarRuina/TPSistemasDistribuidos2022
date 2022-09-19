@@ -8,6 +8,7 @@ import { UserContext } from '../../../constants/UserContext';
 import axios from 'axios';
 import "./NavBar.css";
 import DCButton from '../DCButton';
+import Cart from '../Cart/Cart';
 
 export default function NavBar({actual}) {
   const { user, setUser } = useContext(UserContext);
@@ -19,6 +20,8 @@ export default function NavBar({actual}) {
   const handleOptionsVisible = () => {
     setVisible(!visible);
   };
+
+console.log(user);
 
   useEffect(() => {
     const getBalance = async () => {
@@ -44,35 +47,47 @@ export default function NavBar({actual}) {
       <h1>TP Distribuidos 2022</h1>
       <ul>
         <li>
-        {actual == "inicio"? 
+        {user && (actual == "inicio"? 
           <p>Inicio</p>:
           <Link to="/">
               <button>Inicio</button>
-          </Link>
+          </Link>)
           }
         </li>
         <li>
-          {actual == "wallet"? 
+        {user && 
+          (actual == "wallet"? 
           <p>Billetera</p>:
           <Link to="/wallet">
               Billetera
-          </Link>
+          </Link>)
+        }
+        </li>
+        <li>
+          {user && 
+            (actual == "userProducts"? 
+            <p>Mis Productos</p>:
+            <Link to="/userProducts">
+              <button>Mis Productos</button>
+          </Link>)
           }
         </li>
         <li>
-          <Link to="/userProducts">
-              <button>Mis Productos</button>
-          </Link>
-        </li>
-        <li>
-          <Link to="/userPurchase">
-              <button>Registro de Compras</button>
-          </Link>
+          {user && 
+              (actual == "userPurchase"? 
+              <p>Registro de Compras</p>:
+              <Link to="/userPurchase">
+                <button>Registro de Compras</button>
+              </Link>)
+          }
         </li>
       </ul>
 
+      
+
       <div className='userData'>
-        {user ? 
+        {user && <Cart balance={balance} userId={user.id}/>}
+        {user ?
           <div className='userOptions'>
             <p>{user.username.toUpperCase()}</p>
             <button onClick={handleOptionsVisible} className='arrow'>{visible? <ArrowUpIcon w={5} h={5}/>: <ArrowDownIcon w={5} h={5}/>}</button>
@@ -85,11 +100,8 @@ export default function NavBar({actual}) {
               <DCButton/>
             </div>
           </div>
-          : 
+          :
           <div>
-            <Link to="/login">
-                <button>Ingresar</button>
-              </Link>
             <NavbarModal type="Ingresar" variant="modal" />
           </div>
         }

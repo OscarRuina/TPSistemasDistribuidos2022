@@ -18,32 +18,29 @@ import SingleProduct from '../ui/SingleProduct/SingleProduct';
 export default function UserProducts() {
   const { user, setUser } = useContext(UserContext);
   const { products, loading } = useGetProducts(user.id);
+  const [myProducts, setMyProducts] = useState([]);
+ 
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if(products.length != 0){
+      if (user !== undefined) {
+        setMyProducts(products.filter(product => product.userId == user.id ));
+      }
+    }
+  }, [products]);
+
+  
   const showProducts = () => {
-    return products?.map((product, idx) => {
+    return myProducts?.map((product, idx) => {
       return <SingleProduct product={product} key={idx} />;
     });
   };
 
-  /*
-  <Flex position="absolute" right="2rem" top="-5rem">
-        <Button
-          right="1rem"
-          h="60px"
-          w="100px"
-          borderRadius="5px"
-          onClick={() => navigate(-1)}
-        >
-          Return
-        </Button>
-      </Flex>
-  */
-
   return (
     <div>
-      <NavBar/>
+      <NavBar actual="userProducts"/>
       <VStack
         mt="7rem"
         w="90%"

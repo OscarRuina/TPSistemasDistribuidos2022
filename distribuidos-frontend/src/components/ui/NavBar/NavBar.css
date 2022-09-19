@@ -67,3 +67,10 @@ li{
 ul li a:hover{
     color: aquamarine;
 }
+
+.userData{
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-around;
+    width: 135px;
+}

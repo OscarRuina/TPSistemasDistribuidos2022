@@ -17,19 +17,21 @@ import { getAllProductsDiferent } from '../../../services/productService';
 import SingleProduct from '../../ui/SingleProduct/SingleProduct';
 import SingleProductSmall from '../../ui/SingleProductSmall/SingleProductSmall';
 import axios from 'axios';
+import { CartContext } from '../../../constants/CartContext';
 
 export default function Products() {
   const BASE_URL = 'http://127.0.0.1:5000';
   const { user, setUser } = useContext(UserContext);
-  const [products, setProducts] = React.useState([]);
-  const [loading, setLoading] = React.useState(false);
-  const [productForm, setProductForm] = React.useState([
+
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [productForm, setProductForm] = useState([
     {
       userIdDistinct: 0,
     },
   ]);
-  const [productsDistintUser, setProductsDistintUser] = React.useState([]);
-  const [productsFiltered, setProductsFiltered] = React.useState([]);
+  var productsDistintUser = [];
+  const [productsFiltered, setProductsFiltered] = useState([]);
   //const [filtro, setFiltro] = useState("name");
   //datos de busqueda-----------------------
   const [name, setName] = useState("");
@@ -40,33 +42,42 @@ export default function Products() {
   const [dateFinal, setDateFinal] = useState("");
   //----------------------------------------
 
-  console.log(user);
-
   useEffect(() => {
+    //console.log("cargando componente...")
     const getAllProducts = async () => {
       setLoading(true);
 
       await getAllProductsDiferent(productForm).then(res => {
         setProducts(res.products);
-        user ? setProductsDistintUser(products.filter(product => product.userId != user.id )) : setProductsDistintUser(products);
+        user !== undefined ? productsDistintUser = products.filter(product => product.userId != user.id) : productsDistintUser = products;
         setProductsFiltered(productsDistintUser);
         setLoading(false);
       });
     };
 
     getAllProducts().catch(null);
-    
+
+    //console.log("fin carga...")
   },[]);
 
   useEffect(() => {
-    console.log("productos");
-    console.log(products);
+    /*console.log("productos");
+    console.log(products);*/
     //user != null ? setProductsDistintUser(products.filter(product => product.userId != user.id )): setProductsDistintUser(products);
-    user ? setProductsDistintUser(products.filter(product => product.userId != user.id )): setProductsDistintUser(products);
-    setProductsFiltered(productsDistintUser);
-    console.log(productsDistintUser);
+    //user !== undefined ? setProductsDistintUser(products.filter(product => product.userId != user.id )) : setProductsDistintUser(products);
+    if(products.length != 0){
+      if (user !== undefined) {
+        //console.log("usuario seteado")
+        productsDistintUser = products.filter(product => product.userId != user.id );
+      } else {
+        //console.log("usuario undefined")
+        productsDistintUser = products;
+      }
+      setProductsFiltered(productsDistintUser);
+    }
+    
   }, [products, user]);
-
+  
 
   /*const handleChangeFilter = e =>{
     setFiltro(e.target.value);
@@ -81,75 +92,93 @@ export default function Products() {
 
   const handleNameChange = e =>{
     setName(e.target.value);
-  }
+  };
   const handleCategoryChange = e =>{
     setCategory(e.target.value);
-  }
+  };
   const handlePriceMinChange = e =>{
     setPriceMin(e.target.value);
-  }
+  };
   const handlePriceMaxChange = e =>{
     setPriceMax(e.target.value);
-  }
+  };
   const handleDateInitialChange = e =>{
     setDateInitial(e.target.value);
-  }
+  };
   const handleDateFinalChange = e =>{
     setDateFinal(e.target.value);
-  }
+  };
   
 
   //por ahora imprimo los datos
   const handleSearch = e =>{
     e.preventDefault();
+
     let cantidadDeFiltros = 0;
+    user !== undefined ? productsDistintUser = products.filter(product => product.userId != user.id) : productsDistintUser = products;
+    let listaAFiltrar = productsDistintUser;
+    //console.log(cantidadDeFiltros);
+    //console.log(productsFiltered);
+    
     //console.log(filtro);
     if(name != ""){
-      setProductsFiltered(productsDistintUser.filter(product => product.name.toLowerCase().includes(name.toLowerCase())));
+      listaAFiltrar = listaAFiltrar.filter(product => product.name.toLowerCase().includes(name.toLowerCase()));
       //console.log(productsFiltered);
       //console.log(name);
       cantidadDeFiltros+=1;
     }
     if(category != ""){
-      setProductsFiltered(productsDistintUser.filter(product => product.category.toLowerCase().includes(category.toLowerCase())));
+      listaAFiltrar = listaAFiltrar.filter(product => product.category.toLowerCase().includes(category.toLowerCase()));
       //console.log(category);
       cantidadDeFiltros+=1;
     }
 
     //varian los precios debo buscar
-    if(priceMax=="" || priceMin==""){
-      (priceMax=="" && priceMin!= "") && setProductsFiltered(productsDistintUser.filter(product => product.price >= priceMin));
-      (priceMin=="" && priceMax!= "") && setProductsFiltered(productsDistintUser.filter(product => product.price <= priceMax));
+    if(priceMax!="" && priceMin!=""){
+      listaAFiltrar = listaAFiltrar.filter(product => product.price >= priceMin && product.price <= priceMax);
       cantidadDeFiltros+=1;
     }else{
-      setProductsFiltered(productsDistintUser.filter(product => product.price >= priceMin && product.price <= priceMax));
-      cantidadDeFiltros+=1;
+      if(priceMax=="" && priceMin!= ""){
+        listaAFiltrar = listaAFiltrar.filter(product => product.price >= priceMin);
+        cantidadDeFiltros+=1;
+      }
+      else if (priceMin=="" && priceMax!= ""){
+        listaAFiltrar = listaAFiltrar.filter(product => product.price <= priceMax);
+        cantidadDeFiltros+=1;
+      }
     }
       //console.log(priceMin);
       //console.log(priceMax);
 
-    if(dateFinal=="" || dateInitial==""){
-        (dateFinal=="" && dateInitial!= "") && setProductsFiltered(productsDistintUser.filter(product => product.date >= dateInitial));
-        (dateInitial=="" && dateFinal!= "") && setProductsFiltered(productsDistintUser.filter(product => product.date <= dateFinal));
-        cantidadDeFiltros+=1;
-    }else{
-      setProductsFiltered(productsDistintUser.filter(product => product.date >= dateInitial && product.date <= dateFinal));
-      cantidadDeFiltros+=1;
-    }
-    
-    if(cantidadDeFiltros == 0){
-      setProductsFiltered(productsDistintUser);
-    }
-    //console.log(dateInitial);
-    //console.log(dateFinal);
-    
-    console.log(productsFiltered);
-  }
 
-  const showProducts = e => {
-    return productsFiltered.map((product, idx) => {
-      return <SingleProductSmall key={idx} product={product} />;
-    });
+    if(dateFinal!="" || dateInitial!=""){
+      listaAFiltrar = listaAFiltrar.filter(product => product.date >= dateInitial && product.date <= dateFinal);
+      cantidadDeFiltros+=1;
+        
+    }else{
+      if (dateFinal=="" && dateInitial!= ""){
+        listaAFiltrar = listaAFiltrar.filter(product => product.date >= dateInitial);
+        cantidadDeFiltros+=1;
+      }else if(dateInitial=="" && dateFinal!= ""){
+        listaAFiltrar = listaAFiltrar.filter(product => product.date <= dateFinal);
+        cantidadDeFiltros+=1;
+      }
+    }
+    
+    setProductsFiltered(listaAFiltrar);
+  };
+
+  const showProducts = () => {
+    /*console.log("mostrando productos")
+    console.log(productsFiltered)*/
+    if(productsFiltered.length != 0){
+      return productsFiltered.map((product, idx) => {
+        return <SingleProductSmall key={idx} product={product} />;
+      });
+    }else{
+      return <p className='no-found'>No se encontraron resultados</p>;
+    }
+    
   };
 
   /*
@@ -165,7 +194,7 @@ export default function Products() {
     <div className='container-products'>
       <div className='barra-filtros'>
         <h2 className='titulo-buscador'>Filtros</h2>
-        <form className='buscador'>
+        <div className='buscador'>
 
           <p>Nombre</p>
           <input type="text" value={name} onChange={handleNameChange}/>
@@ -188,13 +217,14 @@ export default function Products() {
           <input type="date" value={dateFinal} onChange={handleDateFinalChange}/>
           
           <IconButton icon={<SearchIcon />} onClick={handleSearch}></IconButton>
-        </form>
+        </div>
       </div>
       <div className='lista-productos'>
 
-        {productsFiltered.length != 0 ? showProducts() : <p>No se encontraron resultados</p>}
+        {showProducts()}
     
       </div>
     </div>
   );
-}
+};
+// {productsFiltered.length != 0 ? showProducts() : <p className='no-found'>No se encontraron resultados</p>}
