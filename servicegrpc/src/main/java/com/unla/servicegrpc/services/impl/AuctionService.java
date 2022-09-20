@@ -29,6 +29,7 @@ public class AuctionService implements IAuctionService {
         Product product = productRepository.findById(requestAuctionDTO.getProductId())
                 .orElseThrow();
         Auction auction = new Auction();
+        auction.setDate(requestAuctionDTO.getDate());
         auction.setBuyer(user);
         auction.setProduct(product);
         auction.setTotal(requestAuctionDTO.getTotal());
