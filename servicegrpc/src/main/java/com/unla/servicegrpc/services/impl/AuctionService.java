@@ -8,6 +8,7 @@ import com.unla.servicegrpc.repositories.AuctionRepository;
 import com.unla.servicegrpc.repositories.ProductRepository;
 import com.unla.servicegrpc.repositories.UserRepository;
 import com.unla.servicegrpc.services.IAuctionService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,9 +30,15 @@ public class AuctionService implements IAuctionService {
         Product product = productRepository.findById(requestAuctionDTO.getProductId())
                 .orElseThrow();
         Auction auction = new Auction();
+        auction.setDate(requestAuctionDTO.getDate());
         auction.setBuyer(user);
         auction.setProduct(product);
         auction.setTotal(requestAuctionDTO.getTotal());
         return auctionRepository.save(auction);
+    }
+
+    @Override
+    public List<Auction> findAllByUserId(long userId) {
+        return auctionRepository.findByBuyer_Id(userId);
     }
 }

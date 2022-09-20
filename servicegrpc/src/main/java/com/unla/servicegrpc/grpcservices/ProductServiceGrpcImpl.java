@@ -7,7 +7,6 @@ import com.unla.servicegrpc.models.database.User;
 import com.unla.servicegrpc.models.request.RequestProductDTO;
 import com.unla.servicegrpc.models.response.ResponseProductDTO;
 import com.unla.servicegrpc.models.response.ResponseUserDTO;
-import com.unla.servicegrpc.repositories.PhotoRepository;
 import com.unla.servicegrpc.services.IPhotoService;
 import com.unla.servicegrpc.services.IProductService;
 import com.unla.servicegrpc.services.IUserService;
