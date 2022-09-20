@@ -12,6 +12,8 @@ import product_pb2
 import product_pb2_grpc
 import shoppingcart_pb2
 import shoppingcart_pb2_grpc
+import auction_pb2
+import auction_pb2_grpc
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -19,8 +21,12 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 #====================================
 #   User
+<<<<<<< Updated upstream
 #====================================
 
+=======
+# ====================================
+>>>>>>> Stashed changes
 @app.route("/user", methods=["POST"])
 def registerUser():
     name = request.json['name']
@@ -98,8 +104,12 @@ def logout():
 
 #====================================
 #   Wallet
+<<<<<<< Updated upstream
 #====================================
 
+=======
+# ====================================
+>>>>>>> Stashed changes
 @app.route("/addWallet", methods=["POST"])
 def addwallet():
     balance = int(request.json['balance'])
@@ -140,8 +150,12 @@ def subtractwallet():
 
 #====================================
 #   Product
+<<<<<<< Updated upstream
 #====================================
 
+=======
+# ====================================
+>>>>>>> Stashed changes
 @app.route('/product', methods=['POST'])
 def createProduct():
     name = request.json["name"]
@@ -149,13 +163,14 @@ def createProduct():
     quantity = int(request.json["quantity"])
     price = float(request.json["price"])
     date = request.json["date"]
+    at_auction = request.json["at_auction"]
     userId = int(request.json["userId"])
     photos = request.json["photos"]
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = product_pb2_grpc.productStub(channel)
         product = stub.create(product_pb2.RequestProduct(name=name, category=category,
-                              quantity=quantity, price=price, date=date, userId=userId, photos=photos))
+                              quantity=quantity, price=price, date=date, at_auction=at_auction, userId=userId, photos=photos))
         print(product)
 
         PHOTOS = []
@@ -173,6 +188,7 @@ def createProduct():
             "quantity": product.__getattribute__("quantity"),
             "price": product.__getattribute__("price"),
             "date": product.__getattribute__("date"),
+            "at_auction": product.__getattribute__("at_auction"),
             "userId": product.__getattribute__("userId"),
             "photos": PHOTOS
         }
@@ -188,13 +204,14 @@ def updateProduct():
     quantity = int(request.json["quantity"])
     price = float(request.json["price"])
     date = request.json["date"]
+    at_auction = request.json["at_auction"]
     userId = int(request.json["userId"])
     photos = request.json["photos"]
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = product_pb2_grpc.productStub(channel)
         product = stub.update(product_pb2.ResponseProduct(id=id, name=name, category=category,
-                              quantity=quantity, price=price, date=date, userId=userId, photos=photos))
+                              quantity=quantity, price=price, date=date, at_auction=at_auction, userId=userId, photos=photos))
         print(product)
 
         PHOTOS = []
@@ -212,6 +229,7 @@ def updateProduct():
             "quantity": product.__getattribute__("quantity"),
             "price": product.__getattribute__("price"),
             "date": product.__getattribute__("date"),
+            "at_auction": product.__getattribute__("at_auction"),
             "userId": product.__getattribute__("userId"),
             "photos": PHOTOS
         }
@@ -271,6 +289,7 @@ def getProduct():
                 "quantity": product.__getattribute__("quantity"),
                 "price": product.__getattribute__("price"),
                 "date": product.__getattribute__("date"),
+                "at_auction": product.__getattribute__("at_auction"),
                 "userId": product.__getattribute__("userId"),
                 "photos": PHOTOS
             }
@@ -285,8 +304,12 @@ def getProduct():
 
 #====================================
 #   ShoppingCart
+<<<<<<< Updated upstream
 #====================================
 
+=======
+# ====================================
+>>>>>>> Stashed changes
 @app.route('/shoppingcart', methods=['POST'])
 def toBuyShoppingCart():
     userCompraId = request.json["userCompraId"]
@@ -324,6 +347,80 @@ def toBuyShoppingCart():
 
     return productResponse
 
+<<<<<<< Updated upstream
+=======
+
+# ====================================
+#   Auction
+# ====================================
+@app.route('/Auction', methods=['POST'])
+def toBuyAuction():
+    userId = int(request.json["userId"])
+    productId = int(request.json["productId"])
+    total = float(request.json["total"])
+
+    with grpc.insecure_channel('localhost:9090') as channel:
+        stub = auction_pb2_grpc.auctionStub(channel)
+        response = stub.comprar(auction_pb2.RegisterAuction(
+            userId=userId, productId=productId, total=total))
+        print(response)
+
+        AuctionResponse = {
+            "id": response.__getattribute__("id"),
+            "name": response.__getattribute__("userId"),
+            "lastname": response.__getattribute__("productId"),
+            "email": response.__getattribute__("total"),
+        }
+
+    return AuctionResponse
+
+# ====================================
+#   Kafka
+# ====================================
+@app.route("/topics", methods=["GET"])
+def get_topics():
+    group_id = request.args.get('groupId') if request.args.get(
+        'groupId') is not None else 'default'
+    return topics(group_id)
+
+
+@app.route("/consumer-groups", methods=["GET"])
+def get_consumer_groups():
+    return consumer_groups()
+
+
+@app.route("/messages", methods=["GET"])
+def get_consumer_messages():
+    response = ''
+    group_id = request.args.get('groupId') if request.args.get(
+        'groupId') is not None else 'default'
+    if request.args.get('topic'):
+        topic = request.args.get('topic')
+        message = json.dumps(get_messages(topic, group_id))
+        response = Response(message, status=200, mimetype='application/json')
+    else:
+        message = json.dumps({"error": "missing topic"})
+        response = Response(message, status=400, mimetype='application/json')
+    return response
+
+
+@app.route("/messages", methods=["POST"])
+def submit_messages():
+    response = ''
+    if request.args.get('topic'):
+        topic = request.args.get('topic')
+        orders = request.json["orders"]
+        message = json.dumps(produce_messages(topic, orders))
+        response = Response(message, status=200, mimetype='application/json')
+    else:
+        message = json.dumps({"error": "missing topic"})
+        response = Response(message, status=400, mimetype='application/json')
+    return response
+
+# ====================================
+#   Start
+# ====================================
+>>>>>>> Stashed changes
 if __name__ == '__main__':
     logging.basicConfig()
     app.run()
