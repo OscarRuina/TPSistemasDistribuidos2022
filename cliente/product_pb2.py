@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rproduct.proto\"\x0e\n\x0c\x45mptyRequest\"\x88\x01\n\x0eRequestProduct\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x10\n\x08\x63\x61tegory\x18\x02 \x01(\t\x12\x10\n\x08quantity\x18\x03 \x01(\x05\x12\r\n\x05price\x18\x04 \x01(\x01\x12\x0c\n\x04\x64\x61te\x18\x05 \x01(\t\x12\x0e\n\x06userId\x18\x06 \x01(\x03\x12\x17\n\x06photos\x18\x07 \x03(\x0b\x32\x07.Photos\"\x95\x01\n\x0fResponseProduct\x12\n\n\x02id\x18\x01 \x01(\x03\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x10\n\x08\x63\x61tegory\x18\x03 \x01(\t\x12\x10\n\x08quantity\x18\x04 \x01(\x05\x12\r\n\x05price\x18\x05 \x01(\x01\x12\x0c\n\x04\x64\x61te\x18\x06 \x01(\t\x12\x0e\n\x06userId\x18\x08 \x01(\x03\x12\x17\n\x06photos\x18\x07 \x03(\x0b\x32\x07.Photos\"\x1a\n\x05getId\x12\x11\n\tproductId\x18\x01 \x01(\x03\"\x9b\x01\n\x15UpdateResponseProduct\x12\n\n\x02id\x18\x01 \x01(\x03\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x10\n\x08\x63\x61tegory\x18\x03 \x01(\t\x12\x10\n\x08quantity\x18\x04 \x01(\x05\x12\r\n\x05price\x18\x05 \x01(\x01\x12\x0c\n\x04\x64\x61te\x18\x06 \x01(\t\x12\x0e\n\x06userId\x18\x08 \x01(\x03\x12\x17\n\x06photos\x18\x07 \x03(\x0b\x32\x07.Photos\"/\n\x0bgetProducts\x12 \n\x08products\x18\x01 \x03(\x0b\x32\x0e.ProductObject\"\x93\x01\n\rProductObject\x12\n\n\x02id\x18\x01 \x01(\x03\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x10\n\x08\x63\x61tegory\x18\x03 \x01(\t\x12\x10\n\x08quantity\x18\x04 \x01(\x05\x12\r\n\x05price\x18\x05 \x01(\x01\x12\x0c\n\x04\x64\x61te\x18\x06 \x01(\t\x12\x17\n\x06photos\x18\x07 \x03(\x0b\x32\x07.Photos\x12\x0e\n\x06userId\x18\x08 \x01(\x03\"$\n\x06Photos\x12\r\n\x05order\x18\x01 \x01(\x05\x12\x0b\n\x03url\x18\x02 \x01(\t\"(\n\x16RequestProductByUserId\x12\x0e\n\x06userId\x18\x01 \x01(\x03\"$\n\x14RequestProductByName\x12\x0c\n\x04name\x18\x01 \x01(\t\",\n\x18RequestProductByCategory\x12\x10\n\x08\x63\x61tegory\x18\x01 \x01(\t\"<\n\x16RequestProductByPrices\x12\x10\n\x08priceMin\x18\x01 \x01(\x01\x12\x10\n\x08priceMax\x18\x02 \x01(\x01\"?\n\x15RequestProductByDates\x12\x13\n\x0b\x64\x61teInitial\x18\x01 \x01(\t\x12\x11\n\tdateFinal\x18\x02 \x01(\t2\xa4\x04\n\x07product\x12+\n\x06\x63reate\x12\x0f.RequestProduct\x1a\x10.ResponseProduct\x12\x32\n\x06update\x12\x10.ResponseProduct\x1a\x16.UpdateResponseProduct\x12\x44\n\x1bgetProductsDistinctByUserId\x12\x17.RequestProductByUserId\x1a\x0c.getProducts\x12;\n\x12getProductByUserId\x12\x17.RequestProductByUserId\x1a\x0c.getProducts\x12\x43\n\x1agetProductByUserIdPurchase\x12\x17.RequestProductByUserId\x1a\x0c.getProducts\x12\x37\n\x10getProductByName\x12\x15.RequestProductByName\x1a\x0c.getProducts\x12?\n\x14getProductByCategory\x12\x19.RequestProductByCategory\x1a\x0c.getProducts\x12;\n\x12getProductByPrices\x12\x17.RequestProductByPrices\x1a\x0c.getProducts\x12\x39\n\x11getProductByDates\x12\x16.RequestProductByDates\x1a\x0c.getProductsB\x1d\n\x19\x63om.unla.servicegrpc.grpcP\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rproduct.proto\"\x0e\n\x0c\x45mptyRequest\"\x9c\x01\n\x0eRequestProduct\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x10\n\x08\x63\x61tegory\x18\x02 \x01(\t\x12\x10\n\x08quantity\x18\x03 \x01(\x05\x12\r\n\x05price\x18\x04 \x01(\x01\x12\x0c\n\x04\x64\x61te\x18\x05 \x01(\t\x12\x12\n\nat_auction\x18\x06 \x01(\x08\x12\x0e\n\x06userId\x18\x07 \x01(\x03\x12\x17\n\x06photos\x18\x08 \x03(\x0b\x32\x07.Photos\"\xa9\x01\n\x0fResponseProduct\x12\n\n\x02id\x18\x01 \x01(\x03\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x10\n\x08\x63\x61tegory\x18\x03 \x01(\t\x12\x10\n\x08quantity\x18\x04 \x01(\x05\x12\r\n\x05price\x18\x05 \x01(\x01\x12\x0c\n\x04\x64\x61te\x18\x06 \x01(\t\x12\x12\n\nat_auction\x18\x07 \x01(\x08\x12\x0e\n\x06userId\x18\x08 \x01(\x03\x12\x17\n\x06photos\x18\t \x03(\x0b\x32\x07.Photos\"\x1a\n\x05getId\x12\x11\n\tproductId\x18\x01 \x01(\x03\"\xaf\x01\n\x15UpdateResponseProduct\x12\n\n\x02id\x18\x01 \x01(\x03\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x10\n\x08\x63\x61tegory\x18\x03 \x01(\t\x12\x10\n\x08quantity\x18\x04 \x01(\x05\x12\r\n\x05price\x18\x05 \x01(\x01\x12\x0c\n\x04\x64\x61te\x18\x06 \x01(\t\x12\x12\n\nat_auction\x18\x07 \x01(\x08\x12\x0e\n\x06userId\x18\x08 \x01(\x03\x12\x17\n\x06photos\x18\t \x03(\x0b\x32\x07.Photos\"/\n\x0bgetProducts\x12 \n\x08products\x18\x01 \x03(\x0b\x32\x0e.ProductObject\"\xa7\x01\n\rProductObject\x12\n\n\x02id\x18\x01 \x01(\x03\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x10\n\x08\x63\x61tegory\x18\x03 \x01(\t\x12\x10\n\x08quantity\x18\x04 \x01(\x05\x12\r\n\x05price\x18\x05 \x01(\x01\x12\x0c\n\x04\x64\x61te\x18\x06 \x01(\t\x12\x12\n\nat_auction\x18\x07 \x01(\x08\x12\x17\n\x06photos\x18\x08 \x03(\x0b\x32\x07.Photos\x12\x0e\n\x06userId\x18\t \x01(\x03\"$\n\x06Photos\x12\r\n\x05order\x18\x01 \x01(\x05\x12\x0b\n\x03url\x18\x02 \x01(\t\"(\n\x16RequestProductByUserId\x12\x0e\n\x06userId\x18\x01 \x01(\x03\"$\n\x14RequestProductByName\x12\x0c\n\x04name\x18\x01 \x01(\t\",\n\x18RequestProductByCategory\x12\x10\n\x08\x63\x61tegory\x18\x01 \x01(\t\"<\n\x16RequestProductByPrices\x12\x10\n\x08priceMin\x18\x01 \x01(\x01\x12\x10\n\x08priceMax\x18\x02 \x01(\x01\"?\n\x15RequestProductByDates\x12\x13\n\x0b\x64\x61teInitial\x18\x01 \x01(\t\x12\x11\n\tdateFinal\x18\x02 \x01(\t2\xa4\x04\n\x07product\x12+\n\x06\x63reate\x12\x0f.RequestProduct\x1a\x10.ResponseProduct\x12\x32\n\x06update\x12\x10.ResponseProduct\x1a\x16.UpdateResponseProduct\x12\x44\n\x1bgetProductsDistinctByUserId\x12\x17.RequestProductByUserId\x1a\x0c.getProducts\x12;\n\x12getProductByUserId\x12\x17.RequestProductByUserId\x1a\x0c.getProducts\x12\x43\n\x1agetProductByUserIdPurchase\x12\x17.RequestProductByUserId\x1a\x0c.getProducts\x12\x37\n\x10getProductByName\x12\x15.RequestProductByName\x1a\x0c.getProducts\x12?\n\x14getProductByCategory\x12\x19.RequestProductByCategory\x1a\x0c.getProducts\x12;\n\x12getProductByPrices\x12\x17.RequestProductByPrices\x1a\x0c.getProducts\x12\x39\n\x11getProductByDates\x12\x16.RequestProductByDates\x1a\x0c.getProductsB\x1d\n\x19\x63om.unla.servicegrpc.grpcP\x01\x62\x06proto3')
 
 
 
@@ -130,29 +130,29 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _EMPTYREQUEST._serialized_start=17
   _EMPTYREQUEST._serialized_end=31
   _REQUESTPRODUCT._serialized_start=34
-  _REQUESTPRODUCT._serialized_end=170
-  _RESPONSEPRODUCT._serialized_start=173
-  _RESPONSEPRODUCT._serialized_end=322
-  _GETID._serialized_start=324
-  _GETID._serialized_end=350
-  _UPDATERESPONSEPRODUCT._serialized_start=353
-  _UPDATERESPONSEPRODUCT._serialized_end=508
-  _GETPRODUCTS._serialized_start=510
-  _GETPRODUCTS._serialized_end=557
-  _PRODUCTOBJECT._serialized_start=560
-  _PRODUCTOBJECT._serialized_end=707
-  _PHOTOS._serialized_start=709
-  _PHOTOS._serialized_end=745
-  _REQUESTPRODUCTBYUSERID._serialized_start=747
-  _REQUESTPRODUCTBYUSERID._serialized_end=787
-  _REQUESTPRODUCTBYNAME._serialized_start=789
-  _REQUESTPRODUCTBYNAME._serialized_end=825
-  _REQUESTPRODUCTBYCATEGORY._serialized_start=827
-  _REQUESTPRODUCTBYCATEGORY._serialized_end=871
-  _REQUESTPRODUCTBYPRICES._serialized_start=873
-  _REQUESTPRODUCTBYPRICES._serialized_end=933
-  _REQUESTPRODUCTBYDATES._serialized_start=935
-  _REQUESTPRODUCTBYDATES._serialized_end=998
-  _PRODUCT._serialized_start=1001
-  _PRODUCT._serialized_end=1549
+  _REQUESTPRODUCT._serialized_end=190
+  _RESPONSEPRODUCT._serialized_start=193
+  _RESPONSEPRODUCT._serialized_end=362
+  _GETID._serialized_start=364
+  _GETID._serialized_end=390
+  _UPDATERESPONSEPRODUCT._serialized_start=393
+  _UPDATERESPONSEPRODUCT._serialized_end=568
+  _GETPRODUCTS._serialized_start=570
+  _GETPRODUCTS._serialized_end=617
+  _PRODUCTOBJECT._serialized_start=620
+  _PRODUCTOBJECT._serialized_end=787
+  _PHOTOS._serialized_start=789
+  _PHOTOS._serialized_end=825
+  _REQUESTPRODUCTBYUSERID._serialized_start=827
+  _REQUESTPRODUCTBYUSERID._serialized_end=867
+  _REQUESTPRODUCTBYNAME._serialized_start=869
+  _REQUESTPRODUCTBYNAME._serialized_end=905
+  _REQUESTPRODUCTBYCATEGORY._serialized_start=907
+  _REQUESTPRODUCTBYCATEGORY._serialized_end=951
+  _REQUESTPRODUCTBYPRICES._serialized_start=953
+  _REQUESTPRODUCTBYPRICES._serialized_end=1013
+  _REQUESTPRODUCTBYDATES._serialized_start=1015
+  _REQUESTPRODUCTBYDATES._serialized_end=1078
+  _PRODUCT._serialized_start=1081
+  _PRODUCT._serialized_end=1629
 # @@protoc_insertion_point(module_scope)

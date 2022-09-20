@@ -1,9 +1,5 @@
-from flask import Flask, request, Response
-from flask_cors import CORS
-from topics import topics
-from consumer import consumer_groups, get_messages
-from producer import produce_messages
-import json
+from flask import Flask, request
+from flask_cors import CORS, cross_origin
 
 import logging
 
@@ -16,16 +12,16 @@ import product_pb2
 import product_pb2_grpc
 import shoppingcart_pb2
 import shoppingcart_pb2_grpc
+import auction_pb2
+import auction_pb2_grpc
 
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-# ====================================
+#====================================
 #   User
-# ====================================
-
-
+#====================================
 @app.route("/user", methods=["POST"])
 def registerUser():
     name = request.json['name']
@@ -33,19 +29,17 @@ def registerUser():
     email = request.json['email']
     username = request.json['username']
     password = request.json['password']
-    role = request.json['role']
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = user_pb2_grpc.userStub(channel)
         user = stub.register(user_pb2.RegisterRequest(
-            name=name, lastname=lastname, email=email, username=username, password=password, role=role))
+            name=name, lastname=lastname, email=email, username=username, password=password))
         userResponse = {
             "id": user.__getattribute__("id"),
             "name": user.__getattribute__("name"),
             "lastname": user.__getattribute__("lastname"),
             "email": user.__getattribute__("email"),
-            "username": user.__getattribute__("username"),
-            "role": user.__getattribute__("role")
+            "username": user.__getattribute__("username")
         }
         print(userResponse)
     return userResponse
@@ -84,8 +78,7 @@ def login():
             username=username, password=password))
         loginResponse = {
             "id": login.__getattribute__("id"),
-            "username": login.__getattribute__("username"),
-            "role": login.__getattribute__("role")
+            "username": login.__getattribute__("username")
         }
         print(loginResponse)
 
@@ -104,11 +97,9 @@ def logout():
 
     return logoutResponse
 
-# ====================================
+#====================================
 #   Wallet
-# ====================================
-
-
+#====================================
 @app.route("/addWallet", methods=["POST"])
 def addwallet():
     balance = int(request.json['balance'])
@@ -147,11 +138,9 @@ def subtractwallet():
 
     return json
 
-# ====================================
+#====================================
 #   Product
 # ====================================
-
-
 @app.route('/product', methods=['POST'])
 def createProduct():
     name = request.json["name"]
@@ -159,13 +148,14 @@ def createProduct():
     quantity = int(request.json["quantity"])
     price = float(request.json["price"])
     date = request.json["date"]
+    at_auction = request.json["at_auction"]
     userId = int(request.json["userId"])
     photos = request.json["photos"]
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = product_pb2_grpc.productStub(channel)
         product = stub.create(product_pb2.RequestProduct(name=name, category=category,
-                              quantity=quantity, price=price, date=date, userId=userId, photos=photos))
+                              quantity=quantity, price=price, date=date, at_auction=at_auction, userId=userId, photos=photos))
         print(product)
 
         PHOTOS = []
@@ -183,6 +173,7 @@ def createProduct():
             "quantity": product.__getattribute__("quantity"),
             "price": product.__getattribute__("price"),
             "date": product.__getattribute__("date"),
+            "at_auction": product.__getattribute__("at_auction"),
             "userId": product.__getattribute__("userId"),
             "photos": PHOTOS
         }
@@ -198,13 +189,14 @@ def updateProduct():
     quantity = int(request.json["quantity"])
     price = float(request.json["price"])
     date = request.json["date"]
+    at_auction = request.json["at_auction"]
     userId = int(request.json["userId"])
     photos = request.json["photos"]
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = product_pb2_grpc.productStub(channel)
         product = stub.update(product_pb2.ResponseProduct(id=id, name=name, category=category,
-                              quantity=quantity, price=price, date=date, userId=userId, photos=photos))
+                              quantity=quantity, price=price, date=date, at_auction=at_auction, userId=userId, photos=photos))
         print(product)
 
         PHOTOS = []
@@ -222,6 +214,7 @@ def updateProduct():
             "quantity": product.__getattribute__("quantity"),
             "price": product.__getattribute__("price"),
             "date": product.__getattribute__("date"),
+            "at_auction": product.__getattribute__("at_auction"),
             "userId": product.__getattribute__("userId"),
             "photos": PHOTOS
         }
@@ -231,17 +224,34 @@ def updateProduct():
 
 @app.route('/product', methods=['GET'])
 def getProduct():
-    
-    print(request.args)
+    userId = int(request.args.get('userId')) if request.args.get('userId') is not None else None
+    print(userId)
     userIdDistinct = int(request.args.get('userIdDistinct')) if request.args.get('userIdDistinct') is not None else None
-    
+    userIdPurchase = int(request.args.get('userIdPurchase')) if request.args.get('userIdPurchase') is not None else None
+    name = request.args.get('name') if request.args.get('name') is not None else None
+    category = request.args.get('category') if request.args.get('category') is not None else None
+    priceMax = float(request.args.get('priceMax')) if request.args.get('priceMax') is not None else None
+    priceMin = float(request.args.get('priceMin')) if request.args.get('priceMin') is not None else None
+    dateInitial = request.args.get('dateInitial') if request.args.get('dateInitial') is not None else None
+    dateFinal = request.args.get('dateFinal') if request.args.get('dateFinal') is not None else None
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = product_pb2_grpc.productStub(channel)
         
-        productList = stub.getProductsDistinctByUserId(product_pb2.RequestProductByUserId(userId=userIdDistinct))
-       
-
+        if userId is not None:
+            productList = stub.getProductByUserId(product_pb2.RequestProductByUserId(userId=userId))
+        elif userIdDistinct is not None:
+            productList = stub.getProductsDistinctByUserId(product_pb2.RequestProductByUserId(userId=userIdDistinct))
+        elif userIdPurchase is not None:
+            productList = stub.getProductByUserIdPurchase(product_pb2.RequestProductByUserId(userId=userIdPurchase))
+        elif name is not None:
+            productList = stub.getProductByName(product_pb2.RequestProductByName(name=name))
+        elif category is not None:
+            productList = stub.getProductByCategory(product_pb2.RequestProductByCategory(category=category))
+        elif priceMax is not None and priceMin is not None:
+            productList = stub.getProductByPrices(product_pb2.RequestProductByPrices(priceMin=priceMin, priceMax=priceMax))
+        elif dateInitial is not None and dateFinal is not None:
+            productList = stub.getProductByDates(product_pb2.RequestProductByDates(dateInitial=dateInitial, dateFinal=dateFinal))
 
 
         PRODUCTS = []
@@ -259,12 +269,12 @@ def getProduct():
                 PHOTOS.append(photosJson)
 
             productJson = {
-                "id": product.__getattribute__("id"),
                 "name": product.__getattribute__("name"),
                 "category": product.__getattribute__("category"),
                 "quantity": product.__getattribute__("quantity"),
                 "price": product.__getattribute__("price"),
                 "date": product.__getattribute__("date"),
+                "at_auction": product.__getattribute__("at_auction"),
                 "userId": product.__getattribute__("userId"),
                 "photos": PHOTOS
             }
@@ -277,20 +287,17 @@ def getProduct():
 
     return productResponse
 
-# ====================================
+#====================================
 #   ShoppingCart
 # ====================================
-
-
 @app.route('/shoppingcart', methods=['POST'])
 def toBuyShoppingCart():
     userCompraId = request.json["userCompraId"]
     itemCart = request.json["itemCart"]
-
+    
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = shoppingcart_pb2_grpc.shoppingcartStub(channel)
-        response = stub.comprar(shoppingcart_pb2.RequestCart(
-            userCompraId=userCompraId, itemCart=itemCart))
+        response = stub.comprar(shoppingcart_pb2.RequestCart(userCompraId=userCompraId, itemCart=itemCart))
         print(response)
 
         ITEMPRODUCT = []
@@ -321,6 +328,33 @@ def toBuyShoppingCart():
     return productResponse
 
 
+# ====================================
+#   Auction
+# ====================================
+@app.route('/Auction', methods=['POST'])
+def toBuyAuction():
+    userId = int(request.json["userId"])
+    productId = int(request.json["productId"])
+    total = float(request.json["total"])
+
+    with grpc.insecure_channel('localhost:9090') as channel:
+        stub = auction_pb2_grpc.auctionStub(channel)
+        response = stub.comprar(auction_pb2.RegisterAuction(
+            userId=userId, productId=productId, total=total))
+        print(response)
+
+        AuctionResponse = {
+            "id": response.__getattribute__("id"),
+            "name": response.__getattribute__("userId"),
+            "lastname": response.__getattribute__("productId"),
+            "email": response.__getattribute__("total"),
+        }
+
+    return AuctionResponse
+
+# ====================================
+#   Kafka
+# ====================================
 @app.route("/topics", methods=["GET"])
 def get_topics():
     group_id = request.args.get('groupId') if request.args.get(
@@ -361,7 +395,9 @@ def submit_messages():
         response = Response(message, status=400, mimetype='application/json')
     return response
 
-
+# ====================================
+#   Start
+# ====================================
 if __name__ == '__main__':
     logging.basicConfig()
     app.run()
