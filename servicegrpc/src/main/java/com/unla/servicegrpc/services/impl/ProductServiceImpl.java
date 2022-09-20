@@ -124,7 +124,7 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public List<Product> findByNotUserId(long userId) {
-        return productRepository.findByUser_IdIsNot(userId);
+        return productRepository.findByUser_IdIsNotAndAuctionFalse(userId);
     }
 
     @Override
