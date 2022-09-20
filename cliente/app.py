@@ -16,6 +16,8 @@ import product_pb2
 import product_pb2_grpc
 import shoppingcart_pb2
 import shoppingcart_pb2_grpc
+import auction_pb2
+import auction_pb2_grpc
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -159,13 +161,14 @@ def createProduct():
     quantity = int(request.json["quantity"])
     price = float(request.json["price"])
     date = request.json["date"]
+    at_auction = request.json["at_auction"]
     userId = int(request.json["userId"])
     photos = request.json["photos"]
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = product_pb2_grpc.productStub(channel)
         product = stub.create(product_pb2.RequestProduct(name=name, category=category,
-                              quantity=quantity, price=price, date=date, userId=userId, photos=photos))
+                              quantity=quantity, price=price, date=date, at_auction=at_auction, userId=userId, photos=photos))
         print(product)
 
         PHOTOS = []
@@ -183,6 +186,7 @@ def createProduct():
             "quantity": product.__getattribute__("quantity"),
             "price": product.__getattribute__("price"),
             "date": product.__getattribute__("date"),
+            "at_auction": product.__getattribute__("at_auction"),
             "userId": product.__getattribute__("userId"),
             "photos": PHOTOS
         }
@@ -198,13 +202,14 @@ def updateProduct():
     quantity = int(request.json["quantity"])
     price = float(request.json["price"])
     date = request.json["date"]
+    at_auction = request.json["at_auction"]
     userId = int(request.json["userId"])
     photos = request.json["photos"]
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = product_pb2_grpc.productStub(channel)
         product = stub.update(product_pb2.ResponseProduct(id=id, name=name, category=category,
-                              quantity=quantity, price=price, date=date, userId=userId, photos=photos))
+                              quantity=quantity, price=price, date=date, at_auction=at_auction, userId=userId, photos=photos))
         print(product)
 
         PHOTOS = []
@@ -222,6 +227,7 @@ def updateProduct():
             "quantity": product.__getattribute__("quantity"),
             "price": product.__getattribute__("price"),
             "date": product.__getattribute__("date"),
+            "at_auction": product.__getattribute__("at_auction"),
             "userId": product.__getattribute__("userId"),
             "photos": PHOTOS
         }
@@ -265,6 +271,7 @@ def getProduct():
                 "quantity": product.__getattribute__("quantity"),
                 "price": product.__getattribute__("price"),
                 "date": product.__getattribute__("date"),
+                "at_auction": product.__getattribute__("at_auction"),
                 "userId": product.__getattribute__("userId"),
                 "photos": PHOTOS
             }
@@ -319,6 +326,63 @@ def toBuyShoppingCart():
         }
 
     return productResponse
+
+
+import auction_pb2
+import auction_pb2_grpc
+
+# ====================================
+#   Auction
+# ====================================
+@app.route('/Auction', methods=['POST'])
+def toBuyAuction():
+    userId = int(request.json["userId"])
+    productId = int(request.json["productId"])
+    total = float(request.json["total"])
+
+    with grpc.insecure_channel('localhost:9090') as channel:
+        stub = auction_pb2_grpc.auctionStub(channel)
+        response = stub.getAuctionsByUserPurchase(auction_pb2.RegisterAuction(
+            userId=userId, productId=productId, total=total))
+        print(response)
+
+        AuctionResponse = {
+            "id": response.__getattribute__("id"),
+            "name": response.__getattribute__("userId"),
+            "lastname": response.__getattribute__("productId"),
+            "email": response.__getattribute__("total"),
+            "date": response.__getattribute__("date")
+        }
+
+    return AuctionResponse
+
+@app.route('/Auction', methods=['GET'])
+def toGetAuction():
+    userId = int(request.args.get('userId')) if request.args.get('userId') is not None else None
+
+    with grpc.insecure_channel('localhost:9090') as channel:
+        stub = auction_pb2_grpc.auctionStub(channel)
+        response = stub.comprar(auction_pb2.RegisterAuction(
+            userId=userId))
+        print(response)
+
+        ITEMAUCTION = []
+
+        for item in response.__getattribute__("auctions"):
+            AuctionResponse = {
+                "id": item.__getattribute__("id"),
+                "name": item.__getattribute__("userId"),
+                "lastname": item.__getattribute__("productId"),
+                "email": item.__getattribute__("total"),
+                "date": item.__getattribute__("date")
+            }
+            ITEMAUCTION.append(AuctionResponse)
+
+        AuctionResponse2 = {
+            "auctions": ITEMAUCTION
+        }
+
+    return AuctionResponse2
 
 
 @app.route("/topics", methods=["GET"])
