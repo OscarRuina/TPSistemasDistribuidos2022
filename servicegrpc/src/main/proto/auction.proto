@@ -5,6 +5,11 @@ option java_package = "com.unla.servicegrpc.grpc";
 
 service auction{
   rpc comprar(RegisterAuction) returns (ResponseAuction);
+  rpc getAuctionsByUserPurchase(RequestUserId) returns (ListAuction);
+}
+
+message RequestUserId{
+    int64 userId = 1;
 }
 
 message RegisterAuction{
@@ -21,4 +26,8 @@ message ResponseAuction{
   double total = 4;
   string date = 5;
 
+}
+
+message ListAuction{
+  repeated ResponseAuction auctions = 1;
 }
