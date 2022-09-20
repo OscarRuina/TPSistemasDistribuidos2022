@@ -50,6 +50,7 @@ python -m grpc_tools.protoc -I./protos --python_out=. --grpc_python_out=. ./prot
 python -m grpc_tools.protoc -I./protos --python_out=. --grpc_python_out=. ./protos/shoppingcart.proto
 python -m grpc_tools.protoc -I./protos --python_out=. --grpc_python_out=. ./protos/user.proto
 python -m grpc_tools.protoc -I./protos --python_out=. --grpc_python_out=. ./protos/wallet.proto
+python -m grpc_tools.protoc -I./protos --python_out=. --grpc_python_out=. ./protos/auction.proto
 ```
 Los archivos generados deberían ser:
 * product_pb2_grpc.py
