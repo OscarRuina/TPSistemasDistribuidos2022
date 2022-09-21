@@ -1,3 +1,4 @@
+from multiprocessing.sharedctypes import Value
 from flask import Flask, request, Response
 from flask_cors import CORS
 from topics import topics
@@ -415,15 +416,21 @@ def get_consumer_messages():
 @app.route("/messages", methods=["POST"])
 def submit_messages():
     response = ''
-    if request.args.get('topic'):
-        topic = request.args.get('topic')
-        orders = request.json["orders"]
-        message = json.dumps(produce_messages(topic, orders))
-        response = Response(message, status=200, mimetype='application/json')
-    else:
-        message = json.dumps({"error": "missing topic"})
-        response = Response(message, status=400, mimetype='application/json')
-    return response
+    try:
+        if request.args.get('topic'):
+            topic = request.args.get('topic')
+            if request.json.get(topic) is None:
+                raise ValueError("The body does not contain same messages as topic")
+            messages = request.json[topic]
+            message = json.dumps(produce_messages(topic, messages))
+            response = Response(message, status=200, mimetype='application/json')
+                
+        else:
+            message = json.dumps({"error": "missing topic"})
+            response = Response(message, status=400, mimetype='application/json')
+        return response
+    except Exception as e:
+        return Response(json.dumps({"error": str(e)}), status=500, mimetype='application/json')
 
 
 if __name__ == '__main__':
