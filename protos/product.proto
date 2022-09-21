@@ -56,6 +56,8 @@ message UpdateResponseProduct{
   bool at_auction = 7;
   int64 userId = 8;
   repeated Photos photos = 9;
+  string nameOld = 10;
+  double priceOld = 11;
 }
 
 message getProducts{

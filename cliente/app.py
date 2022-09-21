@@ -192,6 +192,24 @@ def createProduct():
             "photos": PHOTOS
         }
 
+        #Se debe guardar en un topic de Kafka nombrado con el id del producto la siguiente información:
+        topic = "product_" + str(product.__getattribute__("id"))
+        orders = {
+            "orders": [{
+                "date": date,
+                "old": [{
+                    "name": "null",
+                    "price": "null"
+                }],
+                "new": [{
+                    "name": name,
+                    "price": price
+                }]
+            }]
+        }
+        message = json.dumps(produce_messages(topic, orders["orders"]))
+        kafka = Response(message, status=200, mimetype='application/json')
+
     return productResponse
 
 
@@ -232,6 +250,23 @@ def updateProduct():
             "userId": product.__getattribute__("userId"),
             "photos": PHOTOS
         }
+
+        topic = "product_" + str(id)
+        orders = {
+            "orders": [{
+                "date": date,
+                "old": [{
+                    "name": product.__getattribute__("nameOld"),
+                    "price": product.__getattribute__("priceOld")
+                }],
+                "new": [{
+                    "name": name,
+                    "price": price
+                }]
+            }]
+        }
+        message = json.dumps(produce_messages(topic, orders["orders"]))
+        kafka = Response(message, status=200, mimetype='application/json')
 
     return productResponse
 
