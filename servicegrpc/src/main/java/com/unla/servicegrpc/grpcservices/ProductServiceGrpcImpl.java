@@ -103,6 +103,8 @@ public class ProductServiceGrpcImpl extends productGrpc.productImplBase {
 
         responseProductDTO.setPhotos(photosActual);
 
+        Product productNow = productService.findById(request.getId());
+
         System.out.println(responseProductDTO.getPhotos());
         Product product = productService.update(responseProductDTO, request.getId());
 
@@ -125,6 +127,8 @@ public class ProductServiceGrpcImpl extends productGrpc.productImplBase {
                 .setAtAuction(product.isAuction())
                 .setUserId(product.getUser().getId())
                 .addAllPhotos(photos)
+                .setNameOld(productNow.getName())
+                .setPriceOld(productNow.getPrice())
                 .build();
 
         responseObserver.onNext(updateResponseProduct);

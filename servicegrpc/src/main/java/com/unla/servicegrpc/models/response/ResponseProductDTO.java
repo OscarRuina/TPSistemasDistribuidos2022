@@ -37,7 +37,9 @@ public class ResponseProductDTO {
     @JsonProperty("user")
     private ResponseUserDTO user;
 
+    private String nameOld;
 
+    private double priceOld;
 
     /*faltan 2 datos pero no se si van aca fotos y carrito*/
 
