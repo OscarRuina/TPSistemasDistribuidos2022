@@ -132,7 +132,7 @@ La aplicación correrá en localhost bajo el puerto 5000: `http://127.0.0.1:5000
 #### Kafka
 Se utiliza kafka desde el cliente para producir mensajes desde la vista y consumirlos desde el servidor.
 
-En windows descargar [WLS](https://docs.microsoft.com/es-es/learn/modules/get-started-with-windows-subsystem-for-linux/) para ejecutar Linux desde Windows y así poder instalar Kafka. Dentro del Linux, descargar [Kafka](https://kafka.apache.org/) y Zookeeper. Se puede ver [este tutorial](https://www.conduktor.io/kafka/how-to-install-apache-kafka-on-windows) de como descargar, instalar y configurar las herramientas.
+En windows descargar [WLS](https://docs.microsoft.com/es-es/learn/modules/get-started-with-windows-subsystem-for-linux/) para ejecutar Linux desde Windows y así poder instalar Kafka. Dentro del Linux, descargar [Kafka](https://kafka.apache.org/) y Zookeeper. Se puede ver [este tutorial](https://www.conduktor.io/kafka/how-to-install-apache-kafka-on-windows) de como descargar, instalar y configurar las herramientas y [este video]([este tutorial]).
 
 Correr Zookeeper en WLS
 `bin/zookeeper-server-start.sh config/zookeeper.properties`
@@ -145,7 +145,7 @@ Correr servidor de Kafka en WLS
 El cliente cuenta con los métodos REST los cuales permitirán escribir (producer) y escuchar (consumer) mensajes en Kafka y ver información.
 Estos métodos son:
 * GET /topics?groupId={groupId}: devuelve los tópicos a los cuales está suscripto un consumer
-* GET /consumer-groups: deveulve los consumers existentes en el servidor de Kafka
+* GET /consumer-groups: devuelve los consumers existentes en el servidor de Kafka
 * GET /messages?groupId={groupId}&topic={topicName}: devuelve los mensajes todavía no commiteados de un consumer sobre un tópico específico. También devuelve la cantidad de mensajes restantes a escuchar bajo la key "*consumer_total_lag*".
 * POST /messages?topic={topicName}: permite enviar los mensajes a un tópico específico para ser escritos en Kafka. El body recibe un JSON con la key igual al "topicName" y el value es un array de mensajes JSON, por ej:
 
