@@ -9,7 +9,7 @@ import { loadUserFromLocalStorage } from './services/localStorageService';
 import Wallet from './components/pages/Wallet';
 import RegisterProduct from './components/pages/RegisterProduct';
 import UserProducts from './components/pages/UserProducts';
-import UserPurchase from './components/pages/UserPurchase';
+import UserPurchase from './components/pages/UserPurchase/UserPurchase';
 import { CartProvider } from './constants/CartContext';
 
 function App() {

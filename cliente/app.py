@@ -164,7 +164,12 @@ def createProduct():
     quantity = int(request.json["quantity"])
     price = float(request.json["price"])
     date = request.json["date"]
-    at_auction = request.json["at_auction"]
+    
+    isSubasta = request.json["at_auction"]
+    at_auction = False
+    if isSubasta == "true":
+        at_auction = True
+    
     userId = int(request.json["userId"])
     photos = request.json["photos"]
 

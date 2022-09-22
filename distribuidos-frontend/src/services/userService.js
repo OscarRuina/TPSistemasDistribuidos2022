@@ -18,6 +18,7 @@ export const registerUser = async ({
   email,
   username,
   password,
+  role,
 }) => {
   return await axios
     .post(`${BASE_URL}/user`, {
@@ -26,6 +27,7 @@ export const registerUser = async ({
       email: email,
       username: username,
       password: password,
+      role: role,
     })
     .then(res => {
       return res;

@@ -26,6 +26,7 @@ export default function RegisterProduct() {
     quantity: '',
     price: '',
     date: '',
+    at_auction: "",
     userId: user.id,
     photos: [],
   };
@@ -37,10 +38,12 @@ export default function RegisterProduct() {
     useState(defaultOpts);
 
   const handleInputChange = e => {
+    console.log(e);
     let { name, value } = e.target;
     setRegisterProductForm(prev => {
       return { ...prev, [name]: value };
     });
+    console.log(registerProductForm);
   };
 
   const handleSubmit = async (e) => {
@@ -181,6 +184,13 @@ export default function RegisterProduct() {
                 required
               ></Input>
             </Box>
+            <div onChange={handleInputChange}>
+              <input type="radio" id="Venta" name="at_auction" value={`${false}`}/>
+                <label for="venta">Venta</label>
+              <input type="radio" id="Subasta" name="at_auction" value={`${true}`} />
+                <label for="Subasta">Subasta</label>
+            </div>
+            
             <input type="file" onChange={e => setImagenes(e.target.files)} multiple accept="image/*" required/>
           </Grid>
           <Center>
