@@ -132,7 +132,7 @@ La aplicación correrá en localhost bajo el puerto 5000: `http://127.0.0.1:5000
 #### Kafka
 Se utiliza kafka desde el cliente para producir mensajes desde la vista y consumirlos desde el servidor.
 
-En windows descargar [WLS](https://docs.microsoft.com/es-es/learn/modules/get-started-with-windows-subsystem-for-linux/) para ejecutar Linux desde Windows y así poder instalar Kafka. Dentro del Linux, descargar [Kafka](https://kafka.apache.org/) y Zookeeper. Se puede ver [este tutorial](https://www.conduktor.io/kafka/how-to-install-apache-kafka-on-windows) de como descargar, instalar y configurar las herramientas y [este video]([este tutorial]).
+En windows descargar [WLS](https://docs.microsoft.com/es-es/learn/modules/get-started-with-windows-subsystem-for-linux/) para ejecutar Linux desde Windows y así poder instalar Kafka. Dentro del Linux, descargar [Kafka](https://kafka.apache.org/) y Zookeeper. Se puede ver [este tutorial](https://www.conduktor.io/kafka/how-to-install-apache-kafka-on-windows) de como descargar, instalar y configurar las herramientas y [este video](https://www.youtube.com/playlist?list=PLxoOrmZMsAWxXBF8h_TPqYJNsh3x4GyO4).
 
 Correr Zookeeper en WLS
 `bin/zookeeper-server-start.sh config/zookeeper.properties`
