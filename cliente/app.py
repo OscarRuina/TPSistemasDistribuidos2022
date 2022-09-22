@@ -4,7 +4,9 @@ from flask_cors import CORS
 from topics import topics
 from consumer import consumer_groups, get_messages
 from producer import produce_messages
+from pdf_generator import pdf_generator
 import json
+import base64
 
 import logging
 
@@ -192,7 +194,7 @@ def createProduct():
             "photos": PHOTOS
         }
 
-        #Se debe guardar en un topic de Kafka nombrado con el id del producto la siguiente información:
+        # Se debe guardar en un topic de Kafka nombrado con el id del producto la siguiente información:
         topic = "product_" + str(product.__getattribute__("id"))
         orders = {
             "orders": [{
@@ -273,18 +275,16 @@ def updateProduct():
 
 @app.route('/product', methods=['GET'])
 def getProduct():
-    
+
     print(request.args)
-    userIdDistinct = int(request.args.get('userIdDistinct')) if request.args.get('userIdDistinct') is not None else None
-    
+    userIdDistinct = int(request.args.get('userIdDistinct')) if request.args.get(
+        'userIdDistinct') is not None else None
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = product_pb2_grpc.productStub(channel)
-        
-        productList = stub.getProductsDistinctByUserId(product_pb2.RequestProductByUserId(userId=userIdDistinct))
-       
 
-
+        productList = stub.getProductsDistinctByUserId(
+            product_pb2.RequestProductByUserId(userId=userIdDistinct))
 
         PRODUCTS = []
 
@@ -364,12 +364,10 @@ def toBuyShoppingCart():
     return productResponse
 
 
-import auction_pb2
-import auction_pb2_grpc
-
 # ====================================
 #   Auction
 # ====================================
+
 @app.route('/Auction', methods=['POST'])
 def toBuyAuction():
     userId = int(request.json["userId"])
@@ -392,9 +390,11 @@ def toBuyAuction():
 
     return AuctionResponse
 
+
 @app.route('/Auction', methods=['GET'])
 def toGetAuction():
-    userId = int(request.args.get('userId')) if request.args.get('userId') is not None else None
+    userId = int(request.args.get('userId')) if request.args.get(
+        'userId') is not None else None
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = auction_pb2_grpc.auctionStub(channel)
@@ -455,15 +455,36 @@ def submit_messages():
         if request.args.get('topic'):
             topic = request.args.get('topic')
             if request.json.get(topic) is None:
-                raise ValueError("The body does not contain same messages as topic")
+                raise ValueError(
+                    "The body does not contain same messages as topic")
             messages = request.json[topic]
             message = json.dumps(produce_messages(topic, messages))
-            response = Response(message, status=200, mimetype='application/json')
-                
+            response = Response(message, status=200,
+                                mimetype='application/json')
+
         else:
             message = json.dumps({"error": "missing topic"})
-            response = Response(message, status=400, mimetype='application/json')
+            response = Response(message, status=400,
+                                mimetype='application/json')
         return response
+    except Exception as e:
+        return Response(json.dumps({"error": str(e)}), status=500, mimetype='application/json')
+
+
+@app.route("/pdf/download", methods=["POST"])
+def pdf_download():
+    try:
+        invoice_id = request.json['invoiceId']
+        purchase_date = request.json['purchaseDate']
+        seller = request.json['seller']
+        buyer = request.json['buyer']
+        products = request.json['products']
+        total_amount = request.json['totalAmount']
+
+        pdf = pdf_generator(invoice_id, purchase_date,
+                            seller, buyer, products, total_amount)
+
+        return Response(base64.b64encode(str(pdf).encode()), status=200, mimetype='application/json')
     except Exception as e:
         return Response(json.dumps({"error": str(e)}), status=500, mimetype='application/json')
 
