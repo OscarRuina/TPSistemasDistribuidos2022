@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react';
 import '../../constants/styles.css';
 import { registerUser } from '../../services/userService';
-import {useNavigate} from "react-router-dom"
+import { useNavigate } from 'react-router-dom';
 
 export default function Register({ onClose }) {
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ export default function Register({ onClose }) {
     username: '',
     password: '',
     repeatPassword: '',
-    role: ""
+    role: '',
   });
 
   const [error, setError] = React.useState(false);
@@ -35,7 +35,6 @@ export default function Register({ onClose }) {
   };
 
   const handleSubmit = async () => {
-    console.log(registerForm);
     if (registerForm.password !== registerForm.repeatPassword) {
       setError(prev => true);
       return false;
@@ -118,10 +117,14 @@ export default function Register({ onClose }) {
           required
         />
         {error && (
-          <Text className="error ">las contraseñas no coinciden, intente de nuevo</Text>
+          <Text className="error ">
+            las contraseñas no coinciden, intente de nuevo
+          </Text>
         )}
         {registerError && (
-          <Text className="error ">username ya existente, intente con otro</Text>
+          <Text className="error ">
+            username ya existente, intente con otro
+          </Text>
         )}
         <Flex pt="2rem" justifyContent="center">
           <Button onClick={handleSubmit}>Registrar</Button>
