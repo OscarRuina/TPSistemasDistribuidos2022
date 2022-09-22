@@ -29,13 +29,17 @@ public class ResponseProductDTO {
 
     private LocalDate date;
 
+    private boolean at_auction;
+
     //estaba en lista de string
     private List<Photo> photos;
 
     @JsonProperty("user")
     private ResponseUserDTO user;
 
+    private String nameOld;
 
+    private double priceOld;
 
     /*faltan 2 datos pero no se si van aca fotos y carrito*/
 

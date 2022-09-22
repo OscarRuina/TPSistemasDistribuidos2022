@@ -57,6 +57,9 @@ public class Product {
     @Column(name = "date", nullable = false)
     private LocalDate date;
 
+    @Column(name = "at_auction", nullable = false)
+    private boolean auction;
+
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "product", cascade = CascadeType.ALL)
     private List<Photo> photos;
 
@@ -68,5 +71,10 @@ public class Product {
             CascadeType.MERGE,
             CascadeType.DETACH, CascadeType.REFRESH})
     private List<ShoppingCartProducts> shoppingCartProducts;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = {CascadeType.PERSIST,
+            CascadeType.MERGE,
+            CascadeType.DETACH, CascadeType.REFRESH})
+    private List<Auction> auctions;
 
 }

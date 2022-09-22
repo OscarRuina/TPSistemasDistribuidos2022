@@ -25,8 +25,9 @@ message RequestProduct{
   int32  quantity = 3;
   double  price = 4;
   string date = 5;
-  int64 userId = 6;
-  repeated Photos photos = 7;
+  bool at_auction = 6;
+  int64 userId = 7;
+  repeated Photos photos = 8;
 }
 
 message ResponseProduct{
@@ -36,8 +37,9 @@ message ResponseProduct{
   int32 quantity = 4;
   double price = 5;
   string date = 6;
+  bool at_auction = 7;
   int64 userId = 8;
-  repeated Photos photos = 7;
+  repeated Photos photos = 9;
 }
 
 message getId{
@@ -51,8 +53,11 @@ message UpdateResponseProduct{
   int32 quantity = 4;
   double price = 5;
   string date = 6;
+  bool at_auction = 7;
   int64 userId = 8;
-  repeated Photos photos = 7;
+  repeated Photos photos = 9;
+  string nameOld = 10;
+  double priceOld = 11;
 }
 
 message getProducts{
@@ -66,8 +71,9 @@ message ProductObject{
   int32 quantity = 4;
   double price = 5;
   string date = 6;
-  repeated Photos photos = 7;
-  int64 userId = 8;
+  bool at_auction = 7;
+  repeated Photos photos = 8;
+  int64 userId = 9;
 }
 
 message Photos{
