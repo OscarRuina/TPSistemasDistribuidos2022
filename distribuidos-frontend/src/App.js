@@ -9,8 +9,8 @@ import { loadUserFromLocalStorage } from './services/localStorageService';
 import Wallet from './components/pages/Wallet';
 import RegisterProduct from './components/pages/RegisterProduct';
 import UserProducts from './components/pages/UserProducts';
-import UserPurchase from './components/pages/UserPurchase';
-import Login from "./components/pages/Login/Login";
+import UserPurchase from './components/pages/UserPurchase/UserPurchase';
+import { CartProvider } from './constants/CartContext';
 
 function App() {
   const loadUser = loadUserFromLocalStorage();
@@ -22,15 +22,16 @@ function App() {
     <Router>
       <Box className="App">
         <UserContext.Provider value={{ user, setUser }}>
+          <CartProvider>
           <Routes>
             <Route exact path="/" element={<Index />} />
             <Route path="/account" element={<Account />} />
             <Route path="/wallet" element={<Wallet />} />
-            <Route path="/login" element={<Login />} />
             <Route path="/newProduct" element={<RegisterProduct />} />
             <Route path="/userProducts" element={<UserProducts />} />
             <Route path="/userPurchase" element={<UserPurchase />} />
           </Routes>
+          </CartProvider>
         </UserContext.Provider>
       </Box>
     </Router>

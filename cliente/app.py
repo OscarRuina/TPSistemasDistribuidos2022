@@ -1,9 +1,12 @@
+from multiprocessing.sharedctypes import Value
 from flask import Flask, request, Response
 from flask_cors import CORS
 from topics import topics
 from consumer import consumer_groups, get_messages
 from producer import produce_messages
+from pdf_generator import pdf_generator
 import json
+import base64
 
 import logging
 
@@ -16,6 +19,8 @@ import product_pb2
 import product_pb2_grpc
 import shoppingcart_pb2
 import shoppingcart_pb2_grpc
+import auction_pb2
+import auction_pb2_grpc
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -159,13 +164,19 @@ def createProduct():
     quantity = int(request.json["quantity"])
     price = float(request.json["price"])
     date = request.json["date"]
+    
+    isSubasta = request.json["at_auction"]
+    at_auction = False
+    if isSubasta == "true":
+        at_auction = True
+    
     userId = int(request.json["userId"])
     photos = request.json["photos"]
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = product_pb2_grpc.productStub(channel)
         product = stub.create(product_pb2.RequestProduct(name=name, category=category,
-                              quantity=quantity, price=price, date=date, userId=userId, photos=photos))
+                              quantity=quantity, price=price, date=date, at_auction=at_auction, userId=userId, photos=photos))
         print(product)
 
         PHOTOS = []
@@ -183,9 +194,28 @@ def createProduct():
             "quantity": product.__getattribute__("quantity"),
             "price": product.__getattribute__("price"),
             "date": product.__getattribute__("date"),
+            "at_auction": product.__getattribute__("at_auction"),
             "userId": product.__getattribute__("userId"),
             "photos": PHOTOS
         }
+
+        # Se debe guardar en un topic de Kafka nombrado con el id del producto la siguiente información:
+        topic = "product_" + str(product.__getattribute__("id"))
+        orders = {
+            "orders": [{
+                "date": date,
+                "old": [{
+                    "name": "null",
+                    "price": "null"
+                }],
+                "new": [{
+                    "name": name,
+                    "price": price
+                }]
+            }]
+        }
+        message = json.dumps(produce_messages(topic, orders["orders"]))
+        kafka = Response(message, status=200, mimetype='application/json')
 
     return productResponse
 
@@ -198,13 +228,14 @@ def updateProduct():
     quantity = int(request.json["quantity"])
     price = float(request.json["price"])
     date = request.json["date"]
+    at_auction = request.json["at_auction"]
     userId = int(request.json["userId"])
     photos = request.json["photos"]
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = product_pb2_grpc.productStub(channel)
         product = stub.update(product_pb2.ResponseProduct(id=id, name=name, category=category,
-                              quantity=quantity, price=price, date=date, userId=userId, photos=photos))
+                              quantity=quantity, price=price, date=date, at_auction=at_auction, userId=userId, photos=photos))
         print(product)
 
         PHOTOS = []
@@ -222,27 +253,43 @@ def updateProduct():
             "quantity": product.__getattribute__("quantity"),
             "price": product.__getattribute__("price"),
             "date": product.__getattribute__("date"),
+            "at_auction": product.__getattribute__("at_auction"),
             "userId": product.__getattribute__("userId"),
             "photos": PHOTOS
         }
+
+        topic = "product_" + str(id)
+        orders = {
+            "orders": [{
+                "date": date,
+                "old": [{
+                    "name": product.__getattribute__("nameOld"),
+                    "price": product.__getattribute__("priceOld")
+                }],
+                "new": [{
+                    "name": name,
+                    "price": price
+                }]
+            }]
+        }
+        message = json.dumps(produce_messages(topic, orders["orders"]))
+        kafka = Response(message, status=200, mimetype='application/json')
 
     return productResponse
 
 
 @app.route('/product', methods=['GET'])
 def getProduct():
-    
+
     print(request.args)
-    userIdDistinct = int(request.args.get('userIdDistinct')) if request.args.get('userIdDistinct') is not None else None
-    
+    userIdDistinct = int(request.args.get('userIdDistinct')) if request.args.get(
+        'userIdDistinct') is not None else None
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = product_pb2_grpc.productStub(channel)
-        
-        productList = stub.getProductsDistinctByUserId(product_pb2.RequestProductByUserId(userId=userIdDistinct))
-       
 
-
+        productList = stub.getProductsDistinctByUserId(
+            product_pb2.RequestProductByUserId(userId=userIdDistinct))
 
         PRODUCTS = []
 
@@ -259,11 +306,13 @@ def getProduct():
                 PHOTOS.append(photosJson)
 
             productJson = {
+                "id": product.__getattribute__("id"),
                 "name": product.__getattribute__("name"),
                 "category": product.__getattribute__("category"),
                 "quantity": product.__getattribute__("quantity"),
                 "price": product.__getattribute__("price"),
                 "date": product.__getattribute__("date"),
+                "at_auction": product.__getattribute__("at_auction"),
                 "userId": product.__getattribute__("userId"),
                 "photos": PHOTOS
             }
@@ -320,6 +369,63 @@ def toBuyShoppingCart():
     return productResponse
 
 
+# ====================================
+#   Auction
+# ====================================
+
+@app.route('/Auction', methods=['POST'])
+def toBuyAuction():
+    userId = int(request.json["userId"])
+    productId = int(request.json["productId"])
+    total = float(request.json["total"])
+
+    with grpc.insecure_channel('localhost:9090') as channel:
+        stub = auction_pb2_grpc.auctionStub(channel)
+        response = stub.getAuctionsByUserPurchase(auction_pb2.RegisterAuction(
+            userId=userId, productId=productId, total=total))
+        print(response)
+
+        AuctionResponse = {
+            "id": response.__getattribute__("id"),
+            "name": response.__getattribute__("userId"),
+            "lastname": response.__getattribute__("productId"),
+            "email": response.__getattribute__("total"),
+            "date": response.__getattribute__("date")
+        }
+
+    return AuctionResponse
+
+
+@app.route('/Auction', methods=['GET'])
+def toGetAuction():
+    userId = int(request.args.get('userId')) if request.args.get(
+        'userId') is not None else None
+
+    with grpc.insecure_channel('localhost:9090') as channel:
+        stub = auction_pb2_grpc.auctionStub(channel)
+        response = stub.comprar(auction_pb2.RegisterAuction(
+            userId=userId))
+        print(response)
+
+        ITEMAUCTION = []
+
+        for item in response.__getattribute__("auctions"):
+            AuctionResponse = {
+                "id": item.__getattribute__("id"),
+                "name": item.__getattribute__("userId"),
+                "lastname": item.__getattribute__("productId"),
+                "email": item.__getattribute__("total"),
+                "date": item.__getattribute__("date")
+            }
+            ITEMAUCTION.append(AuctionResponse)
+
+        AuctionResponse2 = {
+            "auctions": ITEMAUCTION
+        }
+
+    return AuctionResponse2
+
+
 @app.route("/topics", methods=["GET"])
 def get_topics():
     group_id = request.args.get('groupId') if request.args.get(
@@ -350,15 +456,42 @@ def get_consumer_messages():
 @app.route("/messages", methods=["POST"])
 def submit_messages():
     response = ''
-    if request.args.get('topic'):
-        topic = request.args.get('topic')
-        orders = request.json["orders"]
-        message = json.dumps(produce_messages(topic, orders))
-        response = Response(message, status=200, mimetype='application/json')
-    else:
-        message = json.dumps({"error": "missing topic"})
-        response = Response(message, status=400, mimetype='application/json')
-    return response
+    try:
+        if request.args.get('topic'):
+            topic = request.args.get('topic')
+            if request.json.get(topic) is None:
+                raise ValueError(
+                    "The body does not contain same messages as topic")
+            messages = request.json[topic]
+            message = json.dumps(produce_messages(topic, messages))
+            response = Response(message, status=200,
+                                mimetype='application/json')
+
+        else:
+            message = json.dumps({"error": "missing topic"})
+            response = Response(message, status=400,
+                                mimetype='application/json')
+        return response
+    except Exception as e:
+        return Response(json.dumps({"error": str(e)}), status=500, mimetype='application/json')
+
+
+@app.route("/pdf/download", methods=["POST"])
+def pdf_download():
+    try:
+        invoice_id = request.json['invoiceId']
+        purchase_date = request.json['purchaseDate']
+        seller = request.json['seller']
+        buyer = request.json['buyer']
+        products = request.json['products']
+        total_amount = request.json['totalAmount']
+
+        pdf = pdf_generator(invoice_id, purchase_date,
+                            seller, buyer, products, total_amount)
+
+        return Response(base64.b64encode(str(pdf).encode()), status=200, mimetype='application/json')
+    except Exception as e:
+        return Response(json.dumps({"error": str(e)}), status=500, mimetype='application/json')
 
 
 if __name__ == '__main__':

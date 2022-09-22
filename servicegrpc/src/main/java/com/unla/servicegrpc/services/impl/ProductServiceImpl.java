@@ -54,6 +54,7 @@ public class ProductServiceImpl implements IProductService {
         product.setPrice(requestProductDTO.getPrice());
         product.setQuantity(requestProductDTO.getQuantity());
         product.setDate(requestProductDTO.getDate());
+        product.setAuction(requestProductDTO.isAt_auction());
 
         User user = userRepository.findById(requestProductDTO.getUserId()).orElseThrow();
         product.setUser(user);
@@ -89,6 +90,7 @@ public class ProductServiceImpl implements IProductService {
         product.setPrice(responseProductDTO.getPrice());
         product.setQuantity(responseProductDTO.getQuantity());
         product.setDate(responseProductDTO.getDate());
+        product.setAuction(responseProductDTO.isAt_auction());
 
         //aca no limito si son 5, deberia hacerse desde front, no permitiendole subir mas de 5
         List<Photo> photos = product.getPhotos();
@@ -122,7 +124,7 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public List<Product> findByNotUserId(long userId) {
-        return productRepository.findByUser_IdIsNot(userId);
+        return productRepository.findByUser_IdIsNotAndAuctionFalse(userId);
     }
 
     @Override
