@@ -25,6 +25,7 @@ export default function Products() {
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isSubasta, setIsSubasta] = useState(false);
   const [productForm, setProductForm] = useState([
     {
       userIdDistinct: 0,
@@ -61,8 +62,8 @@ export default function Products() {
   },[]);
 
   useEffect(() => {
-    /*console.log("productos");
-    console.log(products);*/
+    console.log("productos");
+    console.log(products);
     //user != null ? setProductsDistintUser(products.filter(product => product.userId != user.id )): setProductsDistintUser(products);
     //user !== undefined ? setProductsDistintUser(products.filter(product => product.userId != user.id )) : setProductsDistintUser(products);
     if(products.length != 0){
@@ -192,38 +193,48 @@ export default function Products() {
 
   return (
     <div className='container-products'>
+      <div className='type-product-bar'>
+        <button className={` btn ${!isSubasta ? "btn-actual" : "btn-clickeable"}`} onClick={() => setIsSubasta(false)}>Ventas</button>
+        <button className={`btn ${isSubasta ? "btn-actual": "btn-clickeable"}`} onClick={() =>setIsSubasta(true)}>Subastas</button>
+      </div>
       <div className='barra-filtros'>
-        <h2 className='titulo-buscador'>Filtros</h2>
-        <div className='buscador'>
+            <h2 className='titulo-buscador'>Filtros</h2>
 
-          <p>Nombre</p>
-          <input type="text" value={name} onChange={handleNameChange}/>
+            <div className='buscador'>
 
-          <p>Categoria</p>
-          <input type="text" value={category} onChange={handleCategoryChange}/>
-          
-          <p className='titulo-filtro'>Precio</p>
-          
-          <p>Precio Minimo</p>
-          <input type="number" value={priceMin} onChange={handlePriceMinChange}/>
-          <p>Precio Maximo</p>
-          <input type="number" value={priceMax} onChange={handlePriceMaxChange}/>
-          
-          <p className='titulo-filtro'>Fecha de Elaboracion</p>
-          
-          <p>Fecha Inicio</p>
-          <input type="date" value={dateInitial} onChange={handleDateInitialChange}/>
-          <p>Fecha Fin</p>
-          <input type="date" value={dateFinal} onChange={handleDateFinalChange}/>
-          
-          <IconButton icon={<SearchIcon />} onClick={handleSearch}></IconButton>
+              <p>Nombre</p>
+              <input type="text" value={name} onChange={handleNameChange}/>
+
+              <p>Categoria</p>
+              <input type="text" value={category} onChange={handleCategoryChange}/>
+            
+              <p className='titulo-filtro'>Precio</p>
+            
+              <p>Precio Minimo</p>
+              <input type="number" value={priceMin} onChange={handlePriceMinChange}/>
+              <p>Precio Maximo</p>
+              <input type="number" value={priceMax} onChange={handlePriceMaxChange}/>
+            
+              <p className='titulo-filtro'>Fecha de Elaboracion</p>
+            
+              <p>Fecha Inicio</p>
+              <input type="date" value={dateInitial} onChange={handleDateInitialChange}/>
+              <p>Fecha Fin</p>
+              <input type="date" value={dateFinal} onChange={handleDateFinalChange}/>
+            
+              <IconButton icon={<SearchIcon />} onClick={handleSearch}></IconButton>
+            </div>
         </div>
-      </div>
-      <div className='lista-productos'>
-
-        {showProducts()}
-    
-      </div>
+      {!isSubasta ? 
+          <div className='lista-productos'>
+            {showProducts()}
+          </div>
+      :
+        <div className='lista-products-subasta'>
+          <p className='no-found'>No hay productos en subasta</p>
+        </div>
+      }
+      
     </div>
   );
 };

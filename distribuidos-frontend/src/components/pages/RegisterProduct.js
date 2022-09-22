@@ -26,6 +26,7 @@ export default function RegisterProduct() {
     quantity: '',
     price: '',
     date: '',
+    at_auction: "",
     userId: user.id,
     photos: [],
   };
@@ -181,6 +182,10 @@ export default function RegisterProduct() {
                 required
               ></Input>
             </Box>
+            <input type="radio" id="Venta" name="opcion-venta" value="Venta" onClick={() => handleOptionVenta}>
+              <label for="venta">Venta</label><br>
+            <input type="radio" id="Subasta" name="opcion-venta" value="Subasta" onClick={() => handleOptionVenta}>
+              <label for="Subasta">Subasta</label><br>
             <input type="file" onChange={e => setImagenes(e.target.files)} multiple accept="image/*" required/>
           </Grid>
           <Center>

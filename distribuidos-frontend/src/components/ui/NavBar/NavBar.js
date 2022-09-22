@@ -45,7 +45,28 @@ console.log(user);
   return (
     <div className='NavContainer'>
       <h1>TP Distribuidos 2022</h1>
-      <ul>
+      { user?.role == "MONITOR" ? (
+        <ul>
+          <li>
+            {user ? 
+              <p>Historial de cambios en productos</p>:
+              <Link to="/">
+                  <button>Historial de cambios en productos</button>
+              </Link>
+              }
+          </li>
+          <li>
+            {user? 
+              <p>Historial de subasta de productos</p>:
+              <Link to="/">
+                  Historial de subasta de productos
+              </Link>
+            }
+          </li>
+        </ul>
+      )
+      :
+        (<ul>
         <li>
         {user && (actual == "inicio"? 
           <p>Inicio</p>:
@@ -81,7 +102,8 @@ console.log(user);
               </Link>)
           }
         </li>
-      </ul>
+      </ul>)
+      }
 
       
 
