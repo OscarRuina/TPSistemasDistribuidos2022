@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { UserContext } from '../../constants/UserContext';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
-import {uploadImages} from "../../firebase/config";
+import { uploadImages } from '../../firebase/config';
 import {
   FormControl,
   FormLabel,
@@ -14,7 +14,6 @@ import {
 } from '@chakra-ui/react';
 import { createProduct } from '../../services/productService';
 import NavBar from '../ui/NavBar/NavBar';
-import { async } from '@firebase/util';
 
 export default function RegisterProduct() {
   //los archivos de input file dan una lista de objetos e.target.files[0] el primer archivo tiene lenght
@@ -26,49 +25,40 @@ export default function RegisterProduct() {
     quantity: '',
     price: '',
     date: '',
-    at_auction: "",
+    at_auction: '',
     userId: user.id,
     photos: [],
   };
   const [imagenes, setImagenes] = useState(null);
-  
   const [isError, setIsError] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [registerProductForm, setRegisterProductForm] =
-    useState(defaultOpts);
+  const [registerProductForm, setRegisterProductForm] = useState(defaultOpts);
 
   const handleInputChange = e => {
-    console.log(e);
     let { name, value } = e.target;
     setRegisterProductForm(prev => {
       return { ...prev, [name]: value };
     });
-    console.log(registerProductForm);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    console.log(imagenes);
     let listaImagenes = [];
     for (let i = 0; i < imagenes.length; i++) {
-      if(i<5){
+      if (i < 5) {
         try {
           let urlImagen = await uploadImages(imagenes[i]);
           listaImagenes.push(urlImagen);
         } catch (error) {
-          console.log(error);
-          alert("Fallo la subida de archivos");
+          alert('Fallo la subida de archivos');
         }
       }
     }
-    console.log(listaImagenes);
     for (let j = 0; j < listaImagenes.length; j++) {
-      registerProductForm.photos.push({order: j+1, url:listaImagenes[j]});
+      registerProductForm.photos.push({ order: j + 1, url: listaImagenes[j] });
     }
-    console.log(registerProductForm);
 
     submitForm();
-
   };
 
   const submitForm = async () => {
@@ -79,27 +69,14 @@ export default function RegisterProduct() {
         setRegisterProductForm(defaultOpts);
       })
       .catch(err => {
-        console.log(err);
         setIsError(true);
         setIsSuccess(false);
       });
   };
-  /*
-  <Button
-        position="absolute"
-        top="-5rem"
-        right="2rem"
-        w="100px"
-        h="60px"
-        borderRadius="5px"
-        onClick={() => navigate(-1)}
-      >
-        Return
-      </Button>
-  */
+
   return (
     <div>
-      <NavBar/>
+      <NavBar />
       <Box
         mt="7rem"
         w="90%"
@@ -185,13 +162,29 @@ export default function RegisterProduct() {
               ></Input>
             </Box>
             <div onChange={handleInputChange}>
-              <input type="radio" id="Venta" name="at_auction" value={`${false}`}/>
-                <label for="venta">Venta</label>
-              <input type="radio" id="Subasta" name="at_auction" value={`${true}`} />
-                <label for="Subasta">Subasta</label>
+              <input
+                type="radio"
+                id="Venta"
+                name="at_auction"
+                value={`${false}`}
+              />
+              <label for="venta">Venta</label>
+              <input
+                type="radio"
+                id="Subasta"
+                name="at_auction"
+                value={`${true}`}
+              />
+              <label for="Subasta">Subasta</label>
             </div>
-            
-            <input type="file" onChange={e => setImagenes(e.target.files)} multiple accept="image/*" required/>
+
+            <input
+              type="file"
+              onChange={e => setImagenes(e.target.files)}
+              multiple
+              accept="image/*"
+              required
+            />
           </Grid>
           <Center>
             {isSuccess ? (

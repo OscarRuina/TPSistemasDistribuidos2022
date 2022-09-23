@@ -11,11 +11,10 @@ import RegisterProduct from './components/pages/RegisterProduct';
 import UserProducts from './components/pages/UserProducts';
 import UserPurchase from './components/pages/UserPurchase/UserPurchase';
 import { CartProvider } from './constants/CartContext';
+import ProductDetails from './components/pages/ProductDetails';
 
 function App() {
   const loadUser = loadUserFromLocalStorage();
-  console.log(loadUser);
-  console.log("arriba usuario")
   const [user, setUser] = useState(loadUser);
 
   return (
@@ -23,14 +22,18 @@ function App() {
       <Box className="App">
         <UserContext.Provider value={{ user, setUser }}>
           <CartProvider>
-          <Routes>
-            <Route exact path="/" element={<Index />} />
-            <Route path="/account" element={<Account />} />
-            <Route path="/wallet" element={<Wallet />} />
-            <Route path="/newProduct" element={<RegisterProduct />} />
-            <Route path="/userProducts" element={<UserProducts />} />
-            <Route path="/userPurchase" element={<UserPurchase />} />
-          </Routes>
+            <Routes>
+              <Route exact path="/" element={<Index />} />
+              <Route path="/account" element={<Account />} />
+              <Route path="/wallet" element={<Wallet />} />
+              <Route path="/newProduct" element={<RegisterProduct />} />
+              <Route path="/userProducts" element={<UserProducts />} />
+              <Route
+                path="/userProducts/:productId"
+                element={<ProductDetails />}
+              />
+              <Route path="/userPurchase" element={<UserPurchase />} />
+            </Routes>
           </CartProvider>
         </UserContext.Provider>
       </Box>

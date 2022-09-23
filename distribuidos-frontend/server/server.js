@@ -26,7 +26,6 @@ app.get('/login', async (req, res) => {
 
 app.get('/getProduct', async (req, res) => {
   let payload = JSON.parse(req.query.payload);
-  console.log(payload);
   return res.json(payload);
 });
 
@@ -40,6 +39,4 @@ app.get('/balance/', async (req, res) => {
   return res.json(balance);
 });
 
-app.listen(PORT, () => {
-  console.log(`Listening port: ${PORT}`);
-});
+app.listen(PORT, () => {});
