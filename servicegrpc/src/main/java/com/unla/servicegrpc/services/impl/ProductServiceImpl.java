@@ -116,15 +116,23 @@ public class ProductServiceImpl implements IProductService {
         return productRepository.save(product);
     }
 
+    /** Trae productos creados por el usuario **/
     @Override
     @Transactional
     public List<Product> findByUserId(long userId){
         return productRepository.findByUser_Id(userId);
     }
 
+    /** Trae productos para comprar por el usuario **/
     @Override
     public List<Product> findByNotUserId(long userId) {
         return productRepository.findByUser_IdIsNotAndAuctionFalse(userId);
+    }
+
+    /** Trae productos en subasta para comprar por el usuario **/
+    @Override
+    public List<Product> findByNotUserIdAuctionTrue(long userId) {
+        return productRepository.findByUser_IdIsNotAndAuctionTrue(userId);
     }
 
     @Override
