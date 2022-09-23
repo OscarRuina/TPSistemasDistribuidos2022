@@ -1,6 +1,7 @@
 package com.unla.servicegrpc.models.database;
 
 import com.unla.servicegrpc.utils.messages.CommonErrorMessages;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -21,6 +22,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Setter
@@ -76,5 +78,9 @@ public class Product {
             CascadeType.MERGE,
             CascadeType.DETACH, CascadeType.REFRESH})
     private List<Auction> auctions;
+
+    @UpdateTimestamp
+    @Column(name = "edition_date")
+    private Timestamp editionDate;
 
 }

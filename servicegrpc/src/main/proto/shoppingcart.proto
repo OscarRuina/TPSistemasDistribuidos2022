@@ -6,6 +6,11 @@ option java_package = "com.unla.servicegrpc.grpc";
 
 service shoppingcart{
   rpc comprar(RequestCart) returns(ResponseCart);
+  rpc listUserPurchaseShoppingCart(getIdUser) returns(getList);
+}
+
+message getIdUser{
+  int64 userId = 1;
 }
 
 message RequestCart{
@@ -18,6 +23,10 @@ message ResponseCart{
   UserCompra userCompra = 2;
   repeated ProductData itemProduct=3;
   double precioFinal = 4;
+}
+
+message getList{
+  repeated ResponseCart responseCart = 1;
 }
 
 message ItemCart{
