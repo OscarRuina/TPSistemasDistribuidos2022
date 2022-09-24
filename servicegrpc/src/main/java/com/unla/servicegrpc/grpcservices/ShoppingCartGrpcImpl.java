@@ -94,4 +94,44 @@ public class ShoppingCartGrpcImpl extends shoppingcartGrpc.shoppingcartImplBase 
         responseObserver.onNext(responseCart);
         responseObserver.onCompleted();
     }
+
+    @Override
+    public void listUserPurchaseShoppingCart(getIdUser request,
+            StreamObserver<getList> responseObserver) {
+        List<ShoppingCart> shoppingCarts = shoppingCartService.getListUserId(request.getUserId());
+        List<ResponseCart> responseCarts = new ArrayList<>();
+
+        for(int i = 0; i < shoppingCarts.size(); i++){
+
+            List<ProductData> productsData = new ArrayList<>();
+            for(int j = 0; j < shoppingCarts.get(i).getShoppingCartProducts().size(); j++){
+                ProductData productData = ProductData.newBuilder()
+                        .setId(shoppingCarts.get(i).getShoppingCartProducts().get(j).getId())
+                        .setCategory(shoppingCarts.get(i).getShoppingCartProducts().get(j).getProduct().getCategory())
+                        .setName(shoppingCarts.get(i).getShoppingCartProducts().get(j).getProduct().getName())
+                        .setPrice(shoppingCarts.get(i).getShoppingCartProducts().get(j).getProduct().getPrice())
+                        .setItemQuantity(shoppingCarts.get(i).getShoppingCartProducts().get(j).getQuantity())
+                        .build();
+                productsData.add(productData);
+            }
+
+            ResponseCart responseCart = ResponseCart.newBuilder()
+                    .setShoppingCartId(shoppingCarts.get(i).getId())
+                    .setUserCompra(UserCompra.newBuilder()
+                            .setUserCompraId(shoppingCarts.get(i).getUser().getId())
+                            .setUsername(shoppingCarts.get(i).getUser().getUsername())
+                            .build())
+                    .addAllItemProduct(productsData)
+                    .setPrecioFinal(shoppingCarts.get(i).getFinalPrice())
+                    .build();
+            responseCarts.add(responseCart);
+        }
+
+        getList getList = com.unla.servicegrpc.grpc.getList.newBuilder()
+                .addAllResponseCart(responseCarts)
+                .build();
+        responseObserver.onNext(getList);
+        responseObserver.onCompleted();
+
+    }
 }

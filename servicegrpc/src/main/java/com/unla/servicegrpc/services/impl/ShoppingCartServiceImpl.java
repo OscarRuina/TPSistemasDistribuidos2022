@@ -8,6 +8,7 @@ import com.unla.servicegrpc.models.request.RequestShoppingCartDTO;
 import com.unla.servicegrpc.repositories.ShoppingCartRepository;
 import com.unla.servicegrpc.services.IShoppingCartService;
 import com.unla.servicegrpc.utils.messages.CommonErrorMessages;
+import java.util.List;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,5 +41,10 @@ public class ShoppingCartServiceImpl implements IShoppingCartService {
         shoppingCart.setShoppingCartProducts(requestShoppingCartDTO.getShoppingCartProducts());
         return shoppingCartRepository.save(shoppingCart);
 
+    }
+
+    @Override
+    public List<ShoppingCart> getListUserId(long userId) {
+        return shoppingCartRepository.findByUser_Id(userId);
     }
 }

@@ -23,6 +23,8 @@ public interface IProductService {
 
     List<Product> findByNotUserId(long userId);
 
+    List<Product> findByNotUserIdAuctionTrue(long userId);
+
     List<Product> findByUserIdPurchase(long userId);
 
     List<Product> findByName(String name);
