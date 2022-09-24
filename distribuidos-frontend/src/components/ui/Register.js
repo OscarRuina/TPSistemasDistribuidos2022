@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { v4 as uuid } from 'uuid';
 import {
   Button,
@@ -14,14 +14,15 @@ import {useNavigate} from "react-router-dom"
 
 export default function Register({ onClose }) {
   const navigate = useNavigate();
-  const [registerForm, setRegisterForm] = React.useState({
+ 
+  const [registerForm, setRegisterForm] = useState({
     name: '',
     lastname: '',
     email: '',
     username: '',
     password: '',
     repeatPassword: '',
-    role: ""
+    role: "normal"
   });
 
   const [error, setError] = React.useState(false);
@@ -33,6 +34,14 @@ export default function Register({ onClose }) {
       return { ...prev, [name]: value };
     });
   };
+
+  const handleRole = e => {
+    let valor = e.target.checked ? "monitor" : "normal";
+    setRegisterForm(prev => {
+      return { ...prev, role: valor };
+    });
+    console.log(registerForm);
+  }
 
   const handleSubmit = async () => {
     console.log(registerForm);
@@ -91,14 +100,11 @@ export default function Register({ onClose }) {
           required
         />
         <FormLabel>Role</FormLabel>
-        <Input
-          id={uuid()}
-          type="text"
-          name="role"
-          value={registerForm.role}
-          onChange={handleInputChange}
-          required
-        />
+        
+        <div>
+          <input type="checkbox" id="monitor" name="monitor" onClick={handleRole} />
+          <label for="monitor">es Monitor</label>
+        </div>
         <FormLabel>Contraseña</FormLabel>
         <Input
           id={uuid()}

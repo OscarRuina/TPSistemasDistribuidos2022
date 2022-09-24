@@ -20,13 +20,16 @@ export default function RegisterProduct() {
   //los archivos de input file dan una lista de objetos e.target.files[0] el primer archivo tiene lenght
   const navigate = useNavigate();
   const { user, setUser } = useContext(UserContext);
+  const [isSubasta, setisSubasta] = useState(false);
   const defaultOpts = {
     name: '',
     category: '',
-    quantity: '',
+    quantity: '1',
     price: '',
     date: '',
     at_auction: "",
+    dateInitial: "",
+    dateFinal: "",
     userId: user.id,
     photos: [],
   };
@@ -40,14 +43,33 @@ export default function RegisterProduct() {
   const handleInputChange = e => {
     console.log(e);
     let { name, value } = e.target;
-    setRegisterProductForm(prev => {
-      return { ...prev, [name]: value };
-    });
+    if (name == "at_auction"){
+      setisSubasta(value == "true" ? true : false);
+    }
+    if(name == "quantity" && !isSubasta){
+      setRegisterProductForm(prev => {
+        return { ...prev, [name]: value };
+      });
+    }else if(name != "quantity"){
+      setRegisterProductForm(prev => {
+        return { ...prev, [name]: value };
+      });
+    }
+    
     console.log(registerProductForm);
+    console.log(isSubasta)
   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if(isSubasta){
+      setRegisterProductForm(prev => {
+        return { ...prev, quantity: 1 };
+      });
+    }
+    console.log(registerProductForm)
     console.log(imagenes);
     let listaImagenes = [];
     for (let i = 0; i < imagenes.length; i++) {
@@ -155,13 +177,15 @@ export default function RegisterProduct() {
                 id={uuid()}
                 type="number"
                 name="quantity"
-                value={registerProductForm.quantity}
+                value={isSubasta ? 1 : registerProductForm.quantity}
                 onChange={handleInputChange}
+                readonly={isSubasta? true : false}
                 required
               ></Input>
             </Box>
             <Box>
-              <FormLabel>Precio</FormLabel>
+              
+              <FormLabel>{isSubasta ? "Precio Inicial" : "Precio"}</FormLabel>
               <Input
                 htmlFor="price"
                 id={uuid()}
@@ -185,13 +209,40 @@ export default function RegisterProduct() {
               ></Input>
             </Box>
             <div onChange={handleInputChange}>
-              <input type="radio" id="Venta" name="at_auction" value={`${false}`}/>
+              <input type="radio" id="Venta" name="at_auction" value={`${false}`} defaultChecked/>
                 <label for="venta">Venta</label>
               <input type="radio" id="Subasta" name="at_auction" value={`${true}`} />
                 <label for="Subasta">Subasta</label>
             </div>
             
             <input type="file" onChange={e => setImagenes(e.target.files)} multiple accept="image/*" required/>
+            {isSubasta &&
+              <Box>
+                <FormLabel>Fecha de Inicio</FormLabel>
+                <Input
+                  htmlFor="dateInitial"
+                  id={uuid()}
+                  type="date"
+                  name="dateInitial"
+                  value={registerProductForm.dateInitial}
+                  onChange={handleInputChange}
+                  
+                  required={isSubasta}
+                ></Input>
+                <FormLabel>Fecha de Finalizacion</FormLabel>
+                <Input
+                  htmlFor="dateFinal"
+                  id={uuid()}
+                  type="date"
+                  name="dateFinal"
+                  value={registerProductForm.dateFinal}
+                  onChange={handleInputChange}
+                  
+                  required={isSubasta}
+                ></Input>
+             </Box>
+            }
+            
           </Grid>
           <Center>
             {isSuccess ? (
