@@ -325,6 +325,54 @@ def getProduct():
 
     return productResponse
 
+
+@app.route('/productAution', methods=['GET'])
+def getProductAution():
+
+    print(request.args)
+    userIdDistinct = int(request.args.get('userId')) if request.args.get(
+        'userIdDistinct') is not None else None
+
+    with grpc.insecure_channel('localhost:9090') as channel:
+        stub = product_pb2_grpc.productStub(channel)
+
+        productList = stub.getProductsInAuctionByUserId(
+            product_pb2.RequestProductByUserId(userId=userIdDistinct))
+
+        PRODUCTS = []
+
+        for product in productList.__getattribute__("products"):
+            print(product)
+
+            PHOTOS = []
+
+            for photo in product.__getattribute__("photos"):
+                photosJson = {
+                    "url": photo.__getattribute__("url"),
+                    "order": photo.__getattribute__("order")
+                }
+                PHOTOS.append(photosJson)
+
+            productJson = {
+                "id": product.__getattribute__("id"),
+                "name": product.__getattribute__("name"),
+                "category": product.__getattribute__("category"),
+                "quantity": product.__getattribute__("quantity"),
+                "price": product.__getattribute__("price"),
+                "date": product.__getattribute__("date"),
+                "at_auction": product.__getattribute__("at_auction"),
+                "userId": product.__getattribute__("userId"),
+                "photos": PHOTOS
+            }
+
+            PRODUCTS.append(productJson)
+
+    productResponse = {
+        "products": PRODUCTS
+    }
+
+    return productResponse
+
 # ====================================
 #   ShoppingCart
 # ====================================
@@ -367,6 +415,53 @@ def toBuyShoppingCart():
         }
 
     return productResponse
+
+@app.route('/shoppingcartUserPurchase', methods=['GET'])
+def userPurchaseShoppingCart():
+    userId = int(request.args.get('userId'))
+
+    with grpc.insecure_channel('localhost:9090') as channel:
+        stub = shoppingcart_pb2_grpc.shoppingcartStub(channel)
+        responseCart = stub.listUserPurchaseShoppingCart(shoppingcart_pb2.getIdUser(
+            userId=userId))
+        print(responseCart)
+
+        RESPONSECART = []
+
+        for response in responseCart.__getattribute__("responseCart"):
+
+            ITEMPRODUCT = []
+
+            for item in response.__getattribute__("itemProduct"):
+                photosJson = {
+                    "id": item.__getattribute__("id"),
+                    "name": item.__getattribute__("name"),
+                    "category": item.__getattribute__("category"),
+                    "itemQuantity": item.__getattribute__("itemQuantity"),
+                    "price": item.__getattribute__("price")
+                }
+                ITEMPRODUCT.append(photosJson)
+
+            userCompra = response.__getattribute__("userCompra")
+
+            Compra = {
+                "userCompraId": userCompra.__getattribute__("userCompraId"),
+                "username": userCompra.__getattribute__("username")
+            }
+            productResponse = {
+                "itemProduct": ITEMPRODUCT,
+                "shoppingCartId": response.__getattribute__("shoppingCartId"),
+                "precioFinal": response.__getattribute__("precioFinal"),
+                "userCompra": Compra
+            }
+
+            RESPONSECART.append(productResponse)
+
+        CartResponse = {
+            "responseCart": RESPONSECART
+        }
+
+    return CartResponse
 
 
 # ====================================
