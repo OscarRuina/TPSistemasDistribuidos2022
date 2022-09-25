@@ -5,6 +5,8 @@ from topics import topics
 from consumer import consumer_groups, get_messages
 from producer import produce_messages
 from pdf_generator import pdf_generator
+from pathlib import Path
+from borb.pdf import PDF
 import json
 import base64
 
@@ -290,7 +292,7 @@ def getProduct():
 
         productList = stub.getProductsDistinctByUserId(
             product_pb2.RequestProductByUserId(userId=userIdDistinct))
-
+        
         PRODUCTS = []
 
         for product in productList.__getattribute__("products"):
@@ -312,6 +314,55 @@ def getProduct():
                 "quantity": product.__getattribute__("quantity"),
                 "price": product.__getattribute__("price"),
                 "date": product.__getattribute__("date"),
+                "at_auction": product.__getattribute__("at_auction"),
+                "userId": product.__getattribute__("userId"),
+                "photos": PHOTOS
+            }
+
+            PRODUCTS.append(productJson)
+
+    productResponse = {
+        "products": PRODUCTS
+    }
+
+    return productResponse
+
+@app.route('/auctions', methods=['GET'])
+def getProductAuctions():
+
+    print(request.args)
+    userIdRequest = int(request.args.get('userId')) if request.args.get(
+        'userId') is not None else None
+
+    with grpc.insecure_channel('localhost:9090') as channel:
+        stub = product_pb2_grpc.productStub(channel)
+
+        productList = stub.getProductsInAuctionByUserId(
+            product_pb2.RequestProductByUserId(userId = userIdRequest)
+        )
+        
+        PRODUCTS = []
+
+        for product in productList.__getattribute__("products"):
+            print(product)
+
+            PHOTOS = []
+
+            for photo in product.__getattribute__("photos"):
+                photosJson = {
+                    "url": photo.__getattribute__("url"),
+                    "order": photo.__getattribute__("order")
+                }
+                PHOTOS.append(photosJson)
+
+            productJson = {
+                "id": product.__getattribute__("id"),
+                "name": product.__getattribute__("name"),
+                "category": product.__getattribute__("category"),
+                "quantity": product.__getattribute__("quantity"),
+                "price": product.__getattribute__("price"),
+                "date": product.__getattribute__("date"),
+                "dateFinished": product.__getattribute__("dateFinished"),
                 "at_auction": product.__getattribute__("at_auction"),
                 "userId": product.__getattribute__("userId"),
                 "photos": PHOTOS
@@ -426,6 +477,10 @@ def toGetAuction():
     return AuctionResponse2
 
 
+# ====================================
+#   Kafka
+# ====================================
+
 @app.route("/topics", methods=["GET"])
 def get_topics():
     group_id = request.args.get('groupId') if request.args.get(
@@ -489,7 +544,18 @@ def pdf_download():
         pdf = pdf_generator(invoice_id, purchase_date,
                             seller, buyer, products, total_amount)
 
-        return Response(base64.b64encode(str(pdf).encode()), status=200, mimetype='application/json')
+        # store the PDF
+        with open(Path("factura_generada.pdf"), "wb") as pdf_file_handle:
+            PDF.dumps(pdf_file_handle, pdf)
+
+        encoded_string = "hola"
+
+        with open("factura_generada.pdf", "rb") as pdf_file:
+            encoded_string = base64.b64encode(pdf_file.read())
+            
+        #return Response(base64.b64encode(str(pdf).encode()), status=200, mimetype='application/json')
+        return Response(encoded_string, status=200, mimetype='application/json')
+       
     except Exception as e:
         return Response(json.dumps({"error": str(e)}), status=500, mimetype='application/json')
 

@@ -23,8 +23,8 @@ export default function SingleProductSmall({ product }) {
     <div className="container-product">
       <div className="image-product">
         <img
-          src={bread}
-          // src={product.photos.length !== 0 ? product.photos[0].url : bread}
+          //src={bread}
+          src={product.photos.length !== 0 ? product.photos[0].url : bread}
           alt=""
         />
       </div>
