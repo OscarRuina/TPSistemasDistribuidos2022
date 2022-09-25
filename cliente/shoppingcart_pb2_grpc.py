@@ -19,12 +19,23 @@ class shoppingcartStub(object):
                 request_serializer=shoppingcart__pb2.RequestCart.SerializeToString,
                 response_deserializer=shoppingcart__pb2.ResponseCart.FromString,
                 )
+        self.listUserPurchaseShoppingCart = channel.unary_unary(
+                '/shoppingcart/listUserPurchaseShoppingCart',
+                request_serializer=shoppingcart__pb2.getIdUser.SerializeToString,
+                response_deserializer=shoppingcart__pb2.getList.FromString,
+                )
 
 
 class shoppingcartServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def comprar(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def listUserPurchaseShoppingCart(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -37,6 +48,11 @@ def add_shoppingcartServicer_to_server(servicer, server):
                     servicer.comprar,
                     request_deserializer=shoppingcart__pb2.RequestCart.FromString,
                     response_serializer=shoppingcart__pb2.ResponseCart.SerializeToString,
+            ),
+            'listUserPurchaseShoppingCart': grpc.unary_unary_rpc_method_handler(
+                    servicer.listUserPurchaseShoppingCart,
+                    request_deserializer=shoppingcart__pb2.getIdUser.FromString,
+                    response_serializer=shoppingcart__pb2.getList.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -62,5 +78,22 @@ class shoppingcart(object):
         return grpc.experimental.unary_unary(request, target, '/shoppingcart/comprar',
             shoppingcart__pb2.RequestCart.SerializeToString,
             shoppingcart__pb2.ResponseCart.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def listUserPurchaseShoppingCart(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/shoppingcart/listUserPurchaseShoppingCart',
+            shoppingcart__pb2.getIdUser.SerializeToString,
+            shoppingcart__pb2.getList.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

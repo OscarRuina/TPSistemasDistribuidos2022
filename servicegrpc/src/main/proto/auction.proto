@@ -17,6 +17,7 @@ message RegisterAuction{
   int64 productId = 2;
   double total = 3;
   string date = 4;
+  string dateFinished = 5;
 }
 
 message ResponseAuction{
@@ -25,7 +26,7 @@ message ResponseAuction{
   int64 productId = 3;
   double total = 4;
   string date = 5;
-
+  string dateFinished = 6;
 }
 
 message ListAuction{

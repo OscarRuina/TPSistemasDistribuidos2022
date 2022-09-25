@@ -1,6 +1,7 @@
 import { Box, Button, Flex } from '@chakra-ui/react';
 import React, {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
+import Auction from '../../ui/Auction/Auction';
 import NavBar from '../../ui/NavBar/NavBar';
 import PDF from '../../ui/PDF/PDF';
 import "./UserPurchase.css"
@@ -10,6 +11,34 @@ export default function UserPurchase() {
   const navigate = useNavigate();
   const [isVentas, setIsVentas] = useState(false);
   const [verPDF, setVerPDF] = useState(false);
+  const auction ={
+        invoiceId: 1,
+        purchaseDate: "21-08-2022",
+        seller:{
+          name: "Matias",
+          lastname: "Rivero",
+          username: "mathyz",
+          email: "mati@gmail.com"
+        },
+        buyer:{
+          name: "Lucas",
+          lastname: "Molina",
+          username: "lumo",
+          email: "lumo@gmail.com"
+        },
+        products:[
+          {
+            name: "Silla",
+            price: 150,
+            quantity: 2
+          },{
+            name: "Mesa",
+            price: 2550,
+            quantity: 20
+          }
+        ],
+        totalAmount: 1500
+  }
   /*
   <Button
           right="1rem"
@@ -30,7 +59,7 @@ export default function UserPurchase() {
       </div>
       {!isVentas ?
         <>
-
+          <Auction auction={auction}/>
         <button onClick={() => setVerPDF(!verPDF)}>Ver</button>
 
         <button>Descargar</button>

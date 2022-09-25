@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { UserContext } from '../../../constants/UserContext';
 import React, { useContext, useEffect, useState } from 'react';
-import { getAllProductsDiferent } from '../../../services/productService';
+import { getAllProductsDiferent, getAllProductsSubastaByDistinctUserId } from '../../../services/productService';
 import SingleProduct from '../../ui/SingleProduct/SingleProduct';
 import SingleProductSmall from '../../ui/SingleProductSmall/SingleProductSmall';
 import axios from 'axios';
@@ -24,6 +24,7 @@ export default function Products() {
   const { user, setUser } = useContext(UserContext);
 
   const [products, setProducts] = useState([]);
+  const [auctions, setAuctions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isSubasta, setIsSubasta] = useState(false);
   const [productForm, setProductForm] = useState([
@@ -33,6 +34,9 @@ export default function Products() {
   ]);
   var productsDistintUser = [];
   const [productsFiltered, setProductsFiltered] = useState([]);
+
+  var auctionsDistintUser = [];
+  const [auctionsFiltered, setAuctionsFiltered] = useState([]);
   //const [filtro, setFiltro] = useState("name");
   //datos de busqueda-----------------------
   const [name, setName] = useState('');
@@ -55,19 +59,35 @@ export default function Products() {
             ))
           : (productsDistintUser = products);
         setProductsFiltered(productsDistintUser);
+        //setLoading(false);
+      });
+    };
+
+    const getAllProductsAuctions = async () => {
+      //setLoading(true);
+      await getAllProductsSubastaByDistinctUserId(productForm).then(res => {
+        setAuctions(res.products);
+        user !== undefined
+          ? (auctionsDistintUser = auctions.filter(
+              auction => auction.userId != user.id
+            ))
+          : (auctionsDistintUser = auctions);
+        setAuctionsFiltered(auctionsDistintUser);
         setLoading(false);
       });
     };
 
     getAllProducts().catch(null);
+    getAllProductsAuctions().catch(null);
+    console.log(auctionsDistintUser);
   }, []);
 
   useEffect(() => {
     //user != null ? setProductsDistintUser(products.filter(product => product.userId != user.id )): setProductsDistintUser(products);
     //user !== undefined ? setProductsDistintUser(products.filter(product => product.userId != user.id )) : setProductsDistintUser(products);
-    if (products.length != 0) {
+    if (products?.length != 0) {
       if (user !== undefined) {
-        productsDistintUser = products.filter(
+        productsDistintUser = products?.filter(
           product => product.userId != user.id
         );
       } else {
@@ -76,6 +96,21 @@ export default function Products() {
       setProductsFiltered(productsDistintUser);
     }
   }, [products, user]);
+
+  useEffect(() => {
+    //user != null ? setProductsDistintUser(products.filter(product => product.userId != user.id )): setProductsDistintUser(products);
+    //user !== undefined ? setProductsDistintUser(products.filter(product => product.userId != user.id )) : setProductsDistintUser(products);
+    if (auctions?.length != 0) {
+      if (user !== undefined) {
+        auctionsDistintUser = auctions?.filter(
+          auction => auction.userId != user.id
+        );
+      } else {
+        auctionsDistintUser = auctions;
+      }
+      setAuctionsFiltered(auctionsDistintUser);
+    }
+  }, [auctions, user]);
 
   const handleNameChange = e => {
     setName(e.target.value);
@@ -165,9 +200,20 @@ export default function Products() {
   };
 
   const showProducts = () => {
-    if (productsFiltered.length != 0) {
-      return productsFiltered.map((product, idx) => {
+    if (productsFiltered?.length != 0) {
+      return productsFiltered?.map((product, idx) => {
         return <SingleProductSmall key={idx} product={product} />;
+      });
+    } else {
+      return <p className="no-found">No se encontraron resultados</p>;
+    }
+  };
+
+  const showAuctions = () => {
+    console.log(auctionsFiltered)
+    if (auctionsFiltered?.length != 0) {
+      return auctionsFiltered?.map((auction, idx) => {
+        return <SingleProductSmall key={idx} product={auction} />;
       });
     } else {
       return <p className="no-found">No se encontraron resultados</p>;
@@ -236,9 +282,7 @@ export default function Products() {
       {!isSubasta ? (
         <div className="lista-productos">{showProducts()}</div>
       ) : (
-        <div className="lista-products-subasta">
-          <p className="no-found">No hay productos en subasta</p>
-        </div>
+        <div className="lista-products-subasta">{showAuctions()}</div>
       )}
     </div>
   );

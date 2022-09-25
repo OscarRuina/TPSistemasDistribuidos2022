@@ -29,6 +29,11 @@ class productStub(object):
                 request_serializer=product__pb2.RequestProductByUserId.SerializeToString,
                 response_deserializer=product__pb2.getProducts.FromString,
                 )
+        self.getProductsInAuctionByUserId = channel.unary_unary(
+                '/product/getProductsInAuctionByUserId',
+                request_serializer=product__pb2.RequestProductByUserId.SerializeToString,
+                response_deserializer=product__pb2.getProducts.FromString,
+                )
         self.getProductByUserId = channel.unary_unary(
                 '/product/getProductByUserId',
                 request_serializer=product__pb2.RequestProductByUserId.SerializeToString,
@@ -77,6 +82,12 @@ class productServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def getProductsDistinctByUserId(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getProductsInAuctionByUserId(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -133,6 +144,11 @@ def add_productServicer_to_server(servicer, server):
             ),
             'getProductsDistinctByUserId': grpc.unary_unary_rpc_method_handler(
                     servicer.getProductsDistinctByUserId,
+                    request_deserializer=product__pb2.RequestProductByUserId.FromString,
+                    response_serializer=product__pb2.getProducts.SerializeToString,
+            ),
+            'getProductsInAuctionByUserId': grpc.unary_unary_rpc_method_handler(
+                    servicer.getProductsInAuctionByUserId,
                     request_deserializer=product__pb2.RequestProductByUserId.FromString,
                     response_serializer=product__pb2.getProducts.SerializeToString,
             ),
@@ -222,6 +238,23 @@ class product(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/product/getProductsDistinctByUserId',
+            product__pb2.RequestProductByUserId.SerializeToString,
+            product__pb2.getProducts.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getProductsInAuctionByUserId(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/product/getProductsInAuctionByUserId',
             product__pb2.RequestProductByUserId.SerializeToString,
             product__pb2.getProducts.FromString,
             options, channel_credentials,
