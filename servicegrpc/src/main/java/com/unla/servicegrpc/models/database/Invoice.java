@@ -31,5 +31,5 @@ public class Invoice {
             CascadeType.DETACH, CascadeType.REFRESH})
     private List<InvoiceProducts> invoiceProducts;
 
-    private float total;                //Total
+    private double total;                //Total
 }
