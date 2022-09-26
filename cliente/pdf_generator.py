@@ -1,3 +1,5 @@
+from pathlib import Path
+from borb.pdf import PDF
 from borb.pdf import Document
 from borb.pdf.page.page import Page
 from borb.pdf.canvas.layout.page_layout.multi_column_layout import SingleColumnLayout
@@ -5,6 +7,7 @@ from borb.pdf.canvas.layout.table.fixed_column_width_table import FixedColumnWid
 from borb.pdf.canvas.layout.text.paragraph import Paragraph
 from borb.pdf.canvas.layout.layout_element import Alignment
 from decimal import Decimal
+import base64
 
 
 def buyer_seller_information(invoice_id, purchase_date, seller, buyer):
@@ -90,4 +93,14 @@ def pdf_generator(invoice_id, purchase_date, seller, buyer, products, total_amou
     page_layout.add(Paragraph(" "))
     page_layout.add(products_information(products, total_amount))
 
-    return pdf
+    # store the PDF
+    with open(Path("factura_generada.pdf"), "wb") as pdf_file_handle:
+        PDF.dumps(pdf_file_handle, pdf)
+
+    with open("factura_generada.pdf", "rb") as pdf_file:
+        encoded_pdf = base64.b64encode(pdf_file.read())
+
+    file = Path("factura_generada.pdf")
+    file.unlink()
+
+    return encoded_pdf

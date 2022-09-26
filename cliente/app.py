@@ -1,14 +1,10 @@
-from multiprocessing.sharedctypes import Value
 from flask import Flask, request, Response
 from flask_cors import CORS
 from topics import topics
 from consumer import consumer_groups, get_messages
 from producer import produce_messages
 from pdf_generator import pdf_generator
-from pathlib import Path
-from borb.pdf import PDF
 import json
-import base64
 
 import logging
 
@@ -166,12 +162,12 @@ def createProduct():
     quantity = int(request.json["quantity"])
     price = float(request.json["price"])
     date = request.json["date"]
-    
+
     isSubasta = request.json["at_auction"]
     at_auction = False
     if isSubasta == "true":
         at_auction = True
-    
+
     userId = int(request.json["userId"])
     photos = request.json["photos"]
 
@@ -292,7 +288,7 @@ def getProduct():
 
         productList = stub.getProductsDistinctByUserId(
             product_pb2.RequestProductByUserId(userId=userIdDistinct))
-        
+
         PRODUCTS = []
 
         for product in productList.__getattribute__("products"):
@@ -327,6 +323,7 @@ def getProduct():
 
     return productResponse
 
+
 @app.route('/auctions', methods=['GET'])
 def getProductAuctions():
 
@@ -338,9 +335,9 @@ def getProductAuctions():
         stub = product_pb2_grpc.productStub(channel)
 
         productList = stub.getProductsInAuctionByUserId(
-            product_pb2.RequestProductByUserId(userId = userIdRequest)
+            product_pb2.RequestProductByUserId(userId=userIdRequest)
         )
-        
+
         PRODUCTS = []
 
         for product in productList.__getattribute__("products"):
@@ -444,6 +441,21 @@ def toBuyAuction():
             "date": response.__getattribute__("date")
         }
 
+        # Dentro de una subasta, cada vez que un comprador puja, se registra en un topic de Kafka exclusivo para cada producto, donde se guardará:
+        # fecha puja,
+        # id comprador,
+        # precio ofrecido.
+        topic = "productAuction_" + str(productId)
+        orders = {
+            "orders": [{
+                "date": date,
+                "idBuyer": userId,
+                "price": price
+            }]
+        }
+        message = json.dumps(produce_messages(topic, orders["orders"]))
+        kafka = Response(message, status=200, mimetype='application/json')
+
     return AuctionResponse
 
 
@@ -454,7 +466,7 @@ def toGetAuction():
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = auction_pb2_grpc.auctionStub(channel)
-        response = stub.comprar(auction_pb2.RegisterAuction(
+        response = stub.getProductsInAuctionByUserId(auction_pb2.RequestUserId(
             userId=userId))
         print(response)
 
@@ -476,6 +488,30 @@ def toGetAuction():
 
     return AuctionResponse2
 
+
+@app.route('/AuctionUp', methods=['POST'])
+def pujarAuction():
+    idProduct = int(request.json["productId"])
+    userId = int(request.json["userId"])
+    date = int(request.json["date"])
+    price = float(request.json["price"])
+
+    # Dentro de una subasta, cada vez que un comprador puja, se registra en un topic de Kafka exclusivo para cada producto, donde se guardará:
+    # fecha puja,
+    # id comprador,
+    # precio ofrecido.
+    topic = "productAuction_" + str(idProduct)
+    orders = {
+        "orders": [{
+            "date": date,
+            "idBuyer": userId,
+            "price": price
+        }]
+    }
+    message = json.dumps(produce_messages(topic, orders["orders"]))
+    kafka = Response(message, status=200, mimetype='application/json')
+
+    return AuctionResponse
 
 # ====================================
 #   Kafka
@@ -541,21 +577,11 @@ def pdf_download():
         products = request.json['products']
         total_amount = request.json['totalAmount']
 
-        pdf = pdf_generator(invoice_id, purchase_date,
-                            seller, buyer, products, total_amount)
+        encoded_pdf = pdf_generator(invoice_id, purchase_date,
+                                    seller, buyer, products, total_amount)
 
-        # store the PDF
-        with open(Path("factura_generada.pdf"), "wb") as pdf_file_handle:
-            PDF.dumps(pdf_file_handle, pdf)
+        return Response(encoded_pdf, status=200, mimetype='application/json')
 
-        encoded_string = "hola"
-
-        with open("factura_generada.pdf", "rb") as pdf_file:
-            encoded_string = base64.b64encode(pdf_file.read())
-            
-        #return Response(base64.b64encode(str(pdf).encode()), status=200, mimetype='application/json')
-        return Response(encoded_string, status=200, mimetype='application/json')
-       
     except Exception as e:
         return Response(json.dumps({"error": str(e)}), status=500, mimetype='application/json')
 

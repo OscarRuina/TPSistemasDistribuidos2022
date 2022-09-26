@@ -45,5 +45,6 @@ message ProductData{
   string category = 3;
   int32 itemQuantity = 4;
   double price = 5;
+  int64 userId = 6;
 
 }

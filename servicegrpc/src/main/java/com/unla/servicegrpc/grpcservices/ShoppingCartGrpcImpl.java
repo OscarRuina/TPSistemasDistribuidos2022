@@ -80,6 +80,7 @@ public class ShoppingCartGrpcImpl extends shoppingcartGrpc.shoppingcartImplBase 
                     .setName(shoppingCart.getShoppingCartProducts().get(j).getProduct().getName())
                     .setPrice(shoppingCart.getShoppingCartProducts().get(j).getProduct().getPrice())
                     .setItemQuantity(shoppingCart.getShoppingCartProducts().get(j).getQuantity())
+                    .setUserId(shoppingCart.getShoppingCartProducts().get(j).getProduct().getUser().getId())
                     .build();
             productData.add(productToAdd);
         }
@@ -111,6 +112,7 @@ public class ShoppingCartGrpcImpl extends shoppingcartGrpc.shoppingcartImplBase 
                         .setName(shoppingCarts.get(i).getShoppingCartProducts().get(j).getProduct().getName())
                         .setPrice(shoppingCarts.get(i).getShoppingCartProducts().get(j).getProduct().getPrice())
                         .setItemQuantity(shoppingCarts.get(i).getShoppingCartProducts().get(j).getQuantity())
+                        .setUserId(shoppingCarts.get(i).getShoppingCartProducts().get(j).getProduct().getUser().getId())
                         .build();
                 productsData.add(productData);
             }
