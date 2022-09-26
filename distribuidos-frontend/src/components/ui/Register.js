@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { v4 as uuid } from 'uuid';
 import {
   Button,
@@ -10,18 +10,19 @@ import {
 } from '@chakra-ui/react';
 import '../../constants/styles.css';
 import { registerUser } from '../../services/userService';
-import {useNavigate} from "react-router-dom"
+import { useNavigate } from 'react-router-dom';
 
 export default function Register({ onClose }) {
   const navigate = useNavigate();
-  const [registerForm, setRegisterForm] = React.useState({
+ 
+  const [registerForm, setRegisterForm] = useState({
     name: '',
     lastname: '',
     email: '',
     username: '',
     password: '',
     repeatPassword: '',
-    role: ""
+    role: "normal"
   });
 
   const [error, setError] = React.useState(false);
@@ -34,8 +35,15 @@ export default function Register({ onClose }) {
     });
   };
 
-  const handleSubmit = async () => {
+  const handleRole = e => {
+    let valor = e.target.checked ? "monitor" : "normal";
+    setRegisterForm(prev => {
+      return { ...prev, role: valor };
+    });
     console.log(registerForm);
+  }
+
+  const handleSubmit = async () => {
     if (registerForm.password !== registerForm.repeatPassword) {
       setError(prev => true);
       return false;
@@ -91,14 +99,11 @@ export default function Register({ onClose }) {
           required
         />
         <FormLabel>Role</FormLabel>
-        <Input
-          id={uuid()}
-          type="text"
-          name="role"
-          value={registerForm.role}
-          onChange={handleInputChange}
-          required
-        />
+        
+        <div>
+          <input type="checkbox" id="monitor" name="monitor" onClick={handleRole} />
+          <label for="monitor">es Monitor</label>
+        </div>
         <FormLabel>Contraseña</FormLabel>
         <Input
           id={uuid()}
@@ -118,10 +123,14 @@ export default function Register({ onClose }) {
           required
         />
         {error && (
-          <Text className="error ">las contraseñas no coinciden, intente de nuevo</Text>
+          <Text className="error ">
+            las contraseñas no coinciden, intente de nuevo
+          </Text>
         )}
         {registerError && (
-          <Text className="error ">username ya existente, intente con otro</Text>
+          <Text className="error ">
+            username ya existente, intente con otro
+          </Text>
         )}
         <Flex pt="2rem" justifyContent="center">
           <Button onClick={handleSubmit}>Registrar</Button>

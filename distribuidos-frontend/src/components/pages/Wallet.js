@@ -1,12 +1,9 @@
 import {
   Box,
   Button,
-  Center,
   Flex,
   Image,
   Input,
-  Link,
-  Text,
   chakra,
   HStack,
   ModalBody,
@@ -31,12 +28,10 @@ export default function Wallet() {
   const [balanceForm, setBalanceForm] = React.useState({ balance: 0 });
   const [isChargeDone, setIsChargeDone] = React.useState(false);
   const [isError, setIsError] = React.useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     setsaldoActual(balance);
-  }, [balance])
-  
+  }, [balance]);
 
   const handleInputChange = e => {
     let { name, value } = e.target;
@@ -55,7 +50,6 @@ export default function Wallet() {
         onOpen();
       })
       .catch(err => {
-        console.log(err);
         setIsError(true);
         setIsChargeDone(false);
       });
@@ -79,8 +73,8 @@ export default function Wallet() {
 
   return (
     <Box w="100%">
-      <NavBar actual="wallet"/>
-      
+      <NavBar actual="wallet" />
+
       <Flex pt="5rem" flexDir={'column'}>
         <Flex
           bg="#edf3f8"
@@ -140,7 +134,7 @@ export default function Wallet() {
                 fontSize="2xl"
                 textAlign={'left'}
               >
-                {loading ? "cargando..." : `Wallet Balance : ${saldoActual}$` }
+                {loading ? 'cargando...' : `Wallet Balance : ${saldoActual}$`}
               </chakra.h1>
               <HStack pt="1rem" pb="1rem" gap="2rem">
                 <Input

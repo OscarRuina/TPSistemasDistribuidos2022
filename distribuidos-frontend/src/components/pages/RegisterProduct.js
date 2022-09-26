@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { UserContext } from '../../constants/UserContext';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
-import {uploadImages} from "../../firebase/config";
+import { uploadImages } from '../../firebase/config';
 import {
   FormControl,
   FormLabel,
@@ -14,58 +14,75 @@ import {
 } from '@chakra-ui/react';
 import { createProduct } from '../../services/productService';
 import NavBar from '../ui/NavBar/NavBar';
-import { async } from '@firebase/util';
 
 export default function RegisterProduct() {
   //los archivos de input file dan una lista de objetos e.target.files[0] el primer archivo tiene lenght
   const navigate = useNavigate();
   const { user, setUser } = useContext(UserContext);
+  const [isSubasta, setisSubasta] = useState(false);
   const defaultOpts = {
     name: '',
     category: '',
-    quantity: '',
+    quantity: '1',
     price: '',
     date: '',
+    at_auction: "",
+    dateInitial: "",
+    dateFinal: "",
     userId: user.id,
     photos: [],
   };
   const [imagenes, setImagenes] = useState(null);
-  
   const [isError, setIsError] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [registerProductForm, setRegisterProductForm] =
-    useState(defaultOpts);
+  const [registerProductForm, setRegisterProductForm] = useState(defaultOpts);
 
   const handleInputChange = e => {
     let { name, value } = e.target;
-    setRegisterProductForm(prev => {
-      return { ...prev, [name]: value };
-    });
+    if (name == "at_auction"){
+      setisSubasta(value == "true" ? true : false);
+    }
+    if(name == "quantity" && !isSubasta){
+      setRegisterProductForm(prev => {
+        return { ...prev, [name]: value };
+      });
+    }else if(name != "quantity"){
+      setRegisterProductForm(prev => {
+        return { ...prev, [name]: value };
+      });
+    }
+    
+    console.log(registerProductForm);
+    console.log(isSubasta)
   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if(isSubasta){
+      setRegisterProductForm(prev => {
+        return { ...prev, quantity: 1 };
+      });
+    }
+    console.log(registerProductForm)
     console.log(imagenes);
     let listaImagenes = [];
     for (let i = 0; i < imagenes.length; i++) {
-      if(i<5){
+      if (i < 5) {
         try {
           let urlImagen = await uploadImages(imagenes[i]);
           listaImagenes.push(urlImagen);
         } catch (error) {
-          console.log(error);
-          alert("Fallo la subida de archivos");
+          alert('Fallo la subida de archivos');
         }
       }
     }
-    console.log(listaImagenes);
     for (let j = 0; j < listaImagenes.length; j++) {
-      registerProductForm.photos.push({order: j+1, url:listaImagenes[j]});
+      registerProductForm.photos.push({ order: j + 1, url: listaImagenes[j] });
     }
-    console.log(registerProductForm);
 
     submitForm();
-
   };
 
   const submitForm = async () => {
@@ -76,27 +93,14 @@ export default function RegisterProduct() {
         setRegisterProductForm(defaultOpts);
       })
       .catch(err => {
-        console.log(err);
         setIsError(true);
         setIsSuccess(false);
       });
   };
-  /*
-  <Button
-        position="absolute"
-        top="-5rem"
-        right="2rem"
-        w="100px"
-        h="60px"
-        borderRadius="5px"
-        onClick={() => navigate(-1)}
-      >
-        Return
-      </Button>
-  */
+
   return (
     <div>
-      <NavBar/>
+      <NavBar />
       <Box
         mt="7rem"
         w="90%"
@@ -152,13 +156,15 @@ export default function RegisterProduct() {
                 id={uuid()}
                 type="number"
                 name="quantity"
-                value={registerProductForm.quantity}
+                value={isSubasta ? 1 : registerProductForm.quantity}
                 onChange={handleInputChange}
+                readonly={isSubasta? true : false}
                 required
               ></Input>
             </Box>
             <Box>
-              <FormLabel>Precio</FormLabel>
+              
+              <FormLabel>{isSubasta ? "Precio Inicial" : "Precio"}</FormLabel>
               <Input
                 htmlFor="price"
                 id={uuid()}
@@ -181,7 +187,41 @@ export default function RegisterProduct() {
                 required
               ></Input>
             </Box>
+            <div onChange={handleInputChange}>
+              <input type="radio" id="Venta" name="at_auction" value={`${false}`} defaultChecked/>
+                <label for="venta">Venta</label>
+              <input type="radio" id="Subasta" name="at_auction" value={`${true}`} />
+                <label for="Subasta">Subasta</label>
+            </div>
+            
             <input type="file" onChange={e => setImagenes(e.target.files)} multiple accept="image/*" required/>
+            {isSubasta &&
+              <Box>
+                <FormLabel>Fecha de Inicio</FormLabel>
+                <Input
+                  htmlFor="dateInitial"
+                  id={uuid()}
+                  type="date"
+                  name="dateInitial"
+                  value={registerProductForm.dateInitial}
+                  onChange={handleInputChange}
+                  
+                  required={isSubasta}
+                ></Input>
+                <FormLabel>Fecha de Finalizacion</FormLabel>
+                <Input
+                  htmlFor="dateFinal"
+                  id={uuid()}
+                  type="date"
+                  name="dateFinal"
+                  value={registerProductForm.dateFinal}
+                  onChange={handleInputChange}
+                  
+                  required={isSubasta}
+                ></Input>
+             </Box>
+            }
+            
           </Grid>
           <Center>
             {isSuccess ? (

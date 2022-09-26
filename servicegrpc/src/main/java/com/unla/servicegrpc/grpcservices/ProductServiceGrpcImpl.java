@@ -110,6 +110,8 @@ public class ProductServiceGrpcImpl extends productGrpc.productImplBase {
 
         responseProductDTO.setPhotos(photosActual);
 
+        Product productNow = productService.findById(request.getId());
+
         System.out.println(responseProductDTO.getPhotos());
         Product product = productService.update(responseProductDTO, request.getId());
 

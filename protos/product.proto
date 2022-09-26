@@ -63,6 +63,7 @@ message UpdateResponseProduct{
   repeated Photos photos = 9;
   double actualPrice = 10;
   string finalDate = 11;
+
 }
 
 message getProducts{
