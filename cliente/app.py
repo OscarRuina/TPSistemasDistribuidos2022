@@ -441,6 +441,21 @@ def toBuyAuction():
             "date": response.__getattribute__("date")
         }
 
+        # Dentro de una subasta, cada vez que un comprador puja, se registra en un topic de Kafka exclusivo para cada producto, donde se guardará:
+        # fecha puja,
+        # id comprador,
+        # precio ofrecido.
+        topic = "productAuction_" + str(productId)
+        orders = {
+            "orders": [{
+                "date": date,
+                "idBuyer": userId,
+                "price": price
+            }]
+        }
+        message = json.dumps(produce_messages(topic, orders["orders"]))
+        kafka = Response(message, status=200, mimetype='application/json')
+
     return AuctionResponse
 
 
@@ -451,7 +466,7 @@ def toGetAuction():
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = auction_pb2_grpc.auctionStub(channel)
-        response = stub.comprar(auction_pb2.RegisterAuction(
+        response = stub.getProductsInAuctionByUserId(auction_pb2.RequestUserId(
             userId=userId))
         print(response)
 
@@ -473,6 +488,30 @@ def toGetAuction():
 
     return AuctionResponse2
 
+
+@app.route('/AuctionUp', methods=['POST'])
+def pujarAuction():
+    idProduct = int(request.json["productId"])
+    userId = int(request.json["userId"])
+    date = int(request.json["date"])
+    price = float(request.json["price"])
+
+    # Dentro de una subasta, cada vez que un comprador puja, se registra en un topic de Kafka exclusivo para cada producto, donde se guardará:
+    # fecha puja,
+    # id comprador,
+    # precio ofrecido.
+    topic = "productAuction_" + str(idProduct)
+    orders = {
+        "orders": [{
+            "date": date,
+            "idBuyer": userId,
+            "price": price
+        }]
+    }
+    message = json.dumps(produce_messages(topic, orders["orders"]))
+    kafka = Response(message, status=200, mimetype='application/json')
+
+    return AuctionResponse
 
 # ====================================
 #   Kafka
