@@ -45,7 +45,7 @@ public class ProductServiceGrpcImpl extends productGrpc.productImplBase {
         requestProductDTO.setAt_auction(request.getAtAuction());
         requestProductDTO.setActual_price_auction(request.getActualPrice());
         String str = request.getFinalDate();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         LocalDateTime localDateTime = LocalDateTime.parse(str,formatter);
         requestProductDTO.setFinalDateAuction(localDateTime);
         List<Photo> photosList = new ArrayList<>();
@@ -79,7 +79,7 @@ public class ProductServiceGrpcImpl extends productGrpc.productImplBase {
                 .setAtAuction(product.isAuction())
                 .setUserId(product.getUser().getId())
                 .addAllPhotos(photos)
-                .setDate(product.getFinalDateAuction().toString())
+                .setFinalDate(product.getFinalDateAuction().toString())
                 .setActualPrice(product.getActual_price_auction())
                 .build();
 
@@ -99,7 +99,7 @@ public class ProductServiceGrpcImpl extends productGrpc.productImplBase {
         responseProductDTO.setAt_auction(request.getAtAuction());
         responseProductDTO.setActual_price_auction(request.getActualPrice());
         String str = request.getFinalDate();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         LocalDateTime localDateTime = LocalDateTime.parse(str,formatter);
         responseProductDTO.setFinalDateAuction(localDateTime);
 
@@ -142,7 +142,7 @@ public class ProductServiceGrpcImpl extends productGrpc.productImplBase {
                 .setAtAuction(product.isAuction())
                 .setUserId(product.getUser().getId())
                 .addAllPhotos(photos)
-                .setDate(product.getFinalDateAuction().toString())
+                .setFinalDate(product.getFinalDateAuction().toString())
                 .setActualPrice(product.getActual_price_auction())
                 .setNameOld(productNow.getName())
                 .setPriceOld(productNow.getPrice())
