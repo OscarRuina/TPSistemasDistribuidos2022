@@ -359,7 +359,6 @@ def getProductAuctions():
                 "quantity": product.__getattribute__("quantity"),
                 "price": product.__getattribute__("price"),
                 "date": product.__getattribute__("date"),
-                "dateFinished": product.__getattribute__("dateFinished"),
                 "at_auction": product.__getattribute__("at_auction"),
                 "userId": product.__getattribute__("userId"),
                 "photos": PHOTOS
@@ -491,9 +490,14 @@ def toGetAuction():
 
 @app.route('/AuctionUp', methods=['POST'])
 def pujarAuction():
+    print(request.json)
+    print(request.json['productId'])
+    print(request.json["userId"])
+    print(request.json["date"])
+    print(request.json["price"])
     idProduct = int(request.json["productId"])
     userId = int(request.json["userId"])
-    date = int(request.json["date"])
+    date = request.json["date"]
     price = float(request.json["price"])
 
     # Dentro de una subasta, cada vez que un comprador puja, se registra en un topic de Kafka exclusivo para cada producto, donde se guardará:
@@ -509,7 +513,7 @@ def pujarAuction():
         }]
     }
     message = json.dumps(produce_messages(topic, orders["orders"]))
-    kafka = Response(message, status=200, mimetype='application/json')
+    AuctionResponse = Response(message, status=200, mimetype='application/json')
 
     return AuctionResponse
 
@@ -531,6 +535,7 @@ def get_consumer_groups():
 
 @app.route("/messages", methods=["GET"])
 def get_consumer_messages():
+    print(request.args)
     response = ''
     group_id = request.args.get('groupId') if request.args.get(
         'groupId') is not None else 'default'

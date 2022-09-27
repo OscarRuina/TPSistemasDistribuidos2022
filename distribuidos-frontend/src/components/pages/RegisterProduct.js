@@ -27,7 +27,7 @@ export default function RegisterProduct() {
     price: '',
     date: '',
     at_auction: "",
-    dateInitial: "",
+    priceActual: 0,
     dateFinal: "",
     userId: user.id,
     photos: [],
@@ -197,22 +197,11 @@ export default function RegisterProduct() {
             <input type="file" onChange={e => setImagenes(e.target.files)} multiple accept="image/*" required/>
             {isSubasta &&
               <Box>
-                <FormLabel>Fecha de Inicio</FormLabel>
-                <Input
-                  htmlFor="dateInitial"
-                  id={uuid()}
-                  type="date"
-                  name="dateInitial"
-                  value={registerProductForm.dateInitial}
-                  onChange={handleInputChange}
-                  
-                  required={isSubasta}
-                ></Input>
                 <FormLabel>Fecha de Finalizacion</FormLabel>
                 <Input
                   htmlFor="dateFinal"
                   id={uuid()}
-                  type="date"
+                  type="datetime-local"
                   name="dateFinal"
                   value={registerProductForm.dateFinal}
                   onChange={handleInputChange}

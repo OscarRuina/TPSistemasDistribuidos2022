@@ -41,20 +41,22 @@ export default function NavBar({ actual }) {
       {user?.role == 'MONITOR' ? (
         <ul>
           <li>
-            {user ? (
+            {user  &&
+              (actual == 'productsChange' ? (
               <p>Historial de cambios en productos</p>
             ) : (
               <Link to="/">
                 <button>Historial de cambios en productos</button>
               </Link>
-            )}
+            ))}
           </li>
           <li>
-            {user ? (
+            {user &&
+              (actual == 'auctionsChange' ? (
               <p>Historial de subasta de productos</p>
             ) : (
               <Link to="/">Historial de subasta de productos</Link>
-            )}
+            ))}
           </li>
         </ul>
       ) : (
