@@ -1,5 +1,6 @@
 package com.unla.servicegrpc.models.database;
 
+import java.time.LocalDate;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -37,6 +38,9 @@ public class ShoppingCart {
 
     @Column(name = "finalPrice")
     private double finalPrice;
+
+    @Column(name = "purchaseDate")
+    private LocalDate purchaseDate;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "shoppingCart", cascade = {CascadeType.PERSIST,
             CascadeType.MERGE,

@@ -5,8 +5,37 @@ option java_multiple_files = true;
 option java_package = "com.unla.servicegrpc.grpc";
 
 service shoppingcart{
-  rpc comprar(RequestCart) returns(ResponseCart);
+  //rpc comprar(RequestCart) returns(ResponseCart);
+  rpc comprar(RequestCart) returns(ResponseInvoice);
   rpc listUserPurchaseShoppingCart(getIdUser) returns(getList);
+}
+
+message ResponseInvoice{
+  string date = 2;
+  sellerCart seller = 3;
+  buyerCart buyer = 4;
+  repeated ResponseInvoiceProducts products = 5;
+  double total = 6;
+}
+
+message ResponseInvoiceProducts{
+  string name = 1;
+  double price = 2;
+  int32 quantity = 3;
+}
+
+message sellerCart{
+  string name = 1;
+  string lastname = 2;
+  string username = 3;
+  string email = 4;
+}
+
+message buyerCart{
+  string name = 1;
+  string lastname = 2;
+  string username = 3;
+  string email = 4;
 }
 
 message getIdUser{
@@ -15,14 +44,16 @@ message getIdUser{
 
 message RequestCart{
   int64 userCompraId = 1;
-  repeated ItemCart itemCart =2;
+  string purchaseDate = 2;
+  repeated ItemCart itemCart =3;
 }
 
 message ResponseCart{
   int64 shoppingCartId = 1;
-  UserCompra userCompra = 2;
-  repeated ProductData itemProduct=3;
-  double precioFinal = 4;
+  string purchaseDate = 2;
+  UserCompra userCompra = 3;
+  repeated ProductData itemProduct=4;
+  double precioFinal = 5;
 }
 
 message getList{
