@@ -15,10 +15,14 @@ _sym_db = _symbol_database.Default()
 import product_pb2 as product__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12shoppingcart.proto\x1a\rproduct.proto\"\x1b\n\tgetIdUser\x12\x0e\n\x06userId\x18\x01 \x01(\x03\"@\n\x0bRequestCart\x12\x14\n\x0cuserCompraId\x18\x01 \x01(\x03\x12\x1b\n\x08itemCart\x18\x02 \x03(\x0b\x32\t.ItemCart\"\x7f\n\x0cResponseCart\x12\x16\n\x0eshoppingCartId\x18\x01 \x01(\x03\x12\x1f\n\nuserCompra\x18\x02 \x01(\x0b\x32\x0b.UserCompra\x12!\n\x0bitemProduct\x18\x03 \x03(\x0b\x32\x0c.ProductData\x12\x13\n\x0bprecioFinal\x18\x04 \x01(\x01\".\n\x07getList\x12#\n\x0cresponseCart\x18\x01 \x03(\x0b\x32\r.ResponseCart\"0\n\x08ItemCart\x12\x0e\n\x06itemId\x18\x01 \x01(\x03\x12\x14\n\x0citemQuantity\x18\x02 \x01(\x05\"4\n\nUserCompra\x12\x14\n\x0cuserCompraId\x18\x01 \x01(\x03\x12\x10\n\x08username\x18\x02 \x01(\t\"^\n\x0bProductData\x12\n\n\x02id\x18\x01 \x01(\x03\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x10\n\x08\x63\x61tegory\x18\x03 \x01(\t\x12\x14\n\x0citemQuantity\x18\x04 \x01(\x05\x12\r\n\x05price\x18\x05 \x01(\x01\x32l\n\x0cshoppingcart\x12&\n\x07\x63omprar\x12\x0c.RequestCart\x1a\r.ResponseCart\x12\x34\n\x1clistUserPurchaseShoppingCart\x12\n.getIdUser\x1a\x08.getListB\x1d\n\x19\x63om.unla.servicegrpc.grpcP\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12shoppingcart.proto\x1a\rproduct.proto\"\x92\x01\n\x0fResponseInvoice\x12\x0c\n\x04\x64\x61te\x18\x02 \x01(\t\x12\x1b\n\x06seller\x18\x03 \x01(\x0b\x32\x0b.sellerCart\x12\x19\n\x05\x62uyer\x18\x04 \x01(\x0b\x32\n.buyerCart\x12*\n\x08products\x18\x05 \x03(\x0b\x32\x18.ResponseInvoiceProducts\x12\r\n\x05total\x18\x06 \x01(\x01\"H\n\x17ResponseInvoiceProducts\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05price\x18\x02 \x01(\x01\x12\x10\n\x08quantity\x18\x03 \x01(\x05\"M\n\nsellerCart\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x10\n\x08lastname\x18\x02 \x01(\t\x12\x10\n\x08username\x18\x03 \x01(\t\x12\r\n\x05\x65mail\x18\x04 \x01(\t\"L\n\tbuyerCart\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x10\n\x08lastname\x18\x02 \x01(\t\x12\x10\n\x08username\x18\x03 \x01(\t\x12\r\n\x05\x65mail\x18\x04 \x01(\t\"\x1b\n\tgetIdUser\x12\x0e\n\x06userId\x18\x01 \x01(\x03\"V\n\x0bRequestCart\x12\x14\n\x0cuserCompraId\x18\x01 \x01(\x03\x12\x14\n\x0cpurchaseDate\x18\x02 \x01(\t\x12\x1b\n\x08itemCart\x18\x03 \x03(\x0b\x32\t.ItemCart\"\x95\x01\n\x0cResponseCart\x12\x16\n\x0eshoppingCartId\x18\x01 \x01(\x03\x12\x14\n\x0cpurchaseDate\x18\x02 \x01(\t\x12\x1f\n\nuserCompra\x18\x03 \x01(\x0b\x32\x0b.UserCompra\x12!\n\x0bitemProduct\x18\x04 \x03(\x0b\x32\x0c.ProductData\x12\x13\n\x0bprecioFinal\x18\x05 \x01(\x01\".\n\x07getList\x12#\n\x0cresponseCart\x18\x01 \x03(\x0b\x32\r.ResponseCart\"0\n\x08ItemCart\x12\x0e\n\x06itemId\x18\x01 \x01(\x03\x12\x14\n\x0citemQuantity\x18\x02 \x01(\x05\"4\n\nUserCompra\x12\x14\n\x0cuserCompraId\x18\x01 \x01(\x03\x12\x10\n\x08username\x18\x02 \x01(\t\"n\n\x0bProductData\x12\n\n\x02id\x18\x01 \x01(\x03\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x10\n\x08\x63\x61tegory\x18\x03 \x01(\t\x12\x14\n\x0citemQuantity\x18\x04 \x01(\x05\x12\r\n\x05price\x18\x05 \x01(\x01\x12\x0e\n\x06userId\x18\x06 \x01(\x03\x32o\n\x0cshoppingcart\x12)\n\x07\x63omprar\x12\x0c.RequestCart\x1a\x10.ResponseInvoice\x12\x34\n\x1clistUserPurchaseShoppingCart\x12\n.getIdUser\x1a\x08.getListB\x1d\n\x19\x63om.unla.servicegrpc.grpcP\x01\x62\x06proto3')
 
 
 
+_RESPONSEINVOICE = DESCRIPTOR.message_types_by_name['ResponseInvoice']
+_RESPONSEINVOICEPRODUCTS = DESCRIPTOR.message_types_by_name['ResponseInvoiceProducts']
+_SELLERCART = DESCRIPTOR.message_types_by_name['sellerCart']
+_BUYERCART = DESCRIPTOR.message_types_by_name['buyerCart']
 _GETIDUSER = DESCRIPTOR.message_types_by_name['getIdUser']
 _REQUESTCART = DESCRIPTOR.message_types_by_name['RequestCart']
 _RESPONSECART = DESCRIPTOR.message_types_by_name['ResponseCart']
@@ -26,6 +30,34 @@ _GETLIST = DESCRIPTOR.message_types_by_name['getList']
 _ITEMCART = DESCRIPTOR.message_types_by_name['ItemCart']
 _USERCOMPRA = DESCRIPTOR.message_types_by_name['UserCompra']
 _PRODUCTDATA = DESCRIPTOR.message_types_by_name['ProductData']
+ResponseInvoice = _reflection.GeneratedProtocolMessageType('ResponseInvoice', (_message.Message,), {
+  'DESCRIPTOR' : _RESPONSEINVOICE,
+  '__module__' : 'shoppingcart_pb2'
+  # @@protoc_insertion_point(class_scope:ResponseInvoice)
+  })
+_sym_db.RegisterMessage(ResponseInvoice)
+
+ResponseInvoiceProducts = _reflection.GeneratedProtocolMessageType('ResponseInvoiceProducts', (_message.Message,), {
+  'DESCRIPTOR' : _RESPONSEINVOICEPRODUCTS,
+  '__module__' : 'shoppingcart_pb2'
+  # @@protoc_insertion_point(class_scope:ResponseInvoiceProducts)
+  })
+_sym_db.RegisterMessage(ResponseInvoiceProducts)
+
+sellerCart = _reflection.GeneratedProtocolMessageType('sellerCart', (_message.Message,), {
+  'DESCRIPTOR' : _SELLERCART,
+  '__module__' : 'shoppingcart_pb2'
+  # @@protoc_insertion_point(class_scope:sellerCart)
+  })
+_sym_db.RegisterMessage(sellerCart)
+
+buyerCart = _reflection.GeneratedProtocolMessageType('buyerCart', (_message.Message,), {
+  'DESCRIPTOR' : _BUYERCART,
+  '__module__' : 'shoppingcart_pb2'
+  # @@protoc_insertion_point(class_scope:buyerCart)
+  })
+_sym_db.RegisterMessage(buyerCart)
+
 getIdUser = _reflection.GeneratedProtocolMessageType('getIdUser', (_message.Message,), {
   'DESCRIPTOR' : _GETIDUSER,
   '__module__' : 'shoppingcart_pb2'
@@ -80,20 +112,28 @@ if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
   DESCRIPTOR._serialized_options = b'\n\031com.unla.servicegrpc.grpcP\001'
-  _GETIDUSER._serialized_start=37
-  _GETIDUSER._serialized_end=64
-  _REQUESTCART._serialized_start=66
-  _REQUESTCART._serialized_end=130
-  _RESPONSECART._serialized_start=132
-  _RESPONSECART._serialized_end=259
-  _GETLIST._serialized_start=261
-  _GETLIST._serialized_end=307
-  _ITEMCART._serialized_start=309
-  _ITEMCART._serialized_end=357
-  _USERCOMPRA._serialized_start=359
-  _USERCOMPRA._serialized_end=411
-  _PRODUCTDATA._serialized_start=413
-  _PRODUCTDATA._serialized_end=507
-  _SHOPPINGCART._serialized_start=509
-  _SHOPPINGCART._serialized_end=617
+  _RESPONSEINVOICE._serialized_start=38
+  _RESPONSEINVOICE._serialized_end=184
+  _RESPONSEINVOICEPRODUCTS._serialized_start=186
+  _RESPONSEINVOICEPRODUCTS._serialized_end=258
+  _SELLERCART._serialized_start=260
+  _SELLERCART._serialized_end=337
+  _BUYERCART._serialized_start=339
+  _BUYERCART._serialized_end=415
+  _GETIDUSER._serialized_start=417
+  _GETIDUSER._serialized_end=444
+  _REQUESTCART._serialized_start=446
+  _REQUESTCART._serialized_end=532
+  _RESPONSECART._serialized_start=535
+  _RESPONSECART._serialized_end=684
+  _GETLIST._serialized_start=686
+  _GETLIST._serialized_end=732
+  _ITEMCART._serialized_start=734
+  _ITEMCART._serialized_end=782
+  _USERCOMPRA._serialized_start=784
+  _USERCOMPRA._serialized_end=836
+  _PRODUCTDATA._serialized_start=838
+  _PRODUCTDATA._serialized_end=948
+  _SHOPPINGCART._serialized_start=950
+  _SHOPPINGCART._serialized_end=1061
 # @@protoc_insertion_point(module_scope)
