@@ -81,4 +81,31 @@ export const updateProduct = async product => {
   });
 };
 
+export const hacerPuja = async formPuja => {
+  return await axios
+    .post(`${BASE_URL}/AuctionUp`, formPuja)
+    .then(res => {
+      console.log(res);
+      return res;
+    })
+    .catch(err => {
+      console.log(err);
+      return err;
+    });
+}
+
+//historial de productos
+export const getHistorial = async message => {
+  return await axios
+    .get(`${BASE_URL}/messages`, {
+      params: { ...message}})
+    .then(res => {
+      console.log(res);
+      return res;
+    })
+    .catch(err => {
+      console.log(err);
+      return err;
+    });
+}
 
