@@ -29,6 +29,8 @@ message RequestProduct{
   bool at_auction = 6;
   int64 userId = 7;
   repeated Photos photos = 8;
+  double actualPrice = 9;
+  string finalDate = 10;
 }
 
 message ResponseProduct{
@@ -41,6 +43,9 @@ message ResponseProduct{
   bool at_auction = 7;
   int64 userId = 8;
   repeated Photos photos = 9;
+  double actualPrice = 10;
+  string finalDate = 11;
+
 }
 
 message getId{
@@ -57,8 +62,11 @@ message UpdateResponseProduct{
   bool at_auction = 7;
   int64 userId = 8;
   repeated Photos photos = 9;
-  string nameOld = 10;
-  double priceOld = 11;
+  double actualPrice = 10;
+  string finalDate = 11;
+  string nameOld = 12;
+  double priceOld = 13;
+
 }
 
 message getProducts{

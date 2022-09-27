@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.unla.servicegrpc.models.database.Photo;
 import com.unla.servicegrpc.utils.messages.CommonErrorMessages;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -37,10 +38,12 @@ public class ResponseProductDTO {
     @JsonProperty("user")
     private ResponseUserDTO user;
 
+    private LocalDateTime finalDateAuction;
+
+    private double actual_price_auction;
+
     private String nameOld;
 
     private double priceOld;
-
-    /*faltan 2 datos pero no se si van aca fotos y carrito*/
 
 }

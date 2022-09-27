@@ -11,6 +11,7 @@ import com.unla.servicegrpc.services.IPhotoService;
 import com.unla.servicegrpc.services.IProductService;
 import com.unla.servicegrpc.services.IUserService;
 import io.grpc.stub.StreamObserver;
+import java.time.LocalDateTime;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -40,6 +41,8 @@ public class ProductServiceGrpcImpl extends productGrpc.productImplBase {
         requestProductDTO.setDate(LocalDate.parse(request.getDate()));
         requestProductDTO.setUserId(request.getUserId());
         requestProductDTO.setAt_auction(request.getAtAuction());
+        requestProductDTO.setActual_price_auction(request.getActualPrice());
+        requestProductDTO.setFinalDateAuction(LocalDateTime.parse(request.getFinalDate()));
         List<Photo> photosList = new ArrayList<>();
         for (int k = 0; k < request.getPhotosCount(); k++) {
             Photo photoToAdd = new Photo();
@@ -71,6 +74,8 @@ public class ProductServiceGrpcImpl extends productGrpc.productImplBase {
                 .setAtAuction(product.isAuction())
                 .setUserId(product.getUser().getId())
                 .addAllPhotos(photos)
+                .setDate(product.getDate().toString())
+                .setActualPrice(product.getActual_price_auction())
                 .build();
 
         responseObserver.onNext(responseProduct);
@@ -87,6 +92,8 @@ public class ProductServiceGrpcImpl extends productGrpc.productImplBase {
         responseProductDTO.setPrice(request.getPrice());
         responseProductDTO.setDate(LocalDate.parse(request.getDate()));
         responseProductDTO.setAt_auction(request.getAtAuction());
+        responseProductDTO.setActual_price_auction(request.getActualPrice());
+        responseProductDTO.setFinalDateAuction(LocalDateTime.parse(request.getFinalDate()));
 
         User user = userService.findById(request.getUserId());
 
@@ -127,6 +134,8 @@ public class ProductServiceGrpcImpl extends productGrpc.productImplBase {
                 .setAtAuction(product.isAuction())
                 .setUserId(product.getUser().getId())
                 .addAllPhotos(photos)
+                .setDate(product.getDate().toString())
+                .setActualPrice(product.getActual_price_auction())
                 .setNameOld(productNow.getName())
                 .setPriceOld(productNow.getPrice())
                 .build();

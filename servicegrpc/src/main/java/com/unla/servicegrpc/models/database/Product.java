@@ -3,6 +3,7 @@ package com.unla.servicegrpc.models.database;
 import com.unla.servicegrpc.utils.messages.CommonErrorMessages;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -82,5 +83,11 @@ public class Product {
     @UpdateTimestamp
     @Column(name = "edition_date")
     private Timestamp editionDate;
+
+    @Column(name = "final_date_auction")
+    private LocalDateTime finalDateAuction;
+
+    @Column(name = "actual_price_auction")
+    private double actual_price_auction;
 
 }

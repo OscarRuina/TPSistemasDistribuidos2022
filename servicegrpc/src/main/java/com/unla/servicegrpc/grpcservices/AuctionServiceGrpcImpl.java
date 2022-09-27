@@ -32,7 +32,7 @@ public class AuctionServiceGrpcImpl extends auctionGrpc.auctionImplBase{
         requestAuctionDTO.setUserId(request.getUserId());
         requestAuctionDTO.setProductId(request.getProductId());
         requestAuctionDTO.setTotal(request.getTotal());
-        //requestAuctionDTO.getDateFinished(LocalDateTime.of(request.getDateFinished()));
+        requestAuctionDTO.setDateFinished(LocalDateTime.parse(request.getDateFinished()));
 
         Auction auction = auctionService.comprar(requestAuctionDTO);
 

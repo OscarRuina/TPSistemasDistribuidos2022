@@ -2,6 +2,8 @@ package com.unla.servicegrpc.models.request;
 
 import com.unla.servicegrpc.models.database.Photo;
 import com.unla.servicegrpc.utils.messages.CommonErrorMessages;
+import java.time.LocalDateTime;
+import javax.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,5 +44,10 @@ public class RequestProductDTO {
     private List<Photo> photos;
 
     private long userId;
+
+    private LocalDateTime finalDateAuction;
+
+    private double actual_price_auction;
+
 
 }
