@@ -33,6 +33,7 @@ public class ShoppingCartServiceImpl implements IShoppingCartService {
     public ShoppingCart comprar(RequestShoppingCartDTO requestShoppingCartDTO) {
 
         ShoppingCart shoppingCart = new ShoppingCart();
+        shoppingCart.setPurchaseDate(requestShoppingCartDTO.getPurchaseDate());
         shoppingCart.setUser(requestShoppingCartDTO.getUser());
         shoppingCart.setFinalPrice(requestShoppingCartDTO.getFinalPrice());
         for (ShoppingCartProducts shoppingCartProducts : requestShoppingCartDTO.getShoppingCartProducts()){

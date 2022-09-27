@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.unla.servicegrpc.grpc";
+
+service invoice{
+  rpc listInvoices(buyerId) returns (getInvoices);
+}
+
+message buyerId{
+  int64 buyerId = 1;
+}
+
+message getInvoices{
+  repeated invoiceObject invoices = 1;
+}
+
+message invoiceObject{
+  int64 id = 1;
+  string date = 2;
+  seller seller = 3;
+  buyer buyer = 4;
+  repeated invoiceProductObjects products = 5;
+  double total = 6;
+}
+
+message seller{
+  string name = 1;
+  string lastname = 2;
+  string username = 3;
+  string email = 4;
+}
+
+message buyer{
+  string name = 1;
+  string lastname = 2;
+  string username = 3;
+  string email = 4;
+}
+
+message invoiceProductObjects{
+  string name = 1;
+  double price = 2;
+  int32 quantity = 3;
+}
