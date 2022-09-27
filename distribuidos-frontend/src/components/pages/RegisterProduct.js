@@ -26,9 +26,9 @@ export default function RegisterProduct() {
     quantity: '1',
     price: '',
     date: '',
-    at_auction: "",
-    dateInitial: "",
-    dateFinal: "",
+    at_auction: '',
+    dateInitial: '',
+    dateFinal: '',
     userId: user.id,
     photos: [],
   };
@@ -39,33 +39,32 @@ export default function RegisterProduct() {
 
   const handleInputChange = e => {
     let { name, value } = e.target;
-    if (name == "at_auction"){
-      setisSubasta(value == "true" ? true : false);
+    if (name == 'at_auction') {
+      setisSubasta(value == 'true' ? true : false);
     }
-    if(name == "quantity" && !isSubasta){
+    if (name == 'quantity' && !isSubasta) {
       setRegisterProductForm(prev => {
         return { ...prev, [name]: value };
       });
-    }else if(name != "quantity"){
+    } else if (name != 'quantity') {
       setRegisterProductForm(prev => {
         return { ...prev, [name]: value };
       });
     }
-    
+
     console.log(registerProductForm);
-    console.log(isSubasta)
+    console.log(isSubasta);
   };
 
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
 
-    if(isSubasta){
+    if (isSubasta) {
       setRegisterProductForm(prev => {
         return { ...prev, quantity: 1 };
       });
     }
-    console.log(registerProductForm)
+    console.log(registerProductForm);
     console.log(imagenes);
     let listaImagenes = [];
     for (let i = 0; i < imagenes.length; i++) {
@@ -158,13 +157,12 @@ export default function RegisterProduct() {
                 name="quantity"
                 value={isSubasta ? 1 : registerProductForm.quantity}
                 onChange={handleInputChange}
-                readonly={isSubasta? true : false}
+                readonly={isSubasta ? true : false}
                 required
               ></Input>
             </Box>
             <Box>
-              
-              <FormLabel>{isSubasta ? "Precio Inicial" : "Precio"}</FormLabel>
+              <FormLabel>{isSubasta ? 'Precio Inicial' : 'Precio'}</FormLabel>
               <Input
                 htmlFor="price"
                 id={uuid()}
@@ -188,14 +186,31 @@ export default function RegisterProduct() {
               ></Input>
             </Box>
             <div onChange={handleInputChange}>
-              <input type="radio" id="Venta" name="at_auction" value={`${false}`} defaultChecked/>
-                <label for="venta">Venta</label>
-              <input type="radio" id="Subasta" name="at_auction" value={`${true}`} />
-                <label for="Subasta">Subasta</label>
+              <input
+                type="radio"
+                id="Venta"
+                name="at_auction"
+                value={`${false}`}
+                defaultChecked
+              />
+              <label for="venta">Venta</label>
+              <input
+                type="radio"
+                id="Subasta"
+                name="at_auction"
+                value={`${true}`}
+              />
+              <label for="Subasta">Subasta</label>
             </div>
-            
-            <input type="file" onChange={e => setImagenes(e.target.files)} multiple accept="image/*" required/>
-            {isSubasta &&
+
+            <input
+              type="file"
+              onChange={e => setImagenes(e.target.files)}
+              multiple
+              accept="image/*"
+              required
+            />
+            {isSubasta && (
               <Box>
                 <FormLabel>Fecha de Inicio</FormLabel>
                 <Input
@@ -205,7 +220,6 @@ export default function RegisterProduct() {
                   name="dateInitial"
                   value={registerProductForm.dateInitial}
                   onChange={handleInputChange}
-                  
                   required={isSubasta}
                 ></Input>
                 <FormLabel>Fecha de Finalizacion</FormLabel>
@@ -216,12 +230,10 @@ export default function RegisterProduct() {
                   name="dateFinal"
                   value={registerProductForm.dateFinal}
                   onChange={handleInputChange}
-                  
                   required={isSubasta}
                 ></Input>
-             </Box>
-            }
-            
+              </Box>
+            )}
           </Grid>
           <Center>
             {isSuccess ? (

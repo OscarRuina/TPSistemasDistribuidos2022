@@ -41,19 +41,31 @@ export default function NavBar({ actual }) {
       {user?.role == 'MONITOR' ? (
         <ul>
           <li>
-            {user ? (
-              <p>Historial de cambios en productos</p>
-            ) : (
-              <Link to="/">
-                <button>Historial de cambios en productos</button>
+            {user && (
+              <Link to="/historialProductos">
+                <button
+                  className="historial"
+                  onClick={() => {
+                    console.log('historial');
+                  }}
+                >
+                  Historial de cambios en productos
+                </button>
               </Link>
             )}
           </li>
           <li>
-            {user ? (
-              <p>Historial de subasta de productos</p>
-            ) : (
-              <Link to="/">Historial de subasta de productos</Link>
+            {user && (
+              <Link to="/historialProductos">
+                <button
+                  className="historial"
+                  onClick={() => {
+                    console.log('historial');
+                  }}
+                >
+                  Historial de cambios en subastas
+                </button>
+              </Link>
             )}
           </li>
         </ul>

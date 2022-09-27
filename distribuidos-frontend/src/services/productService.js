@@ -3,6 +3,7 @@ import axios from 'axios';
 const BASE_URL = 'http://127.0.0.1:5000';
 
 export const createProduct = async product => {
+  console.log(product);
   axios
     .post(`${BASE_URL}/product`, product)
     .then(res => {
@@ -79,5 +80,3 @@ export const updateProduct = async product => {
     return res;
   });
 };
-
-

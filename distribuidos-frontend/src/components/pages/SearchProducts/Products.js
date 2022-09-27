@@ -1,23 +1,13 @@
 import { SearchIcon } from '@chakra-ui/icons';
 import './products.css';
-import {
-  Box,
-  Flex,
-  FormControl,
-  FormHelperText,
-  FormLabel,
-  IconButton,
-  Input,
-  Text,
-  VStack,
-} from '@chakra-ui/react';
+import { IconButton } from '@chakra-ui/react';
 import { UserContext } from '../../../constants/UserContext';
 import React, { useContext, useEffect, useState } from 'react';
-import { getAllProductsDiferent, getAllProductsSubastaByDistinctUserId } from '../../../services/productService';
-import SingleProduct from '../../ui/SingleProduct/SingleProduct';
+import {
+  getAllProductsDiferent,
+  getAllProductsSubastaByDistinctUserId,
+} from '../../../services/productService';
 import SingleProductSmall from '../../ui/SingleProductSmall/SingleProductSmall';
-import axios from 'axios';
-import { CartContext } from '../../../constants/CartContext';
 
 export default function Products() {
   const BASE_URL = 'http://127.0.0.1:5000';
@@ -52,7 +42,6 @@ export default function Products() {
       setLoading(true);
 
       await getAllProductsDiferent(productForm).then(res => {
-        setProducts(res.products);
         user !== undefined
           ? (productsDistintUser = products.filter(
               product => product.userId != user.id
@@ -210,7 +199,7 @@ export default function Products() {
   };
 
   const showAuctions = () => {
-    console.log(auctionsFiltered)
+    console.log(auctionsFiltered);
     if (auctionsFiltered?.length != 0) {
       return auctionsFiltered?.map((auction, idx) => {
         return <SingleProductSmall key={idx} product={auction} />;
@@ -287,4 +276,3 @@ export default function Products() {
     </div>
   );
 }
-// {productsFiltered.length != 0 ? showProducts() : <p className='no-found'>No se encontraron resultados</p>}
