@@ -4,7 +4,7 @@ import { CartContext } from '../../../constants/CartContext';
 import './SingleProductSmall.css';
 import bread from '../../../Assets/images/bread1.jpg';
 
-export default function SingleProductSmall({ product }) {
+export default function SingleProductSmall({ product, role, tipo }) {
   const { addItemToCart } = useContext(CartContext);
   let productToAdd = {
     id: product.id,
@@ -18,6 +18,16 @@ export default function SingleProductSmall({ product }) {
     productToAdd = { ...productToAdd, cantidad: 1 };
     addItemToCart(productToAdd);
   };
+
+  const handlePuja = () => {
+
+  }
+  const handleproductChange = () => {
+    
+  }
+  const handleAuctionChange = () => {
+    
+  }
 
   return (
     <div className="container-product">
@@ -50,10 +60,27 @@ export default function SingleProductSmall({ product }) {
           {product.date.toUpperCase()}
         </p>
       </div>
-
-      <button className="btn-compra" onClick={handleAddToCart}>
-        Comprar
-      </button>
+      {role != "MONITOR" && ( tipo == "product" ?
+        <button className="btn-compra" onClick={handleAddToCart}>
+          Comprar
+        </button>
+      :
+      (
+        <button className="btn-compra" onClick={handlePuja}>
+          Pujar
+        </button>
+      )
+      )}
+      {role == "MONITOR" && ( tipo == "product" ?
+        <button className="btn-compra" onClick={handleproductChange}>
+          Ver historial de cambios
+        </button>
+      :
+      (
+        <button className="btn-compra" onClick={handleAuctionChange}>
+          Ver historial de cambios
+        </button>
+      ))}
     </div>
   );
 }

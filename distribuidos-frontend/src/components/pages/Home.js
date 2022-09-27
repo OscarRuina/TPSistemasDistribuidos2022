@@ -21,7 +21,11 @@ export default function Home() {
 
   return (
     <div className='container-default'>
-      <NavBar actual="inicio"/>
+      {user?.role == "MONITOR" ?
+        <NavBar actual="productsChange"/>
+        :
+        <NavBar actual="inicio"/>
+      }
       <Products />
     </div>
   );

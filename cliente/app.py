@@ -359,7 +359,6 @@ def getProductAuctions():
                 "quantity": product.__getattribute__("quantity"),
                 "price": product.__getattribute__("price"),
                 "date": product.__getattribute__("date"),
-                "dateFinished": product.__getattribute__("dateFinished"),
                 "at_auction": product.__getattribute__("at_auction"),
                 "userId": product.__getattribute__("userId"),
                 "photos": PHOTOS

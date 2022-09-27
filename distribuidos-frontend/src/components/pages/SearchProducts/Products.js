@@ -65,7 +65,7 @@ export default function Products() {
 
     const getAllProductsAuctions = async () => {
       //setLoading(true);
-      await getAllProductsSubastaByDistinctUserId(productForm).then(res => {
+      await getAllProductsSubastaByDistinctUserId(productForm[0].userIdDistinct).then(res => {
         setAuctions(res.products);
         user !== undefined
           ? (auctionsDistintUser = auctions.filter(
@@ -136,12 +136,17 @@ export default function Products() {
     e.preventDefault();
 
     let cantidadDeFiltros = 0;
-    user !== undefined
+    !isSubasta && (user !== undefined
       ? (productsDistintUser = products.filter(
           product => product.userId != user.id
         ))
-      : (productsDistintUser = products);
-    let listaAFiltrar = productsDistintUser;
+      : (productsDistintUser = products));
+    isSubasta && (user !== undefined
+      ? (auctionsDistintUser = auctions.filter(
+          product => product.userId != user.id
+        ))
+      : (auctionsDistintUser = auctions));
+    let listaAFiltrar = isSubasta ? auctionsDistintUser : productsDistintUser;
 
     if (name != '') {
       listaAFiltrar = listaAFiltrar.filter(product =>
@@ -202,7 +207,7 @@ export default function Products() {
   const showProducts = () => {
     if (productsFiltered?.length != 0) {
       return productsFiltered?.map((product, idx) => {
-        return <SingleProductSmall key={idx} product={product} />;
+        return <SingleProductSmall key={idx} product={product} role={user?.role} tipo="product" />;
       });
     } else {
       return <p className="no-found">No se encontraron resultados</p>;
@@ -213,7 +218,7 @@ export default function Products() {
     console.log(auctionsFiltered)
     if (auctionsFiltered?.length != 0) {
       return auctionsFiltered?.map((auction, idx) => {
-        return <SingleProductSmall key={idx} product={auction} />;
+        return <SingleProductSmall key={idx} product={auction} role={user?.role} tipo="auction"/>;
       });
     } else {
       return <p className="no-found">No se encontraron resultados</p>;
