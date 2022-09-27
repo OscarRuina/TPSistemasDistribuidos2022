@@ -1,9 +1,9 @@
-from multiprocessing.sharedctypes import Value
 from flask import Flask, request, Response
 from flask_cors import CORS
 from topics import topics
 from consumer import consumer_groups, get_messages
 from producer import produce_messages
+from pdf_generator import pdf_generator
 import json
 
 import logging
@@ -162,7 +162,12 @@ def createProduct():
     quantity = int(request.json["quantity"])
     price = float(request.json["price"])
     date = request.json["date"]
-    at_auction = request.json["at_auction"]
+
+    isSubasta = request.json["at_auction"]
+    at_auction = False
+    if isSubasta == "true":
+        at_auction = True
+
     userId = int(request.json["userId"])
     photos = request.json["photos"]
 
@@ -191,6 +196,24 @@ def createProduct():
             "userId": product.__getattribute__("userId"),
             "photos": PHOTOS
         }
+
+        # Se debe guardar en un topic de Kafka nombrado con el id del producto la siguiente información:
+        topic = "product_" + str(product.__getattribute__("id"))
+        orders = {
+            "orders": [{
+                "date": date,
+                "old": [{
+                    "name": "null",
+                    "price": "null"
+                }],
+                "new": [{
+                    "name": name,
+                    "price": price
+                }]
+            }]
+        }
+        message = json.dumps(produce_messages(topic, orders["orders"]))
+        kafka = Response(message, status=200, mimetype='application/json')
 
     return productResponse
 
@@ -233,23 +256,38 @@ def updateProduct():
             "photos": PHOTOS
         }
 
+        topic = "product_" + str(id)
+        orders = {
+            "orders": [{
+                "date": date,
+                "old": [{
+                    "name": product.__getattribute__("nameOld"),
+                    "price": product.__getattribute__("priceOld")
+                }],
+                "new": [{
+                    "name": name,
+                    "price": price
+                }]
+            }]
+        }
+        message = json.dumps(produce_messages(topic, orders["orders"]))
+        kafka = Response(message, status=200, mimetype='application/json')
+
     return productResponse
 
 
 @app.route('/product', methods=['GET'])
 def getProduct():
-    
+
     print(request.args)
-    userIdDistinct = int(request.args.get('userIdDistinct')) if request.args.get('userIdDistinct') is not None else None
-    
+    userIdDistinct = int(request.args.get('userIdDistinct')) if request.args.get(
+        'userIdDistinct') is not None else None
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = product_pb2_grpc.productStub(channel)
-        
-        productList = stub.getProductsDistinctByUserId(product_pb2.RequestProductByUserId(userId=userIdDistinct))
-       
 
-
+        productList = stub.getProductsDistinctByUserId(
+            product_pb2.RequestProductByUserId(userId=userIdDistinct))
 
         PRODUCTS = []
 
@@ -272,6 +310,56 @@ def getProduct():
                 "quantity": product.__getattribute__("quantity"),
                 "price": product.__getattribute__("price"),
                 "date": product.__getattribute__("date"),
+                "at_auction": product.__getattribute__("at_auction"),
+                "userId": product.__getattribute__("userId"),
+                "photos": PHOTOS
+            }
+
+            PRODUCTS.append(productJson)
+
+    productResponse = {
+        "products": PRODUCTS
+    }
+
+    return productResponse
+
+
+@app.route('/auctions', methods=['GET'])
+def getProductAuctions():
+
+    print(request.args)
+    userIdRequest = int(request.args.get('userId')) if request.args.get(
+        'userId') is not None else None
+
+    with grpc.insecure_channel('localhost:9090') as channel:
+        stub = product_pb2_grpc.productStub(channel)
+
+        productList = stub.getProductsInAuctionByUserId(
+            product_pb2.RequestProductByUserId(userId=userIdRequest)
+        )
+
+        PRODUCTS = []
+
+        for product in productList.__getattribute__("products"):
+            print(product)
+
+            PHOTOS = []
+
+            for photo in product.__getattribute__("photos"):
+                photosJson = {
+                    "url": photo.__getattribute__("url"),
+                    "order": photo.__getattribute__("order")
+                }
+                PHOTOS.append(photosJson)
+
+            productJson = {
+                "id": product.__getattribute__("id"),
+                "name": product.__getattribute__("name"),
+                "category": product.__getattribute__("category"),
+                "quantity": product.__getattribute__("quantity"),
+                "price": product.__getattribute__("price"),
+                "date": product.__getattribute__("date"),
+                "dateFinished": product.__getattribute__("dateFinished"),
                 "at_auction": product.__getattribute__("at_auction"),
                 "userId": product.__getattribute__("userId"),
                 "photos": PHOTOS
@@ -329,12 +417,10 @@ def toBuyShoppingCart():
     return productResponse
 
 
-import auction_pb2
-import auction_pb2_grpc
-
 # ====================================
 #   Auction
 # ====================================
+
 @app.route('/Auction', methods=['POST'])
 def toBuyAuction():
     userId = int(request.json["userId"])
@@ -355,15 +441,32 @@ def toBuyAuction():
             "date": response.__getattribute__("date")
         }
 
+        # Dentro de una subasta, cada vez que un comprador puja, se registra en un topic de Kafka exclusivo para cada producto, donde se guardará:
+        # fecha puja,
+        # id comprador,
+        # precio ofrecido.
+        topic = "productAuction_" + str(productId)
+        orders = {
+            "orders": [{
+                "date": date,
+                "idBuyer": userId,
+                "price": price
+            }]
+        }
+        message = json.dumps(produce_messages(topic, orders["orders"]))
+        kafka = Response(message, status=200, mimetype='application/json')
+
     return AuctionResponse
+
 
 @app.route('/Auction', methods=['GET'])
 def toGetAuction():
-    userId = int(request.args.get('userId')) if request.args.get('userId') is not None else None
+    userId = int(request.args.get('userId')) if request.args.get(
+        'userId') is not None else None
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = auction_pb2_grpc.auctionStub(channel)
-        response = stub.comprar(auction_pb2.RegisterAuction(
+        response = stub.getProductsInAuctionByUserId(auction_pb2.RequestUserId(
             userId=userId))
         print(response)
 
@@ -385,6 +488,34 @@ def toGetAuction():
 
     return AuctionResponse2
 
+
+@app.route('/AuctionUp', methods=['POST'])
+def pujarAuction():
+    idProduct = int(request.json["productId"])
+    userId = int(request.json["userId"])
+    date = int(request.json["date"])
+    price = float(request.json["price"])
+
+    # Dentro de una subasta, cada vez que un comprador puja, se registra en un topic de Kafka exclusivo para cada producto, donde se guardará:
+    # fecha puja,
+    # id comprador,
+    # precio ofrecido.
+    topic = "productAuction_" + str(idProduct)
+    orders = {
+        "orders": [{
+            "date": date,
+            "idBuyer": userId,
+            "price": price
+        }]
+    }
+    message = json.dumps(produce_messages(topic, orders["orders"]))
+    kafka = Response(message, status=200, mimetype='application/json')
+
+    return AuctionResponse
+
+# ====================================
+#   Kafka
+# ====================================
 
 @app.route("/topics", methods=["GET"])
 def get_topics():
@@ -420,15 +551,37 @@ def submit_messages():
         if request.args.get('topic'):
             topic = request.args.get('topic')
             if request.json.get(topic) is None:
-                raise ValueError("The body does not contain same messages as topic")
+                raise ValueError(
+                    "The body does not contain same messages as topic")
             messages = request.json[topic]
             message = json.dumps(produce_messages(topic, messages))
-            response = Response(message, status=200, mimetype='application/json')
-                
+            response = Response(message, status=200,
+                                mimetype='application/json')
+
         else:
             message = json.dumps({"error": "missing topic"})
-            response = Response(message, status=400, mimetype='application/json')
+            response = Response(message, status=400,
+                                mimetype='application/json')
         return response
+    except Exception as e:
+        return Response(json.dumps({"error": str(e)}), status=500, mimetype='application/json')
+
+
+@app.route("/pdf/download", methods=["POST"])
+def pdf_download():
+    try:
+        invoice_id = request.json['invoiceId']
+        purchase_date = request.json['purchaseDate']
+        seller = request.json['seller']
+        buyer = request.json['buyer']
+        products = request.json['products']
+        total_amount = request.json['totalAmount']
+
+        encoded_pdf = pdf_generator(invoice_id, purchase_date,
+                                    seller, buyer, products, total_amount)
+
+        return Response(encoded_pdf, status=200, mimetype='application/json')
+
     except Exception as e:
         return Response(json.dumps({"error": str(e)}), status=500, mimetype='application/json')
 

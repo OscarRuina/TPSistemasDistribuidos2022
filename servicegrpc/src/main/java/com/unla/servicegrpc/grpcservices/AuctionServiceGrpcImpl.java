@@ -6,12 +6,14 @@ import com.unla.servicegrpc.grpc.RequestUserId;
 import com.unla.servicegrpc.grpc.ResponseAuction;
 import com.unla.servicegrpc.grpc.auctionGrpc;
 import com.unla.servicegrpc.models.database.Auction;
+import com.unla.servicegrpc.models.database.Product;
 import com.unla.servicegrpc.models.request.RequestAuctionDTO;
 import com.unla.servicegrpc.services.IAuctionService;
 import com.unla.servicegrpc.services.IProductService;
 import com.unla.servicegrpc.services.IUserService;
 import io.grpc.stub.StreamObserver;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import net.devh.boot.grpc.server.service.GrpcService;
@@ -30,6 +32,7 @@ public class AuctionServiceGrpcImpl extends auctionGrpc.auctionImplBase{
         requestAuctionDTO.setUserId(request.getUserId());
         requestAuctionDTO.setProductId(request.getProductId());
         requestAuctionDTO.setTotal(request.getTotal());
+        requestAuctionDTO.setDateFinished(LocalDateTime.parse(request.getDateFinished()));
 
         Auction auction = auctionService.comprar(requestAuctionDTO);
 

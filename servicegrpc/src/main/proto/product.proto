@@ -45,6 +45,7 @@ message ResponseProduct{
   repeated Photos photos = 9;
   double actualPrice = 10;
   string finalDate = 11;
+
 }
 
 message getId{
@@ -63,6 +64,9 @@ message UpdateResponseProduct{
   repeated Photos photos = 9;
   double actualPrice = 10;
   string finalDate = 11;
+  string nameOld = 12;
+  double priceOld = 13;
+
 }
 
 message getProducts{

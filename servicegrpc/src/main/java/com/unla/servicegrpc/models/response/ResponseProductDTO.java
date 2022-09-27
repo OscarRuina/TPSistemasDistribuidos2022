@@ -42,6 +42,8 @@ public class ResponseProductDTO {
 
     private double actual_price_auction;
 
-    /*faltan 2 datos pero no se si van aca fotos y carrito*/
+    private String nameOld;
+
+    private double priceOld;
 
 }

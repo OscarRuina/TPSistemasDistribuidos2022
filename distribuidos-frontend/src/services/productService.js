@@ -37,6 +37,19 @@ export const getAllProductsDiferent = async productForm => {
     });
 };
 
+export const getAllProductsSubastaByDistinctUserId = async productForm => {
+  return await axios
+    .get(`${BASE_URL}/auctions`, {
+      params: { ...productForm },
+    })
+    .then(res => {
+      return res.data;
+    })
+    .catch(err => {
+      return err;
+    });
+};
+
 export const getAllProductsPurchased = async userIdPurchase => {
   return await axios
     .get(`${BASE_URL}/product`, {
@@ -49,3 +62,22 @@ export const getAllProductsPurchased = async userIdPurchase => {
       return err;
     });
 };
+
+export const getProductById = (userId, productId) => {
+  return getAllProducts(userId)
+    .then(res => {
+      let prod = res.data.products.filter(product => product.id == productId);
+      return prod[0];
+    })
+    .catch(err => {
+      return err;
+    });
+};
+
+export const updateProduct = async product => {
+  return await axios.post(`${BASE_URL}/updproduct`, product).then(res => {
+    return res;
+  });
+};
+
+
