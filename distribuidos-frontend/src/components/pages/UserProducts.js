@@ -14,33 +14,32 @@ import useGetProducts from '../../hooks/useProducts';
 import NavBar from '../ui/NavBar/NavBar';
 import SingleProduct from '../ui/SingleProduct/SingleProduct';
 
-
 export default function UserProducts() {
   const { user, setUser } = useContext(UserContext);
   const { products, loading } = useGetProducts(user.id);
   const [myProducts, setMyProducts] = useState([]);
- 
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if(products.length != 0){
+    if (products.length != 0) {
       if (user !== undefined) {
-        setMyProducts(products.filter(product => product.userId == user.id ));
+        setMyProducts(products.filter(product => product.userId == user.id));
       }
     }
   }, [products]);
 
-  
   const showProducts = () => {
-    return myProducts?.map((product, idx) => {
-      return <SingleProduct product={product} key={idx} />;
-    });
+    console.log('mis productos');
+    console.log(myProducts);
+    // return myProducts?.map((product, idx) => {
+    //   return <SingleProduct product={product} key={idx} />;
+    // });
   };
 
   return (
     <div>
-      <NavBar actual="userProducts"/>
+      <NavBar actual="userProducts" />
       <VStack
         mt="7rem"
         w="90%"
@@ -55,10 +54,10 @@ export default function UserProducts() {
         <Center pt="-1rem">
           <Text fontSize="2rem">Mis Productos</Text>
         </Center>
-        
+
         <Link to="/newProduct">
-              <button>Agregar</button>
-          </Link>
+          <button>Agregar</button>
+        </Link>
         {loading ? (
           <Text>Loading...</Text>
         ) : (

@@ -12,6 +12,7 @@ import UserProducts from './components/pages/UserProducts';
 import UserPurchase from './components/pages/UserPurchase/UserPurchase';
 import { CartProvider } from './constants/CartContext';
 import ProductDetails from './components/pages/ProductDetails';
+import HistorialProductos from './components/pages/historialProductos/HistorialProductos';
 
 function App() {
   const loadUser = loadUserFromLocalStorage();
@@ -33,6 +34,10 @@ function App() {
                 element={<ProductDetails />}
               />
               <Route path="/userPurchase" element={<UserPurchase />} />
+              <Route
+                path="/historialProductos"
+                element={<HistorialProductos />}
+              />
             </Routes>
           </CartProvider>
         </UserContext.Provider>
