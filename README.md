@@ -161,6 +161,18 @@ Estos métodos son:
 	}
 	```
 
+#### CMAK
+Utilizamos [CMAK](https://github.com/yahoo/CMAK) (Cluster Manager for Apache Kafka) el cual nos brinda una vista web sobre los clusters de Kafka con toda su información.
+
+Se puede ver en [este video](https://www.youtube.com/watch?v=AlQfpG10vAc&list=PLxoOrmZMsAWxXBF8h_TPqYJNsh3x4GyO4&index=5&ab_channel=SelfTuts) como instalar y configurar CMAK.
+
+CMAK nos permite administrar los clústeres y conocer el estado de sus tópicos, consumidores, particiones, etc. Además podemos gestionar las asignaciones de particiones, agregar más particiones y administrar los tópicos, entre otros.
+
+Para correr CMAK debemos seguir los siguientes pasos en la ruta de Linux donde se clonó el [repositorio](https://github.com/yahoo/CMAK):
+- Correr el comando: `./sbt clean dist` 
+- Cambiar la configuración en el archivo application.conf:
+     - cmak.zkhosts=“zookeeper-host:2181" 
+- Levantar el servidor de CMAK con el comando: `bin/cmak -Dconfig.file=conf/application.conf -Dhttp.port=8080`
 ## Servidor Java con Spring
 
 #### Prerequisitos:
