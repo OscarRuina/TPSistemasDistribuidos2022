@@ -19,6 +19,8 @@ import shoppingcart_pb2
 import shoppingcart_pb2_grpc
 import auction_pb2
 import auction_pb2_grpc
+import invoice_pb2
+import invoice_pb2_grpc
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -194,7 +196,9 @@ def createProduct():
             "date": product.__getattribute__("date"),
             "at_auction": product.__getattribute__("at_auction"),
             "userId": product.__getattribute__("userId"),
-            "photos": PHOTOS
+            "photos": PHOTOS,
+            "actualPrice": product.__getattribute__("actualPrice"),
+            "finalDate": product.__getattribute__("finalDate")
         }
 
         # Se debe guardar en un topic de Kafka nombrado con el id del producto la siguiente información:
@@ -253,7 +257,9 @@ def updateProduct():
             "date": product.__getattribute__("date"),
             "at_auction": product.__getattribute__("at_auction"),
             "userId": product.__getattribute__("userId"),
-            "photos": PHOTOS
+            "photos": PHOTOS,
+            "actualPrice": product.__getattribute__("actualPrice"),
+            "finalDate": product.__getattribute__("finalDate")
         }
 
         topic = "product_" + str(id)
@@ -380,11 +386,12 @@ def getProductAuctions():
 #   ShoppingCart
 # ====================================
 
-
+# comprar(RequestCart) returns(ResponseInvoice);
 @app.route('/shoppingcart', methods=['POST'])
 def toBuyShoppingCart():
     #print(request.json)
     userCompraId = request.json["userCompraId"]
+    purchaseDate = request.json["purchaseDate"]
     itemCart = request.json["itemCart"]
     purchaseDate = request.json["purchaseDate"]
 
@@ -431,6 +438,48 @@ def toBuyShoppingCart():
 
     return productResponse
 
+#listUserPurchaseShoppingCart(getIdUser) returns(getList);
+@app.route('/shoppingcartListUserPurchase', methods=['GETA'])
+def listUserPurchaseShoppingCart():
+
+    userId = int(request.args.get('userId')) if request.args.get('userId') is not None else None
+
+    with grpc.insecure_channel('localhost:9090') as channel:
+        stub = shoppingcart_pb2_grpc.shoppingcartStub(channel)
+        response = stub.listUserPurchaseShoppingCart(shoppingcart_pb2.getIdUser(
+            userId=userId))
+        print(response)
+
+    CART = []
+
+    for item in response.__getattribute__("responseCart"):
+
+        CART2 = []
+
+        for item2 in item.__getattribute__("itemProduct"):
+            itemJson2 = {
+                "id": item2.__getattribute__("id"),
+                "name": item2.__getattribute__("name"),
+                "category": item2.__getattribute__("category"),
+                "itemQuantity": item2.__getattribute__("itemQuantity"),
+                "price": item2.__getattribute__("price"),
+                "userId": item2.__getattribute__("userId")
+            }
+            CART2.append(itemJson2)
+
+        itemJson = {
+            "shoppingCartId": item.__getattribute__("shoppingCartId"),
+            "purchaseDate": item.__getattribute__("purchaseDate"),
+            "userCompra": item.__getattribute__("userCompra"),
+            "itemProduct": CART2,
+            "precioFinal": item.__getattribute__("precioFinal")
+        }
+        CART.append(itemJson)
+
+    responseListUserPurchaseShoppingCarta = {
+        "responseCart": CART
+    }
+    return responseListUserPurchaseShoppingCarta
 
 # ====================================
 #   Auction
@@ -532,6 +581,67 @@ def pujarAuction():
     AuctionResponse = Response(message, status=200, mimetype='application/json')
 
     return AuctionResponse
+
+# ====================================
+#   Invoice
+# ====================================
+
+#rpc listInvoices(buyerId) returns (getInvoices);
+@app.route('/Invoices', methods=['GET'])
+def toGetInvoices():
+    buyerId = int(request.args.get('buyerId')) if request.args.get(
+        'userId') is not None else None
+
+    with grpc.insecure_channel('localhost:9090') as channel:
+        stub = invoice_pb2_grpc.invoiceStub(channel)
+        response = stub.listInvoices(invoice_pb2.buyerId(
+            buyerId=buyerId))
+        print(response)
+
+        ItemInvoices = []
+
+        for item in response.__getattribute__("invoices"):
+            seller = item.__getattribute__("seller")
+            buyer = item.__getattribute__("buyer")
+
+            jsonSeller = {
+                "name": seller.__getattribute__("name"),
+                "lastname": seller.__getattribute__("lastname"),
+                "username": seller.__getattribute__("username"),
+                "email": seller.__getattribute__("email")
+            }
+            jsonBuyer = {
+                "name": buyer.__getattribute__("name"),
+                "lastname": buyer.__getattribute__("lastname"),
+                "username": buyer.__getattribute__("username"),
+                "email": buyer.__getattribute__("email")
+            }
+
+            ItemInvoices2 = []
+
+            for item2 in item.__getattribute__("invoices"):
+                Jsonproducts = {
+                    "name": item2.__getattribute__("name"),
+                    "price": item2.__getattribute__("price"),
+                    "quantity": item2.__getattribute__("quantity")
+                }
+
+                ItemInvoices2.append(Jsonproducts)
+
+            InvoicesResponse = {
+                "id": item.__getattribute__("id"),
+                "date": item.__getattribute__("date"),
+                "seller": jsonSeller,
+                "buyer": jsonBuyer,
+                "total": item.__getattribute__("total")
+            }
+            ItemInvoices.append(InvoicesResponse)
+
+        jsonItemInvoices = {
+            "invoices": ItemInvoices
+        }
+
+        return jsonItemInvoices
 
 # ====================================
 #   Kafka

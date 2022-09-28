@@ -14,6 +14,7 @@ import com.unla.servicegrpc.services.IUserService;
 import io.grpc.stub.StreamObserver;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import net.devh.boot.grpc.server.service.GrpcService;
@@ -32,7 +33,10 @@ public class AuctionServiceGrpcImpl extends auctionGrpc.auctionImplBase{
         requestAuctionDTO.setUserId(request.getUserId());
         requestAuctionDTO.setProductId(request.getProductId());
         requestAuctionDTO.setTotal(request.getTotal());
-        requestAuctionDTO.setDateFinished(LocalDateTime.parse(request.getDateFinished()));
+        String str = request.getDateFinished();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime localDateTime = LocalDateTime.parse(str,formatter);
+        requestAuctionDTO.setDateFinished(localDateTime);
 
         Auction auction = auctionService.comprar(requestAuctionDTO);
 
@@ -42,6 +46,7 @@ public class AuctionServiceGrpcImpl extends auctionGrpc.auctionImplBase{
                 .setUserId(auction.getBuyer().getId())
                 .setProductId(auction.getProduct().getId())
                 .setTotal(auction.getTotal())
+                .setDateFinished(auction.getDateFinished().toString())
                 .build();
 
         responseObserver.onNext(responseAuction);
@@ -60,6 +65,7 @@ public class AuctionServiceGrpcImpl extends auctionGrpc.auctionImplBase{
                     .setUserId(auction.getBuyer().getId())
                     .setProductId(auction.getProduct().getId())
                     .setTotal(auction.getTotal())
+                    .setDateFinished(auction.getDateFinished().toString())
                     .build();
             responseAuctions.add(responseAuction);
         });

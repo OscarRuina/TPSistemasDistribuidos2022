@@ -105,11 +105,11 @@ public class ShoppingCartGrpcImpl extends shoppingcartGrpc.shoppingcartImplBase 
         }
 
         ResponseInvoice responseInvoice = ResponseInvoice.newBuilder()
-                .setDate(shoppingCart.getPurchaseDate().toString())
+                .setPurchaseDate(shoppingCart.getPurchaseDate().toString())
                 .setSeller(sellerCart)
                 .setBuyer(buyerCart)
                 .addAllProducts(products)
-                .setTotal(shoppingCart.getFinalPrice())
+                .setTotalAmount(shoppingCart.getFinalPrice())
                 .build();
 
         responseObserver.onNext(responseInvoice);

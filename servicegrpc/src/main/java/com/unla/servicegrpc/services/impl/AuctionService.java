@@ -34,6 +34,7 @@ public class AuctionService implements IAuctionService {
         auction.setBuyer(user);
         auction.setProduct(product);
         auction.setTotal(requestAuctionDTO.getTotal());
+        auction.setDateFinished(requestAuctionDTO.getDateFinished());
         return auctionRepository.save(auction);
     }
 
