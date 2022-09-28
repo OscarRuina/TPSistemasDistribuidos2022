@@ -249,6 +249,8 @@ public class ProductServiceGrpcImpl extends productGrpc.productImplBase {
                     .setQuantity(products.get(i).getQuantity())
                     .setDate(products.get(i).getDate().toString())
                     .setAtAuction(products.get(i).isAuction())
+                    .setActualPrice(products.get(i).getActual_price_auction())
+                    .setFinalDate(products.get(i).getFinalDateAuction().toString())
                     .addAllPhotos(photosData)
                     .setUserId(products.get(i).getUser().getId())
                     .build();
