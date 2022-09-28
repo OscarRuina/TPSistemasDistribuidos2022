@@ -53,6 +53,7 @@ public class ShoppingCartGrpcImpl extends shoppingcartGrpc.shoppingcartImplBase 
             products.setSubtotal(
                     products.getProduct().getPrice() * request.getItemCart(i).getItemQuantity());
             total += products.getSubtotal();
+
             shoppingCartProducts.add(products);
         }
 

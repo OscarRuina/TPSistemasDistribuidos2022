@@ -45,7 +45,7 @@ public class RequestProductDTO {
 
     private long userId;
 
-    private LocalDateTime finalDateAuction;
+    private LocalDate finalDateAuction;
 
     private double actual_price_auction;
 

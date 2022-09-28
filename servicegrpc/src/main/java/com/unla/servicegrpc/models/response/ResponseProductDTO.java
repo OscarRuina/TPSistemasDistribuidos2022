@@ -38,7 +38,7 @@ public class ResponseProductDTO {
     @JsonProperty("user")
     private ResponseUserDTO user;
 
-    private LocalDateTime finalDateAuction;
+    private LocalDate finalDateAuction;
 
     private double actual_price_auction;
 

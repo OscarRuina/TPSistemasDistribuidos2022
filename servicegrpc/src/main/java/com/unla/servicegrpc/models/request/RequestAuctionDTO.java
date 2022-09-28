@@ -19,7 +19,7 @@ public class RequestAuctionDTO {
 
     private LocalDate date;
 
-    private LocalDateTime dateFinished;
+    private LocalDate dateFinished;
 
     private long productId;
 

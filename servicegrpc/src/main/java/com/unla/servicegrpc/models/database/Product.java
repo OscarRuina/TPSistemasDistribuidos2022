@@ -85,7 +85,7 @@ public class Product {
     private Timestamp editionDate;
 
     @Column(name = "final_date_auction")
-    private LocalDateTime finalDateAuction;
+    private LocalDate finalDateAuction;
 
     @Column(name = "actual_price_auction")
     private double actual_price_auction;

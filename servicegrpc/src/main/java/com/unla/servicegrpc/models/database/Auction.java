@@ -35,7 +35,7 @@ public class Auction {
     private LocalDate date;
 
     @Column(name = "dateFinished", nullable = false)
-    private LocalDateTime dateFinished;
+    private LocalDate dateFinished;
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinColumn(name = "product_Id")

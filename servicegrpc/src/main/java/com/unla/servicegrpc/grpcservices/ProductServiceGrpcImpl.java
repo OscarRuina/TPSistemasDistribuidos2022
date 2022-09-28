@@ -44,10 +44,7 @@ public class ProductServiceGrpcImpl extends productGrpc.productImplBase {
         requestProductDTO.setUserId(request.getUserId());
         requestProductDTO.setAt_auction(request.getAtAuction());
         requestProductDTO.setActual_price_auction(request.getActualPrice());
-        String str = request.getFinalDate();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        LocalDateTime localDateTime = LocalDateTime.parse(str,formatter);
-        requestProductDTO.setFinalDateAuction(localDateTime);
+        requestProductDTO.setFinalDateAuction(LocalDate.parse(request.getFinalDate()));
         List<Photo> photosList = new ArrayList<>();
         for (int k = 0; k < request.getPhotosCount(); k++) {
             Photo photoToAdd = new Photo();
@@ -98,10 +95,7 @@ public class ProductServiceGrpcImpl extends productGrpc.productImplBase {
         responseProductDTO.setDate(LocalDate.parse(request.getDate()));
         responseProductDTO.setAt_auction(request.getAtAuction());
         responseProductDTO.setActual_price_auction(request.getActualPrice());
-        String str = request.getFinalDate();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        LocalDateTime localDateTime = LocalDateTime.parse(str,formatter);
-        responseProductDTO.setFinalDateAuction(localDateTime);
+        responseProductDTO.setFinalDateAuction(LocalDate.parse(request.getFinalDate()));
 
         User user = userService.findById(request.getUserId());
 
@@ -257,6 +251,8 @@ public class ProductServiceGrpcImpl extends productGrpc.productImplBase {
                     .setQuantity(products.get(i).getQuantity())
                     .setDate(products.get(i).getDate().toString())
                     .setAtAuction(products.get(i).isAuction())
+                    .setActualPrice(products.get(i).getActual_price_auction())
+                    .setFinalDate(products.get(i).getFinalDateAuction().toString())
                     .addAllPhotos(photosData)
                     .setUserId(products.get(i).getUser().getId())
                     .build();

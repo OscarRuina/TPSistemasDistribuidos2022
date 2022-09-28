@@ -109,3 +109,13 @@ export const getHistorial = async message => {
     });
 }
 
+export const recibirInvoices = async () => {
+  return await axios
+    .post(`127.0.0.1:5000/messages`, {topic: "invoice"})
+    .then(res => {
+      return res;
+    })
+    .catch(err => {
+      return err;
+    });
+};
