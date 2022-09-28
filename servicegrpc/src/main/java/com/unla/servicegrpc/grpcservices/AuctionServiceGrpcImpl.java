@@ -33,10 +33,7 @@ public class AuctionServiceGrpcImpl extends auctionGrpc.auctionImplBase{
         requestAuctionDTO.setUserId(request.getUserId());
         requestAuctionDTO.setProductId(request.getProductId());
         requestAuctionDTO.setTotal(request.getTotal());
-        String str = request.getDateFinished();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        LocalDateTime localDateTime = LocalDateTime.parse(str,formatter);
-        requestAuctionDTO.setDateFinished(localDateTime);
+        requestAuctionDTO.setDateFinished(LocalDate.parse(request.getDateFinished()));
 
         Auction auction = auctionService.comprar(requestAuctionDTO);
 
