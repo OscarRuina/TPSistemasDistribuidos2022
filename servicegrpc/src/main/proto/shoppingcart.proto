@@ -11,11 +11,11 @@ service shoppingcart{
 }
 
 message ResponseInvoice{
-  string date = 2;
+  string purchaseDate = 2;
   sellerCart seller = 3;
   buyerCart buyer = 4;
   repeated ResponseInvoiceProducts products = 5;
-  double total = 6;
+  double totalAmount = 6;
 }
 
 message ResponseInvoiceProducts{
