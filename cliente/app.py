@@ -186,7 +186,7 @@ def createProduct():
         with grpc.insecure_channel('localhost:9090') as channel:
             stub = product_pb2_grpc.productStub(channel)
             product = stub.create(product_pb2.RequestProduct(name=name, category=category,
-                                quantity=quantity, price=price, date=date, at_auction=at_auction, userId=userId, photos=photos))
+                                                             quantity=quantity, price=price, date=date, at_auction=at_auction, userId=userId, photos=photos))
 
             PHOTOS = []
 
@@ -249,7 +249,7 @@ def updateProduct():
         with grpc.insecure_channel('localhost:9090') as channel:
             stub = product_pb2_grpc.productStub(channel)
             product = stub.update(product_pb2.ResponseProduct(id=id, name=name, category=category,
-                                quantity=quantity, price=price, date=date, at_auction=at_auction, userId=userId, photos=photos))
+                                                              quantity=quantity, price=price, date=date, at_auction=at_auction, userId=userId, photos=photos))
 
             PHOTOS = []
 
@@ -351,7 +351,7 @@ def getProductAuctions():
 
         with grpc.insecure_channel('localhost:9090') as channel:
             stub = product_pb2_grpc.productStub(channel)
-            
+
             auctionList = stub.getProductsInAuctionByUserId(
                 product_pb2.RequestProductByUserId(userId=userIdRequest)
             )
@@ -395,6 +395,8 @@ def getProductAuctions():
 # ====================================
 
 # comprar(RequestCart) returns(ResponseInvoice);
+
+
 @app.route('/shoppingcart', methods=['POST'])
 def toBuyShoppingCart():
     try:
@@ -407,7 +409,6 @@ def toBuyShoppingCart():
             stub = shoppingcart_pb2_grpc.shoppingcartStub(channel)
             response = stub.comprar(shoppingcart_pb2.RequestCart(
                 userCompraId=userCompraId, itemCart=itemCart, purchaseDate=purchaseDate))
-
 
             ITEMPRODUCT = []
 
@@ -424,7 +425,7 @@ def toBuyShoppingCart():
                 "lastname": response.__getattribute__("buyer").__getattribute__("lastname"),
                 "username": response.__getattribute__("buyer").__getattribute__("username"),
                 "email": response.__getattribute__("buyer").__getattribute__("email")
-            } 
+            }
             userVenta = {
                 "name": response.__getattribute__("seller").__getattribute__("name"),
                 "lastname": response.__getattribute__("seller").__getattribute__("lastname"),
@@ -432,7 +433,6 @@ def toBuyShoppingCart():
                 "email": response.__getattribute__("seller").__getattribute__("email")
             }
 
-            
             productResponse = {
                 "date": response.__getattribute__("date"),
                 "products": ITEMPRODUCT,
@@ -445,11 +445,14 @@ def toBuyShoppingCart():
     except Exception as e:
         return Response(json.dumps({"error": str(e)}), status=500, mimetype='application/json')
 
-#listUserPurchaseShoppingCart(getIdUser) returns(getList);
+# listUserPurchaseShoppingCart(getIdUser) returns(getList);
+
+
 @app.route('/shoppingcartListUserPurchase', methods=['GETA'])
 def listUserPurchaseShoppingCart():
     try:
-        userId = int(request.args.get('userId')) if request.args.get('userId') is not None else None
+        userId = int(request.args.get('userId')) if request.args.get(
+            'userId') is not None else None
 
         with grpc.insecure_channel('localhost:9090') as channel:
             stub = shoppingcart_pb2_grpc.shoppingcartStub(channel)
@@ -492,6 +495,7 @@ def listUserPurchaseShoppingCart():
 # ====================================
 #   Auction
 # ====================================
+
 
 @app.route('/Auction', methods=['POST'])
 def toBuyAuction():
@@ -536,7 +540,8 @@ def toBuyAuction():
 @app.route('/Auction', methods=['GET'])
 def toGetAuction():
     try:
-        userId = int(request.args.get('userId')) if request.args.get('userId') is not None else None
+        userId = int(request.args.get('userId')) if request.args.get(
+            'userId') is not None else None
 
         with grpc.insecure_channel('localhost:9090') as channel:
             stub = auction_pb2_grpc.auctionStub(channel)
@@ -585,7 +590,8 @@ def pujarAuction():
             }]
         }
         message = json.dumps(produce_messages(topic, orders["orders"]))
-        AuctionResponse = Response(message, status=200, mimetype='application/json')
+        AuctionResponse = Response(
+            message, status=200, mimetype='application/json')
 
         return AuctionResponse
     except Exception as e:
@@ -595,7 +601,9 @@ def pujarAuction():
 #   Invoice
 # ====================================
 
-#rpc listInvoices(buyerId) returns (getInvoices);
+# rpc listInvoices(buyerId) returns (getInvoices);
+
+
 @app.route('/Invoices', methods=['GET'])
 def toGetInvoices():
     try:
@@ -658,6 +666,7 @@ def toGetInvoices():
 #   Kafka
 # ====================================
 
+
 @app.route("/topics", methods=["GET"])
 def get_topics():
     try:
@@ -685,10 +694,12 @@ def get_consumer_messages():
         if request.args.get('topic'):
             topic = request.args.get('topic')
             message = json.dumps(get_messages(topic, group_id))
-            response = Response(message, status=200, mimetype='application/json')
+            response = Response(message, status=200,
+                                mimetype='application/json')
         else:
             message = json.dumps({"error": "missing topic"})
-            response = Response(message, status=400, mimetype='application/json')
+            response = Response(message, status=400,
+                                mimetype='application/json')
         return response
     except Exception as e:
         return Response(json.dumps({"error": str(e)}), status=500, mimetype='application/json')
