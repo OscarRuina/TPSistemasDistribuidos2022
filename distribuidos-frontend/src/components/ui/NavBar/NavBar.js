@@ -37,7 +37,9 @@ export default function NavBar({ actual }) {
 
   return (
     <div className="NavContainer">
-      <h1>TP Distribuidos 2022</h1>
+      <Link to="/">
+        <h1>Distribuidos</h1>
+      </Link>
       {user?.role == 'MONITOR' ? (
         <ul>
           <li>
@@ -56,7 +58,7 @@ export default function NavBar({ actual }) {
           </li>
           <li>
             {user && (
-              <Link to="/historialProductos">
+              <Link to="/historialSubastas">
                 <button
                   className="historial"
                   onClick={() => {
@@ -113,7 +115,11 @@ export default function NavBar({ actual }) {
       )}
 
       <div className="userData">
-        {user && <Cart balance={balance} userId={user.id} />}
+        {user.role == 'MONITOR' ? (
+          <h1>MONITOR</h1>
+        ) : (
+          user && <Cart balance={balance} userId={user.id} />
+        )}
         {user ? (
           <div className="userOptions">
             <p>{user.username.toUpperCase()}</p>
