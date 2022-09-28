@@ -1,6 +1,7 @@
 package com.unla.servicegrpc.models.database;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,7 +35,7 @@ public class Auction {
     private LocalDate date;
 
     @Column(name = "dateFinished", nullable = false)
-    private LocalDate dateFinished;
+    private LocalDateTime dateFinished;
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinColumn(name = "product_Id")
