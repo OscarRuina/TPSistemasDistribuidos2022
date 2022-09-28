@@ -17,7 +17,7 @@ class shoppingcartStub(object):
         self.comprar = channel.unary_unary(
                 '/shoppingcart/comprar',
                 request_serializer=shoppingcart__pb2.RequestCart.SerializeToString,
-                response_deserializer=shoppingcart__pb2.ResponseCart.FromString,
+                response_deserializer=shoppingcart__pb2.ResponseInvoice.FromString,
                 )
         self.listUserPurchaseShoppingCart = channel.unary_unary(
                 '/shoppingcart/listUserPurchaseShoppingCart',
@@ -30,7 +30,8 @@ class shoppingcartServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def comprar(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """rpc comprar(RequestCart) returns(ResponseCart);
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -47,7 +48,7 @@ def add_shoppingcartServicer_to_server(servicer, server):
             'comprar': grpc.unary_unary_rpc_method_handler(
                     servicer.comprar,
                     request_deserializer=shoppingcart__pb2.RequestCart.FromString,
-                    response_serializer=shoppingcart__pb2.ResponseCart.SerializeToString,
+                    response_serializer=shoppingcart__pb2.ResponseInvoice.SerializeToString,
             ),
             'listUserPurchaseShoppingCart': grpc.unary_unary_rpc_method_handler(
                     servicer.listUserPurchaseShoppingCart,
@@ -77,7 +78,7 @@ class shoppingcart(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/shoppingcart/comprar',
             shoppingcart__pb2.RequestCart.SerializeToString,
-            shoppingcart__pb2.ResponseCart.FromString,
+            shoppingcart__pb2.ResponseInvoice.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
