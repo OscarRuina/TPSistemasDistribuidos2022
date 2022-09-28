@@ -4,13 +4,18 @@ import { BsCart, BsCartFill } from 'react-icons/bs';
 import './Cart.css';
 import bootstrap, { Alert } from 'bootstrap';
 import ItemCart from '../ItemCart/ItemCart';
-import { toBuyShoppingCart } from '../../../services/cartService';
+import { toBuyShoppingCart, enviarInvoicesAKafka, enviarServerConsumaInvoices } from '../../../services/cartService';
 
 export default function Cart({ balance, userId }) {
   const [cartOpen, setCartOpen] = useState(false);
   const [productsLength, setProductsLength] = useState(0);
 
   const { cartItems, purchaseFinished } = useContext(CartContext);
+
+  const date = new Date();
+  //const futureDate = date.getDate() + 3;
+  //date.setDate(futureDate);
+  const defaultValue = date.toLocaleDateString('en-CA');
 
   useEffect(() => {
     setProductsLength(
@@ -24,21 +29,26 @@ export default function Cart({ balance, userId }) {
   );
 
   const handlePago = () => {
-    let cartForm = { userCompraId: userId, itemCart: [] };
+    let cartForm = { userCompraId: userId, itemCart: [], purchaseDate: defaultValue };
     if (balance < total) {
       alert('no dispones del saldo suficiente');
     } else {
       alert('realizando compra');
+      
       let itemCarts = [];
       itemCarts = cartItems.map(item => {
         return { itemId: item.id, itemQuantity: item.cantidad };
       });
       cartForm.itemCart = itemCarts;
+      console.log(cartForm)
 
       toBuyShoppingCart(cartForm).then(value => {
         if (value.status == 200) {
           purchaseFinished();
+          enviarInvoicesAKafka(value.data);
+          enviarServerConsumaInvoices();
         }
+        console.log(value);
       });
     }
   };

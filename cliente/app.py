@@ -298,7 +298,7 @@ def getProduct():
         PRODUCTS = []
 
         for product in productList.__getattribute__("products"):
-            print(product)
+            #print(product)
 
             PHOTOS = []
 
@@ -339,14 +339,14 @@ def getProductAuctions():
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = product_pb2_grpc.productStub(channel)
-
-        productList = stub.getProductsInAuctionByUserId(
+        
+        auctionList = stub.getProductsInAuctionByUserId(
             product_pb2.RequestProductByUserId(userId=userIdRequest)
         )
-
+        print(auctionList)
         PRODUCTS = []
 
-        for product in productList.__getattribute__("products"):
+        for product in auctionList.__getattribute__("products"):
             print(product)
 
             PHOTOS = []
@@ -367,8 +367,12 @@ def getProductAuctions():
                 "date": product.__getattribute__("date"),
                 "at_auction": product.__getattribute__("at_auction"),
                 "userId": product.__getattribute__("userId"),
+                #"actualPrice": product.__getattribute__("actualPrice"),
+                #"finalDate": product.__getattribute__("finalDate"),
                 "photos": PHOTOS
             }
+            print("lo que mando")
+            print(productJson)
 
             PRODUCTS.append(productJson)
 
@@ -385,35 +389,52 @@ def getProductAuctions():
 # comprar(RequestCart) returns(ResponseInvoice);
 @app.route('/shoppingcart', methods=['POST'])
 def toBuyShoppingCart():
-
+    #print(request.json)
     userCompraId = request.json["userCompraId"]
     purchaseDate = request.json["purchaseDate"]
     itemCart = request.json["itemCart"]
+    purchaseDate = request.json["purchaseDate"]
 
     with grpc.insecure_channel('localhost:9090') as channel:
         stub = shoppingcart_pb2_grpc.shoppingcartStub(channel)
         response = stub.comprar(shoppingcart_pb2.RequestCart(
-            userCompraId=userCompraId, purchaseDate=purchaseDate, itemCart=itemCart))
-        print(response)
+            userCompraId=userCompraId, itemCart=itemCart, purchaseDate=purchaseDate))
+        #print(response)
+
 
         ITEMPRODUCT = []
 
         for item in response.__getattribute__("products"):
-
-            itemJson = {
+            photosJson = {
                 "name": item.__getattribute__("name"),
-                "price": item.__getattribute__("price"),
-                "quantity": item.__getattribute__("quantity"),
+                "itemQuantity": item.__getattribute__("quantity"),
+                "price": item.__getattribute__("price")
             }
-            ITEMPRODUCT.append(itemJson)
+            ITEMPRODUCT.append(photosJson)
 
-        productResponse = {
-            "date": item.__getattribute__("date"),
-            "seller": item.__getattribute__("seller"),
-            "buyer": item.__getattribute__("buyer"),
-            "products": ITEMPRODUCT,
-            "total": item.__getattribute__("total")
+        userCompra = {
+            "name": response.__getattribute__("buyer").__getattribute__("name"),
+            "lastname": response.__getattribute__("buyer").__getattribute__("lastname"),
+            "username": response.__getattribute__("buyer").__getattribute__("username"),
+            "email": response.__getattribute__("buyer").__getattribute__("email")
+        } 
+        userVenta = {
+            "name": response.__getattribute__("seller").__getattribute__("name"),
+            "lastname": response.__getattribute__("seller").__getattribute__("lastname"),
+            "username": response.__getattribute__("seller").__getattribute__("username"),
+            "email": response.__getattribute__("seller").__getattribute__("email")
         }
+
+        
+        productResponse = {
+            "date": response.__getattribute__("date"),
+            "products": ITEMPRODUCT,
+            "buyer": userCompra,
+            "seller": userVenta,
+            "total": response.__getattribute__("total"),
+        }
+        
+        #print(productResponse)
 
     return productResponse
 
@@ -656,18 +677,21 @@ def get_consumer_messages():
 
 @app.route("/messages", methods=["POST"])
 def submit_messages():
+    
+    print(request.json)
+    
     response = ''
     try:
-        if request.args.get('topic'):
-            topic = request.args.get('topic')
-            if request.json.get(topic) is None:
+        if request.json['topic']:
+            topic = request.json['topic']
+            if request.json['message'] is None:
                 raise ValueError(
                     "The body does not contain same messages as topic")
-            messages = request.json[topic]
+            messages = request.json["message"]
             message = json.dumps(produce_messages(topic, messages))
             response = Response(message, status=200,
                                 mimetype='application/json')
-
+            print(response)
         else:
             message = json.dumps({"error": "missing topic"})
             response = Response(message, status=400,

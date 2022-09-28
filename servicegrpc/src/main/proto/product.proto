@@ -83,6 +83,9 @@ message ProductObject{
   bool at_auction = 7;
   repeated Photos photos = 8;
   int64 userId = 9;
+  double actualPrice = 10;
+  string finalDate = 11;
+
 }
 
 message Photos{
